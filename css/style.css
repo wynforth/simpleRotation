@@ -15,9 +15,73 @@ body {
   visibility: visible !important;
 }
 
-.actions {
-  margin-top: 0.5em;
+.container.abilities,
+.container.rotation {
+	padding: 15px;
+	background-color: #939393;
+	box-shadow: inset 4px 4px 15px -2px black;
+	border-radius: 15px 25px 5px 5px;
+	margin-bottom: 1em;
 }
+
+.actions {
+  #margin-top: 0.5em;
+  border: 1px solid transparent;
+  padding: 2px;
+}
+
+.header {
+	font-weight: bold;
+	padding-left: 0.3em;
+	padding-bottom: 1px;
+	border-radius: 7px 24px 0px 0px;
+	margin-top: 0.5em;
+}
+
+.header.rotation{
+	background-color: #494b4c;
+}	
+
+.rotation-action {
+  display: inline-block;
+  position: relative;
+  border: 2px dashed transparent;
+  margin-top: 2px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+.rotation .actions {
+	border-color: #494b4c;
+	background-color: #737373;
+}
+.rotation .actions img {
+	width: 24px;
+	height: 24px;
+}
+
+.header img,
+.header img{
+	width: 24px;
+	height: 24px;	
+}
+
+.BLM, .SMN, .RDM, .MNK, .DRG, .SAM, .BRD, .MCH,
+.caster, .melee, .ranged {
+	background-color: #84230d;
+}
+
+.border-BLM, .border-SMN, .border-RDM, 
+.border-MNK, .border-DRG, .border-SAM, 
+.border-BRD, .border-MCH,
+.border-caster, .border-melee, .border-ranged {
+	border-color: #84230d;
+	background-color: #837373
+}
+
+
 
 .actions .action .cooldown {
   display: block;
@@ -38,19 +102,35 @@ body {
   cursor: pointer;
 }
 
-.actions .action.selected {
-  border: 2px solid #00ffff !important;
-  -webkit-animation: selected 5s linear infinite;
-  animation: selected 5s linear infinite;
-}
-
 .action {
   display: inline-block;
   position: relative;
   border: 2px dashed transparent;
+  margin-top: 2px;
 }
 
-.action-image {
+.action img {
 	width: 40px;
 	height: 40px;
+}
+
+.actions .action.highlight {
+  border-color: #d0a21a;
+  
+}
+
+.actions .action.disabled img {
+  filter: grayscale(20%) contrast(60%) brightness(60%);
+}
+
+.green {
+  color: #0c0;
+}
+
+.yellow {
+  color: #ff0;
+}
+
+.orange {
+  color: #f80;
 }
