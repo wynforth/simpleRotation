@@ -1,19 +1,56 @@
 body {
   color: #fff;
-  background-color: #494b4d;
-}
-
-.info {
-  width: 800px;
-  margin: 0 auto;
-  margin-top: 1em;
-  text-align: left !important;
+  background-color: #494b4c;
 }
 
 .progress-tp {
-	background-color: #f4b042;
+	background-color: orange;
 }
 
 .progress-mana {
-	background-color: #0e5cb5;
+	background-color: #283593;
+}
+
+.active {
+  visibility: visible !important;
+}
+
+.actions {
+  margin-top: 0.5em;
+}
+
+.actions .action .cooldown {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 2px black, 0 0 2px black;
+  font-weight: bold;
+  color: #fff;
+}
+
+.actions .action,
+.actions .action * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+.actions .action.selected {
+  border: 2px solid #00ffff !important;
+  -webkit-animation: selected 5s linear infinite;
+  animation: selected 5s linear infinite;
+}
+
+.action {
+  display: inline-block;
+  position: relative;
+  border: 2px dashed transparent;
+}
+
+.action-image {
+	width: 40px;
+	height: 40px;
 }

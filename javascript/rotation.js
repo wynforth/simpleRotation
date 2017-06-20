@@ -18,7 +18,7 @@ createActionButtons();
 function createActionButtons(){
 	var rowLimit = 12;
 	const Action = ({ name, url }) => `<div class="action" data-action="${name}">
-          <img src="img/${url}.png" />
+          <img class="action-image" src="img/${url}.png" />
           <small class="cooldown"></small>
         </div>`;
 	

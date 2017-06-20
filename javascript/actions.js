@@ -70,8 +70,56 @@ const BLMactions = {
 		potency: 460,
 		mana: 1200,
 		cast: 3.0
-	}
+	},
+	blizzardI: {
+		name: "Blizzard I",
+		type: "spell",
+		potency: 180,
+		mana: 480,
+		cast: 2.5
+	},
+	blizzardII: {
+		name: "Blizzard II",
+		type: "spell",
+		potency: 50,
+		mana: 960,
+		cast: 3
+	},
+	blizzardIII: {
+		name: "Blizzard III",
+		type: "spell",
+		potency: 240,
+		mana: 1440,
+		cast: 3.5
+	},
+	blizzardIV: {
+		name: "Blizzard IV",
+		type: "spell",
+		potency: 260,
+		mana: 1200,
+		cast: 3
+	}	
 };
+
+const statuses = {
+	//BLM
+	astral_fire: {name: "Astral Fire", duration: 13},
+	umbral_ice: {name: "Umbral Ice", duration: 13},
+	ley_lines: {name: "Ley Lines", duration: 30},
+	triplecast: {name: "Triplecast", duration: 15, stacks: 3},
+	umbral_heart: {name: "Umbral Hearts", duration: 30, stacks: 3},
+	enochian: {name: "Enochian", duration: 30},
+	polyglot: {name: "Polyglot", duration: 30},
+	thundercloud: {name: "Thundercloud", duration: 12},
+	sharpcast: {name: "Sharpcast", duration: 15},
+	firestarter: {name: "Firestarter", duration: 12},
+	
+	//caster
+	swiftcast: {name: "Swiftcast", duration: 10, stacks: 1 },
+	lucid_dreaming: {name: "Lucid Dreaming", duration: 21},
+	diversion: {name: "Diversion", duration: 15},
+	surecast: {name: "Surecast", duration: 10}
+}
 
 const jobActions = {
 	BLM: BLMactions,
