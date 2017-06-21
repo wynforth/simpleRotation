@@ -16,7 +16,8 @@ body {
 }
 
 .container.abilities,
-.container.rotation {
+.container.rotation,
+.container.result {
 	padding: 15px;
 	background-color: #939393;
 	box-shadow: inset 4px 4px 15px -2px black;
@@ -53,7 +54,8 @@ body {
   cursor: pointer;
 }
 
-.rotation .actions {
+.rotation .actions,
+.result .actions {
 	border-color: #494b4c;
 	background-color: #737373;
 }

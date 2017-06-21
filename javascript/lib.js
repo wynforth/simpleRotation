@@ -50,6 +50,53 @@ function actionUsable(key) {
   return action.isUseable(state);
 }
 
+function setStatus(name, active){
+	var status = Object.assign({},baseStatus,statuses[name]);
+	if(active){
+		//add/update status
+		if(hasStatus(name)){
+			state.statuses[name].duration = status.duration //reset duration of existing
+		} else {
+			state.statuses[name] = status; //create new status
+		}
+	} else {
+		delete state.statuses[name];
+	}
+}
+
+function updateStatus(name, stack, set=false) {
+	var isNew = !hasStatus(name);
+	setStatus(name,true);
+	if(set) {
+		state.statuses[name].stacks = stack;
+	} else if(!isNew) {
+		state.statuses[name].stacks = Math.min(state.statuses[name].stacks+stack, state.statuses[name].maxStacks);
+	}
+
+	if(state.statuses[name].stacks <= 0)
+		delete state.stasuses[name];
+}
+
 function hasStatus(name) {
-  return state.statuses[name] > 0; 
+	//console.log("checking status: " + name);
+	
+	if(state.statuses[name])
+		return state.statuses[name].duration > 0; 
+	return false;
+}
+
+function hasAnyStatus(arr) {
+	for(var i=0; i< arr.length; i++){
+		if(hasStatus(arr[i]))
+			return true;
+	}
+	return false;
+}
+
+function hasAllStatus(arr) {
+	for(var i=0; i< arr.length; i++){
+		if(!hasStatus(arr[i]))
+			return false;
+	}
+	return true;
 }
