@@ -7,11 +7,13 @@ function resetState(job){
 	return {
 		tp: 1000,
 		maxTP: 1000,
+		potency: 0,
 		maxMana: maxMana[job],
 		mana: maxMana[job],
 		job: job,
 		role: getRole(job),
 		statuses: {},
+		recast: {},
 		currentTime: 0,
 		targetTime: 0
 	};
@@ -27,76 +29,7 @@ actions = getActions(state);
 createActionButtons();
 updateActionButtons();
 
-function createActionButtons(){
-	const Action = ({ name, url }) => `
-		<div class="action" data-action="${name}">
-          <img src="img/${url}.png" />
-          <small class="cooldown"></small>
-        </div>`;
-	
-	var actionArr = [];
-	for(var key in getJobActions(state.job)){
-		if(actions.hasOwnProperty(key)){
-			actionArr.push({'name': key, 'url': key});
-			//console.log(action.name.replace(/\ /g,'_').toLowerCase());
-		}
-	}
-	$(".header.job").addClass(state.job);
-	$(".header.job .image-job").attr("src","img/job_"+state.job+".png");
-	$(".actions.job").addClass(`border-${state.job}`);
-	$(".actions.job").html(actionArr.map(Action).join(''));
-	
-	var actionArr = [];
-	for(var key in getRoleActions(state.role)){
-		if(actions.hasOwnProperty(key)){
-			actionArr.push({'name': key, 'url': key});
-			//console.log(action.name.replace(/\ /g,'_').toLowerCase());
-		}
-	}
-	$(".header.role").addClass(state.role);
-	$(".header.role .image-role").attr("src","img/role_"+state.role+".png");
-	$(".actions.role").addClass(`border-${state.role}`);
-	$(".actions.role").html(actionArr.map(Action).join(''));
-}
 
-function updateActionButtons(){
-  $(".actions .action").each(function() {
-    const key = $(this).data("action");
-    const action = getAction(key);
-	//update image incase the action was replaced
-    $("img", this).prop("src", `img/${action.id}.png`);
-
-    $(this).toggleClass("disabled", !actionUsable(key));
-    $(this).toggleClass("highlight", action.isHighlighted(state));
-  });
-}
-
-function addRotationAction(id, key){
-	
-	const Rotation_Action = ({ id, key }) => `
-<div class="rotation-action" data-id="${id}" data-action="${key}">
-          <img src="img/${key}.png" />
-          <small class="cooldown"></small>
-        </div>`;
-		
-	$(".rotation .actions").append([{'id': id, 'key': key }].map(Rotation_Action).join(''));
-
-	$(".rotation .actions .rotation-action").last().click(function(e) {
-		var name = $(this).data("action");
-		var index = $(this).data("id");
-		console.log("Removing: " + name + " at index " + index);
-		removeRotationAction(index);
-	});
-		
-}	
-
-function updateRotationButtons(){
-	$(".rotation .actions").html("");
-	for(var i = 0; i < rotation.length; i++){
-		addRotationAction(i, rotation[i].id);
-	}
-	
-}
 
 function removeRotationAction(index){
 	rotation.splice(index,1);
@@ -105,6 +38,8 @@ function removeRotationAction(index){
 	playRotation();
 	updateActionButtons();
 }	
+
+
 
 /*
 table structure:
@@ -119,19 +54,49 @@ row:
  -- if buff time remaining > end time = solid fill
  -- if buff time remaining < end time = striped/dark fill
  */
-function advanceTime(duration){
+function advanceTime(time){
 	//update statuses
-	state.currentTime = state.currentTime + duration;
+	var toremove = [];
+	for(var key in state.statuses){
+		state.statuses[key].duration -= time;
+		if(state.statuses[key].duration <= 0)
+			toremove.push(key);
+	}
+	
+	for(var i=0; i < toremove.length; i++){
+		if(toremove[i] == "enochian"){
+			if(hasAnyStatus(['astral_fire','umbral_ice'])){
+				var status = getStatus('enochian');
+				state.statuses['enochian'].duration += status.duration;
+				setStatus('polyglot',true);
+				
+			} else {
+				setStatus(toremove[i],false);
+			}
+
+		} else {
+		
+			setStatus(toremove[i],false);
+		}
+	}
+	state.currentTime = state.currentTime + time;
+}
+
+function calculatePotency(potency){
+	var mod = 1;
+	
+	if(hasStatus('enochian')) mod += 0.05;
+	
+	return potency*mod;
 }
 
 function playRotation(){
 	var resultTable = [];
 	state = resetState(state.job);
-	console.log(state);
 	for(var i=0; i< rotation.length; i++){
 		var row = {};
 		var action = rotation[i];
-		console.log(action.name);
+		//console.log(action.name);
 		if(action.type != 'ability'){
 			//not oGCD we advance to targetTime;
 			advanceTime(state.targetTime-state.currentTime);
@@ -139,7 +104,7 @@ function playRotation(){
 		
 		row.name = action.name;
 		row.startTime = state.currentTime;
-		row.potency = action.getPotency(state);
+		
 		
 		//determine cast time, and next action time
 		var castTime = action.getCast(state);
@@ -176,15 +141,36 @@ function playRotation(){
 		
 		
 		//update current time to when this action is ussuable: 
+		addRecast(action.recastGroup(),action.recast);
 		advanceTime(delay);
+		//remove cost
+		
+		
+		//add potency
+		state.potency += calculatePotency(action.getPotency(state));
+		row.potency = calculatePotency(action.getPotency(state));
+		
 		action.execute(state);
 		row.endTime = state.currentTime;
 		resultTable.push(row);
 	}
+	advanceTime(state.targetTime-state.currentTime);
 	console.log(state);
 	console.log(resultTable);
 }
 
+/*
+what to do when an action is clicked
+- check if it can be used
+- add it to the rotation
+- play through the rotation
+- update all things that need updating
+-- rotation
+-- statuses
+-- actions
+-- resources
+-- dps results
+*/
 function addAction(name){
 	if(!actionUsable(name)) {
 		console.log("Cannot use " + name + " right now. Add Error message handling?");
@@ -199,8 +185,10 @@ function addAction(name){
 	rotation.push(action);
 	
 	playRotation();
+	updateStatuses();
 	updateRotationButtons();
 	updateActionButtons();
+	updateStats();
 }
 
 // Click Handlers

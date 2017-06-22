@@ -11,7 +11,11 @@ const baseAction = {
 	animTime: 0.8,
 	comboActions: [],
 	comboPotency: 0,
+	hidden: false,
 	
+	recastGroup(){
+		return this.type=='ability' ? this.id : 'global';
+	},
 	
 	isCombo(state) {
 		if(state.lastActionTime + 8000 > state.currentTime && this.comboActions.includes(state.lastAction)) {
@@ -22,11 +26,10 @@ const baseAction = {
 	},
 	
 	execute(state) { 
-		this.nextCast = state.currentTime + this.recast;
 	},
 	
 	isUseable(state) {
-		return state.currentTime >= this.nextCast;
+		return true;
 	},
 	
 	isHighlighted(state) {
@@ -53,6 +56,10 @@ const baseAction = {
 	
 	getCast(state) {
 		return this.cast;
+	},
+	
+	getRecast(state) {
+		return Math.max(0, this.nextCast - state.currentTime);
 	}
 };
 
@@ -66,15 +73,44 @@ const BLMactions = {
 		mana: 1440,
 		cast: 2.5,
 		execute(state){
-			if(hasStatus("umbral_ice"))
+			if(hasStatus("umbral_ice")) {
 				setStatus("umbral_ice",false);
-			else
+			} else if(hasStatus("astral_fire")){
 				updateStatus("astral_fire",1);
+				updateStatus("umbral-heart",-1);
+			} else {
+				setStatus("astral_fire",true);
+			}
 			
 			if(hasStatus("sharpcast")){
 				setStatus("sharpcast",false);
 				setStatus("firestarter",true);
 			}
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (hasStatus('umbral_heart') ? 1:2);
+			
+			if(hasStatus('umbral_ice'))
+				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			var mod = 1;
+			if(hasStatus('umbral_ice'))
+				mod -= 0.1 * getStacks('umbral_ice');
+			
+			if(hasStatus('astral_fire'))
+				mod += 0.2 + (0.2 * getStacks('astral_fire'));
+			
+			return this.potency * mod;
+		},
+		getCast(state){
+			if(hasStatus('umbral_ice'))
+				if(getStacks('umbral_ice') == 3)
+					return this.cast * 0.5;
+			return this.cast;
 		}
 	},
 	fire_ii: {
@@ -84,11 +120,40 @@ const BLMactions = {
 		mana: 1800,
 		cast: 3.0,
 		execute(state){
-			if(hasStatus("umbral_ice"))
+			if(hasStatus("umbral_ice")) {
 				setStatus("umbral_ice",false);
-			else
+			} else if(hasStatus("astral_fire")){
 				updateStatus("astral_fire",1);
-		}	
+				updateStatus("umbral-heart",-1);
+			} else {
+				setStatus("astral_fire",true);
+			}
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (hasStatus('umbral_heart') ? 1:2);
+			
+			if(hasStatus('umbral_ice'))
+				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			var mod = 1;
+			if(hasStatus('umbral_ice'))
+				mod -= 0.1 * getStacks('umbral_ice');
+			
+			if(hasStatus('astral_fire'))
+				mod += 0.2 + (0.2 * getStacks('astral_fire'));
+			
+			return this.potency * mod;
+		},
+		getCast(state){
+			if(hasStatus('umbral_ice'))
+				if(getStacks('umbral_ice') == 3)
+					return this.cast * 0.5;
+			return this.cast;
+		}
 	},
 	fire_iii: {
 		name: "Fire III",
@@ -97,23 +162,49 @@ const BLMactions = {
 		mana: 2400,
 		cast: 3.5,
 		execute(state){
+			if(hasStatus("astral_fire") && !hasStatus("firestarter"))
+				updateStatus("umbral_heart",-1);
+			
+			//always
+			updateStatus("astral_fire",3,true);
 			if(hasStatus("umbral_ice"))
 				setStatus("umbral_ice",false);
-			updateStatus("astral_fire",3,true);
+
 			
-			setStatus("firestarter",false);
+			if(hasStatus("firestarter"))
+				setStatus("firestarter",false);
 		},
 		getCast(state){
 			if(hasStatus("firestarter")) return 0;
+			if(hasStatus('umbral_ice'))
+				if(getStacks('umbral_ice') == 3)
+					return this.cast * 0.5;
 			return this.cast;
-		}, 
+		},
 		getManaCost(state){
 			if(hasStatus("firestarter")) return 0;
+			
+			if(hasStatus('astral_fire'))
+				return this.mana * (hasStatus('umbral_heart') ? 1:2);
+			
+			if(hasStatus('umbral_ice'))
+				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				
 			return this.mana;
 		},
 		isHighlighted(state) {
 			return hasStatus('firestarter');
 		},
+		getPotency(state){
+			var mod = 1;
+			if(hasStatus('umbral_ice'))
+				mod -= 0.1 * getStacks('umbral_ice');
+			
+			if(hasStatus('astral_fire'))
+				mod += 0.2 + (0.2 * getStacks('astral_fire'));
+			
+			return this.potency * mod;
+		}
 	},
 	fire_iv: {
 		name: "Fire IV",
@@ -121,8 +212,37 @@ const BLMactions = {
 		potency: 460,
 		mana: 1200,
 		cast: 3.0,
+		execute(state){
+			if(hasStatus("astral_fire"))
+				updateStatus("umbral_heart",-1);
+		},
 		isUseable(state) {
 			return hasAllStatus(['enochian','astral_fire']);
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (hasStatus('umbral_heart') ? 1:2);
+			
+			if(hasStatus('umbral_ice'))
+				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			var mod = 1;
+			if(hasStatus('umbral_ice'))
+				mod -= 0.1 * getStacks('umbral_ice');
+			
+			if(hasStatus('astral_fire'))
+				mod += 0.2 + (0.2 * getStacks('astral_fire'));
+			
+			return this.potency * mod;
+		},
+		getCast(state){
+			if(hasStatus('umbral_ice'))
+				if(getStacks('umbral_ice') == 3)
+					return this.cast * 0.5;
+			return this.cast;
 		}
 	},
 	flare: {
@@ -132,9 +252,35 @@ const BLMactions = {
 		mana: 0,
 		cast: 4,
 		execute(state){
+			updateStatus("astral_fire",3,true);
 			if(hasStatus("umbral_ice"))
 				setStatus("umbral_ice",false);
-			updateStatus("astral_fire",3,true);
+			
+		},
+		getCast(state){
+			if(hasStatus('umbral_ice'))
+				if(getStacks('umbral_ice') == 3)
+					return this.cast * 0.5;
+			return this.cast;
+		},
+		getPotency(state){
+			var mod = 1;
+			if(hasStatus('umbral_ice'))
+				mod -= 0.1 * getStacks('umbral_ice');
+			
+			if(hasStatus('astral_fire'))
+				mod += 0.2 + (0.2 * getStacks('astral_fire'));
+			//console.log(mod);
+			return this.potency * mod;
+		},
+		getManaCost(state){
+			if(hasStatus('umbral_heart'))
+				return state.maxMana/3;
+			
+			return state.mana;
+		},
+		isUseable(state) {
+			return state.mana > 1200;
 		}
 	},
 	blizzard_i: {
@@ -170,9 +316,9 @@ const BLMactions = {
 		mana: 1440,
 		cast: 3.5,
 		execute(state){
+			updateStatus("umbral_ice",3,true);
 			if(hasStatus("astral_fire"))
 				setStatus("astral_fire",false);
-			updateStatus("umbral_ice",3,true);
 		}
 	},
 	blizzard_iv: {
@@ -182,7 +328,7 @@ const BLMactions = {
 		mana: 1200,
 		cast: 3,
 		execute(state){
-			updateStatus("umbral_hearts",3,true);
+			updateStatus("umbral_heart",3,true);
 		},
 		isUseable(state) {
 			return hasAllStatus(['enochian','umbral_ice']);
@@ -307,6 +453,9 @@ const BLMactions = {
 		potency: 100,
 		mana: 960,
 		cast: 0,
+		execute(state){
+			setStatus('sharpcast',false);
+		},
 		getPotency(state){
 			if(hasStatus('sharpcast')){
 				return this.potency*2;
@@ -342,11 +491,11 @@ const BLMactions = {
 		recast: 12,
 		execute(state){
 			if(hasStatus('umbral_ice')){
-				setStatus('umbral_ice',false);
 				setStatus('astral_fire',true);
+				setStatus('umbral_ice',false);
 			} else if(hasStatus('astral-fire')){
-				setStatus('astral_fire',false);
 				setStatus('umbral_ice',true);
+				setStatus('astral_fire',false);
 			}
 		}
 				
@@ -384,7 +533,7 @@ const BLMactions = {
 			setStatus("enochian",true);
 		},
 		isUseable(state) {
-			return hasAnyStatus(['umbral_ice','astral_fire']);
+			return hasAnyStatus(["umbral_ice","astral_fire"]);
 		}
 	},
 	between_the_lines: {
@@ -406,33 +555,58 @@ const BLMactions = {
 const roleActions = {
 	'caster': {
 		addle: {
-			name: "Addle"
+			name: "Addle",
+			recast: 120,
+			execute(state) { setStatus('addle',true); }
 		},
-		break_action: {
-			name: "Break"
+		'break': {
+			name: "Break",
+			type: "spell",
+			cast: 2.5,
+			recast: 2.5,
+			potency: 50,
+			execute(state){ setStatus('heavy',true); }
 		},
 		drain: {
-			name: "Drain"
+			name: "Drain",
+			type: "spell",
+			cast: 2.5,
+			recast: 2.5,
+			potency: 80,
 		},
 		diversion: {
 			name: "Diversion",
+			recast: 120,
 			execute(state){ setStatus("diversion",true); }
 		},
 		lucid_dreaming: {
 			name: "Lucid Dreaming",
+			recast: 120,
 			execute(state){ setStatus("lucid_dreaming",true); }
 		},
 		swiftcast: {
 			name: "Swiftcast",
+			recast: 60,
 			execute(state){ setStatus("swiftcast",true); }
 		},
-		mana_shift: {name: "Mana Shift"},
-		apocatastasis: {name: "Apocatastasis"},
+		mana_shift: {
+			name: "Mana Shift", 
+			recast: 150,
+		},
+		apocatastasis: {
+			name: "Apocatastasis",
+			recast: 150,
+			execute(state) { setStatus('apocatastasis',true); }
+		},
 		surecast: {
 			name: "Surecast",
-			execute(state){ setStatus("sharpcast",true); }
+			recast: 30,
+			execute(state){ setStatus("surecast",true); }
 		},
-		erase: {name: "Erase"}
+		erase: {
+			name: "Erase",
+			recast: 90
+		},
 	}
 };
 
@@ -452,10 +626,15 @@ const statuses = {
 	firestarter: {name: "Firestarter", duration: 12},
 	
 	//caster
+	addle: {name: "Addle", duration: 10},
 	swiftcast: {name: "Swiftcast", duration: 10, stacks: 1 },
 	lucid_dreaming: {name: "Lucid Dreaming", duration: 21},
 	diversion: {name: "Diversion", duration: 15},
 	surecast: {name: "Surecast", duration: 10},
+	apocatastasis: {name: "Apocatastasis", duration: 10},
+	
+	//general
+	heavy:  {name:"Heavy", duration: 20},
 }
 
 

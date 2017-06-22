@@ -25,7 +25,7 @@ body {
 	margin-bottom: 1em;
 }
 
-.actions {
+.actions, .statuses {
   #margin-top: 0.5em;
   border: 1px solid transparent;
   padding: 2px;
@@ -39,7 +39,8 @@ body {
 	margin-top: 0.5em;
 }
 
-.header.rotation{
+.header.rotation,
+.header.statuses {
 	background-color: #494b4c;
 }	
 
@@ -55,7 +56,8 @@ body {
 }
 
 .rotation .actions,
-.result .actions {
+.result .actions,
+.rotation .statuses {
 	border-color: #494b4c;
 	background-color: #737373;
 }
@@ -115,6 +117,32 @@ body {
 	width: 40px;
 	height: 40px;
 }
+
+.statuses .status .cooldown {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  text-shadow: 0 0 2px black, 0 0 2px black;
+  #font-weight: bold;
+  color: #fff;
+}
+
+.status {
+  display: inline-block;
+  position: relative;
+  border: 2px dashed transparent;
+  margin-top: 2px;
+  margin-bottom: 1em;
+}
+
+.status img {
+	width: 24px;
+	height: 32px;
+}
+
+
 
 .actions .action.highlight {
   border-color: #d0a21a;
