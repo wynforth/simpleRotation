@@ -367,11 +367,15 @@ const BLMactions = {
 			return this.mana
 		},
 		execute(state){
+			setStatus('thunder',true);
 			setStatus("thundercloud",false);
 			if(hasStatus("sharpcast")){
 				setStatus("sharpcast",false);
 				setStatus("thundercloud",true);
 			}
+		},
+		getPotency(state){
+			return hasStatus('thundercloud') ? this.potency + 240 : this.potency;
 		},
 		isHighlighted(state) {
 			return hasStatus('thundercloud');
@@ -395,6 +399,7 @@ const BLMactions = {
 			return this.mana
 		},
 		execute(state){
+			setStatus('thunder_ii',true);
 			setStatus("thundercloud",false);
 			if(hasStatus("sharpcast")){
 				setStatus("sharpcast",false);
@@ -406,7 +411,10 @@ const BLMactions = {
 		},
 		getReplacement(state){
 			return state.level > 64 ? 'thunder_iv' : false;
-		}
+		},
+		getPotency(state){
+			return hasStatus('thundercloud') ? this.potency + 120 : this.potency;
+		},
 	},
 	thunder_iii: {
 		name: "Thunder III",
@@ -425,6 +433,7 @@ const BLMactions = {
 			return this.mana
 		},
 		execute(state){
+			setStatus('thunder_iii',true);
 			setStatus("thundercloud",false);
 			if(hasStatus("sharpcast")){
 				setStatus("sharpcast",false);
@@ -433,7 +442,10 @@ const BLMactions = {
 		},
 		isHighlighted(state) {
 			return hasStatus('thundercloud');
-		}
+		},
+		getPotency(state){
+			return hasStatus('thundercloud') ? this.potency + 320 : this.potency;
+		},
 	},
 	thunder_iv: {
 		name: "Thunder IV",
@@ -452,6 +464,7 @@ const BLMactions = {
 			return this.mana
 		},
 		execute(state){
+			setStatus('thunder_iv',true);
 			setStatus("thundercloud",false);
 			if(hasStatus("sharpcast")){
 				setStatus("sharpcast",false);
@@ -460,7 +473,10 @@ const BLMactions = {
 		},
 		isHighlighted(state) {
 			return hasStatus('thundercloud');
-		}
+		},
+		getPotency(state){
+			return hasStatus('thundercloud') ? this.potency + 180 : this.potency;
+		},
 	},
 	scathe: {
 		name: "Scathe",
@@ -630,7 +646,12 @@ const baseStatus = {name: "status", duration: 0, stacks: 1, maxStacks: 1, tick(s
 const statuses = {
 	//BLM
 	astral_fire: {name: "Astral Fire", duration: 13, maxStacks: 3},
-	umbral_ice: {name: "Umbral Ice", duration: 13, maxStacks: 3},
+	umbral_ice: {
+		name: "Umbral Ice", duration: 13, maxStacks: 3,
+		tick(state){
+			setMana(state.mana + (state.maxMana * (.15 + (.15 * getStacks('umbral_ice')))));
+		}			
+	},
 	ley_lines: {name: "Ley Lines", duration: 30},
 	triplecast: {name: "Triplecast", duration: 15, maxStacks: 3},
 	umbral_heart: {name: "Umbral Hearts", duration: 30, maxStacks: 3},
@@ -639,6 +660,10 @@ const statuses = {
 	thundercloud: {name: "Thundercloud", duration: 12},
 	sharpcast: {name: "Sharpcast", duration: 15},
 	firestarter: {name: "Firestarter", duration: 12},
+	thunder: {name: "Thunder I", duration: 18, tick(state){ state.potency += 40; }},
+	thunder_ii: {name: "Thunder II", duration: 12, tick(state){ state.potency += 30; }},
+	thunder_iii: {name: "Thunder III", duration: 24, tick(state){ state.potency += 40; }},
+	thunder_iv: {name: "Thunder IV", duration: 18, tick(state){ state.potency += 30; }},
 	
 	//caster
 	addle: {name: "Addle", duration: 10},
