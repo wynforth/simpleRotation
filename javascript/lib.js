@@ -67,8 +67,9 @@ function addRotationAction(id, key){
         </div>`;
 		
 	$(".rotation .actions").append([{'id': id, 'key': key }].map(Rotation_Action).join(''));
-
-	$(".rotation .actions .rotation-action").last().click(function(e) {
+	var last = $(".rotation .actions .rotation-action").last();
+	last.toggleClass("error", !actionUsable(key));
+	last.click(function(e) {
 		var name = $(this).data("action");
 		var index = $(this).data("id");
 		console.log("Removing: " + name + " at index " + index);
@@ -76,6 +77,10 @@ function addRotationAction(id, key){
 	});
 		
 }	
+
+function clearRotationButtons(){
+	$(".rotation .actions").html("");
+}
 
 function updateRotationButtons(){
 	$(".rotation .actions").html("");

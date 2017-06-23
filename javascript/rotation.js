@@ -33,10 +33,7 @@ updateActionButtons();
 
 function removeRotationAction(index){
 	rotation.splice(index,1);
-	
-	updateRotationButtons();
-	playRotation();
-	updateActionButtons();
+	update();
 }	
 
 
@@ -92,10 +89,16 @@ function calculatePotency(potency){
 
 function playRotation(){
 	var resultTable = [];
+	
 	state = resetState(state.job);
+	clearRotationButtons();
+	
 	for(var i=0; i< rotation.length; i++){
 		var row = {};
 		var action = rotation[i];
+		//display rotation action
+		addRotationAction(i,action.id);
+		
 		//console.log(action.name);
 		if(action.type != 'ability'){
 			//not oGCD we advance to targetTime;
@@ -150,6 +153,8 @@ function playRotation(){
 		state.potency += calculatePotency(action.getPotency(state));
 		row.potency = calculatePotency(action.getPotency(state));
 		
+		
+		
 		action.execute(state);
 		row.endTime = state.currentTime;
 		resultTable.push(row);
@@ -183,12 +188,17 @@ function addAction(name){
 		return;
 	}
 	rotation.push(action);
+
+	update();
+}
+
+function update(){
 	
 	playRotation();
 	updateStatuses();
-	updateRotationButtons();
+	//updateRotationButtons();
 	updateActionButtons();
-	updateStats();
+	updateStats();	
 }
 
 // Click Handlers

@@ -3,12 +3,30 @@ body {
   background-color: #494b4c;
 }
 
+.splitter {
+	display: flex;
+	border: 1px solid transparent;
+	padding: 2px;
+}
+
+.resources {
+	width: 200px;
+}
+
+.statuses {
+	flex: 1;
+}
+
 .progress-tp {
 	background-color: orange;
 }
 
 .progress-mana {
 	background-color: #283593;
+}
+
+.progress {
+	margin: .2em .5em .5em 0em;
 }
 
 .active {
@@ -25,7 +43,7 @@ body {
 	margin-bottom: 1em;
 }
 
-.actions, .statuses {
+.actions {
   #margin-top: 0.5em;
   border: 1px solid transparent;
   padding: 2px;
@@ -55,9 +73,17 @@ body {
   cursor: pointer;
 }
 
+.rotation-action.error {
+	border: 2px solid red;
+	
+}
+.rotation-action.error img {
+	filter: grayscale(20%) contrast(60%) brightness(60%);
+}
+
 .rotation .actions,
 .result .actions,
-.rotation .statuses {
+.rotation .splitter {
 	border-color: #494b4c;
 	background-color: #737373;
 }
@@ -134,7 +160,7 @@ body {
   position: relative;
   border: 2px dashed transparent;
   margin-top: 2px;
-  margin-bottom: 1em;
+  margin-bottom: .5em;
 }
 
 .status img {

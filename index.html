@@ -16,12 +16,7 @@
 <body>
 
   <div class="container info">
-	<div class="progress">
-	  <div class="progress-bar progress-tp" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000" style="width:100%;"><span class="tp">1000/1000</span></div>
-	</div><br/>
-    <div class="progress">
-      <div class="progress-bar progress-mana" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="15480" style="width:100%;"><span class="mana">15480/15480</span></div>
-    </div><br />
+	
 
     <!--Range: <span class="range">10</span><br />-->
     
@@ -37,8 +32,44 @@
   
   <div class="container rotation">
     
-	<div class="header rotation">Active Statuses</div>
-    <div class="statuses border-top-0"></div>
+	<!--
+	<div class="splitter border-top-0">
+		<div class="resources">
+			<div class="header rotation">Resources</div>
+			<div class="progress">
+				<div class="progress-bar progress-tp" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000" style="width:100%;">
+					<span class="tp">1000/1000</span>
+				</div>
+			</div>
+			<div class="progress">
+				<div class="progress-bar progress-mana" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="15480" style="width:100%;">
+					<span class="mana">15480/15480</span>
+				</div>
+			</div>
+		</div>
+		<div class="status-split">
+			<div class="header rotation">Status</div>
+			<div class="statuses"></div>
+		</div>
+	</div>
+	-->
+	
+	<div class="header rotation">Status</div>
+	<div class="splitter border-top-0">
+		<div class="resources">
+			<div class="progress">
+				<div class="progress-bar progress-tp" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000" style="width:100%;">
+					<span class="tp">1000/1000</span>
+				</div>
+			</div>
+			<div class="progress">
+				<div class="progress-bar progress-mana" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="15480" style="width:100%;">
+					<span class="mana">15480/15480</span>
+				</div>
+			</div>
+		</div>
+		<div class="statuses"></div>
+	</div>
 	
 	<div class="header rotation">Rotation</div>
     <div class="actions border-top-0"></div>
