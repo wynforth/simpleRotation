@@ -625,7 +625,7 @@ const roleActions = {
 	}
 };
 
-const baseStatus = {name: "status", duration: 0, stacks: 1, maxStacks: 1};
+const baseStatus = {name: "status", duration: 0, stacks: 1, maxStacks: 1, tick(state){ }};
 
 const statuses = {
 	//BLM
