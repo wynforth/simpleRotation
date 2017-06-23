@@ -130,17 +130,45 @@ body {
 	height: 24px;	
 }
 
+
+/* 
+TANK
+*/
+.DRK, .PLD, .WAR, .tank {
+	background-color: rgb(45, 58, 128);
+}
+
+.border-DRK, .border-PLD, .border-WAR, .border-tank {
+	border-color: rgb(45, 58, 128);
+	background-color: rgb(129,136,178);
+}
+
+/*
+HEALER
+*/
+.AST, .SCH, .WHM, .healer {
+	background-color: rgb(52, 102, 36);
+}
+
+.border-AST, .border-SCH, .border-WHM, .border-healer {
+	border-color: rgb(52, 102, 36);
+	background-color: rgb(133,163,123);
+}
+
+/* 
+DPS
+*/
 .BLM, .SMN, .RDM, .MNK, .DRG, .SAM, .BRD, .MCH,
 .caster, .melee, .ranged {
-	background-color: #84230d;
+	background-color: rgb(115, 40, 40);
 }
 
 .border-BLM, .border-SMN, .border-RDM, 
 .border-MNK, .border-DRG, .border-SAM, 
 .border-BRD, .border-MCH,
 .border-caster, .border-melee, .border-ranged {
-	border-color: #84230d;
-	background-color: #837373
+	border-color: rgb(115, 40, 40);
+	background-color: rgb(171,126,126);
 }
 
 

@@ -2,43 +2,14 @@
 const currentJob = 'BLM';
 
 var rotation = [];
+var state = {};
 
-function resetState(job){
-	return {
-		level: 70,
-		tp: 1000,
-		maxTP: 1000,
-		potency: 0,
-		maxMana: maxMana[job],
-		mana: maxMana[job],
-		job: job,
-		role: getRole(job),
-		statuses: {},
-		recast: {},
-		currentTime: 0,
-		targetTime: 0,
-		nextTick: 3.0
-	};
-}
-
-var state = resetState(currentJob);
-
-//initialize state
-
-
-actions = getActions(state);
-
-createActionButtons();
-updateActionButtons();
-
-
+initialize();
 
 function removeRotationAction(index){
 	rotation.splice(index,1);
 	update();
 }	
-
-
 
 /*
 table structure:

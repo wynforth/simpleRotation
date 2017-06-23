@@ -299,6 +299,21 @@ const BLMactions = {
 				setStatus("astral_fire",false);
 			else
 				updateStatus("umbral_ice",1);
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (getStacks('astral_fire') > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			return this.potency * (1 - (0.1 * getStacks('astral_fire')));
+		},
+		getCast(state){
+			if(hasStatus('astral_fire'))
+				if(getStacks('astral_fire') == 3)
+					return this.cast * 0.5;
+			return this.cast;
 		}
 	},
 	blizzard_ii: {
@@ -312,6 +327,21 @@ const BLMactions = {
 				setStatus("astral_fire",false);
 			else
 				updateStatus("umbral_ice",1);
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (getStacks('astral_fire') > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			return this.potency * (1 - (0.1 * getStacks('astral_fire')));
+		},
+		getCast(state){
+			if(hasStatus('astral_fire'))
+				if(getStacks('astral_fire') == 3)
+					return this.cast * 0.5;
+			return this.cast;
 		}
 	},
 	blizzard_iii: {
@@ -324,6 +354,21 @@ const BLMactions = {
 			updateStatus("umbral_ice",3,true);
 			if(hasStatus("astral_fire"))
 				setStatus("astral_fire",false);
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (getStacks('astral_fire') > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			return this.potency * (1 - (0.1 * getStacks('astral_fire')));
+		},
+		getCast(state){
+			if(hasStatus('astral_fire'))
+				if(getStacks('astral_fire') == 3)
+					return this.cast * 0.5;
+			return this.cast;
 		}
 	},
 	blizzard_iv: {
@@ -337,6 +382,21 @@ const BLMactions = {
 		},
 		isUseable(state) {
 			return hasAllStatus(['enochian','umbral_ice']);
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (getStacks('astral_fire') > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			return this.potency * (1 - (0.1 * getStacks('astral_fire')));
+		},
+		getCast(state){
+			if(hasStatus('astral_fire'))
+				if(getStacks('astral_fire') == 3)
+					return this.cast * 0.5;
+			return this.cast;
 		}
 	},
 	freeze: {
@@ -350,6 +410,21 @@ const BLMactions = {
 				setStatus("astral_fire",false);
 			else
 				updateStatus("umbral_ice",1);
+		},
+		getManaCost(state){
+			if(hasStatus('astral_fire'))
+				return this.mana * (getStacks('astral_fire') > 1 ? 0.25:0.5);
+				
+			return this.mana;
+		},
+		getPotency(state){
+			return this.potency * (1 - (0.1 * getStacks('astral_fire')));
+		},
+		getCast(state){
+			if(hasStatus('astral_fire'))
+				if(getStacks('astral_fire') == 3)
+					return this.cast * 0.5;
+			return this.cast;
 		}
 	},
 	thunder_i: {
@@ -507,7 +582,7 @@ const BLMactions = {
 			return hasStatus('polyglot');
 		},
 		
-		isHiglighted(state){
+		isHighlighted(state){
 			return hasStatus('polyglot');
 		}
 	},
@@ -537,7 +612,10 @@ const BLMactions = {
 	},
 	convert: {
 		name: "Convert",
-		recast: 180
+		recast: 180,
+		execute(state){
+			setMana(state.mana + (state.maxMana * .2));
+		}
 	},
 	aetherial_manipulation: {
 		name: "Aetherial Manipulation",

@@ -1,3 +1,29 @@
+function resetState(job){
+	return {
+		level: 70,
+		tp: 1000,
+		maxTP: 1000,
+		potency: 0,
+		maxMana: maxMana[job],
+		mana: maxMana[job],
+		job: job,
+		role: getRole(job),
+		statuses: {},
+		recast: {},
+		currentTime: 0,
+		targetTime: 0,
+		nextTick: 3.0
+	};
+}
+
+//initialize state
+function initialize(){
+	state = resetState(currentJob);
+	actions = getActions(state);
+	createActionButtons();
+	updateActionButtons();
+}
+
 /*----------------
 
 DISPLAY FUNCTIONS
