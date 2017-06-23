@@ -5,6 +5,7 @@ var rotation = [];
 
 function resetState(job){
 	return {
+		level: 70,
 		tp: 1000,
 		maxTP: 1000,
 		potency: 0,
@@ -15,7 +16,8 @@ function resetState(job){
 		statuses: {},
 		recast: {},
 		currentTime: 0,
-		targetTime: 0
+		targetTime: 0,
+		nextTick: 3.0
 	};
 }
 
@@ -52,9 +54,26 @@ row:
  -- if buff time remaining < end time = striped/dark fill
  */
 function advanceTime(time){
+	state.currentTime = state.currentTime + time;
+	var doTick = state.nextTick <= state.currentTime;
+	//mana ticks
+	if(doTick){
+		//general tick
+		if(!hasStatus('astral_fire'))
+			setMana(state.mana + (state.maxMana*.02));
+		state.nextTick += 3;
+	}
+	
+	
+	//dot ticks
+	
+	
+	
 	//update statuses
 	var toremove = [];
 	for(var key in state.statuses){
+		if(doTick) 
+			state.statuses[key].tick(state);
 		state.statuses[key].duration -= time;
 		if(state.statuses[key].duration <= 0)
 			toremove.push(key);
@@ -76,7 +95,7 @@ function advanceTime(time){
 			setStatus(toremove[i],false);
 		}
 	}
-	state.currentTime = state.currentTime + time;
+	
 }
 
 function calculatePotency(potency){
@@ -85,6 +104,14 @@ function calculatePotency(potency){
 	if(hasStatus('enochian')) mod += 0.05;
 	
 	return potency*mod;
+}
+
+function calculateManaCost(mana){
+	return mana;
+}
+
+function calculateTPCost(tp){
+	return tp;
 }
 
 function playRotation(){
@@ -145,13 +172,21 @@ function playRotation(){
 		
 		//update current time to when this action is ussuable: 
 		addRecast(action.recastGroup(),action.recast);
+		console.log(delay);
 		advanceTime(delay);
+
 		//remove cost
-		
+		var mana = calculateManaCost(action.getManaCost());
+		setMana(state.mana - mana);
+		row.mana = mana;
+		var tp = calculateTPCost(action.getTPCost());
+		setTP(state.tp - tp);
+		row.tp = tp;
 		
 		//add potency
-		state.potency += calculatePotency(action.getPotency(state));
-		row.potency = calculatePotency(action.getPotency(state));
+		var potency = calculatePotency(action.getPotency(state))
+		state.potency += potency;
+		row.potency = potency;
 		
 		
 		

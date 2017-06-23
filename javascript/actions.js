@@ -12,6 +12,7 @@ const baseAction = {
 	comboActions: [],
 	comboPotency: 0,
 	hidden: false,
+	level: 1,
 	
 	recastGroup(){
 		return this.type=='ability' ? this.id : 'global';
@@ -28,8 +29,12 @@ const baseAction = {
 	execute(state) { 
 	},
 	
+	isLevel(state) {
+		return this.level <= state.level;
+	},
+	
 	isUseable(state) {
-		return true;
+		return this.isLevel(state);
 	},
 	
 	isHighlighted(state) {
@@ -92,7 +97,7 @@ const BLMactions = {
 				return this.mana * (hasStatus('umbral_heart') ? 1:2);
 			
 			if(hasStatus('umbral_ice'))
-				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				return this.mana * (getStacks('umbral_ice') > 1 ? 0.25:0.5);
 				
 			return this.mana;
 		},
@@ -134,7 +139,7 @@ const BLMactions = {
 				return this.mana * (hasStatus('umbral_heart') ? 1:2);
 			
 			if(hasStatus('umbral_ice'))
-				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				return this.mana * (getStacks('umbral_ice') > 1 ? 0.25:0.5);
 				
 			return this.mana;
 		},
@@ -188,7 +193,7 @@ const BLMactions = {
 				return this.mana * (hasStatus('umbral_heart') ? 1:2);
 			
 			if(hasStatus('umbral_ice'))
-				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				return this.mana * (getStacks('umbral_ice') > 1 ? 0.25:0.5);
 				
 			return this.mana;
 		},
@@ -224,7 +229,7 @@ const BLMactions = {
 				return this.mana * (hasStatus('umbral_heart') ? 1:2);
 			
 			if(hasStatus('umbral_ice'))
-				return this.mana * (getStacks('umbral_ice').stacks > 1 ? 0.25:0.5);
+				return this.mana * (getStacks('umbral_ice') > 1 ? 0.25:0.5);
 				
 			return this.mana;
 		},
@@ -370,6 +375,9 @@ const BLMactions = {
 		},
 		isHighlighted(state) {
 			return hasStatus('thundercloud');
+		},
+		getReplacement(state){
+			return state.level > 45 ? 'thunder_iii' : false;
 		}
 	},
 	thunder_ii: {
@@ -395,6 +403,9 @@ const BLMactions = {
 		},
 		isHighlighted(state) {
 			return hasStatus('thundercloud');
+		},
+		getReplacement(state){
+			return state.level > 64 ? 'thunder_iv' : false;
 		}
 	},
 	thunder_iii: {
@@ -403,6 +414,8 @@ const BLMactions = {
 		potency: 70,
 		mana: 1920,
 		cast: 2.5,
+		hidden: true,
+		level: 45,
 		getCast(state){
 			if(hasStatus("thundercloud")) return 0;
 			return this.cast;
@@ -428,6 +441,8 @@ const BLMactions = {
 		potency: 50,
 		mana: 2160,
 		cast: 3,
+		hidden: true,
+		level: 64,
 		getCast(state){
 			if(hasStatus("thundercloud")) return 0;
 			return this.cast;

@@ -10,11 +10,12 @@ function createActionButtons(){
 		<div class="action" data-action="${name}">
           <img src="img/${url}.png" />
           <small class="cooldown"></small>
+		  <small class="cost"></small>
         </div>`;
 	
 	var actionArr = [];
 	for(var key in getJobActions(state.job)){
-		if(actions.hasOwnProperty(key)){
+		if(actions.hasOwnProperty(key) && !actions[key].hidden){
 			actionArr.push({'name': key, 'url': key});
 			//console.log(action.name.replace(/\ /g,'_').toLowerCase());
 		}
@@ -48,6 +49,17 @@ function updateActionButtons(){
 
 	$(this).toggleClass("disabled", !actionUsable(key));
     $(this).toggleClass("highlight", action.isHighlighted(state));
+		
+	var mpCost = action.getManaCost(state);
+	var tpCost = action.getTPCost(state)
+	if(mpCost > 0 || tpCost > 0){
+		var value = Math.max(mpCost, tpCost);
+		$(".cost", this).text(`${value.toFixed(0)}`)
+		$(".cost", this).toggleClass("mp-text", mpCost > 0);
+		$(".cost", this).toggleClass("tp-text", tpCost > 0);
+	} else {
+		$(".cost", this).text('');
+	}
 	
 	var label = $(".cooldown", this)
 	var value = getRecast(action.recastGroup());
@@ -131,10 +143,12 @@ function getAction(name) {
 		return false;
 
 	var action = Object.assign({ id: name }, baseAction, actions[name]);
+	
 	var replacement = action.getReplacement(state);
 
 	if(replacement != false)
 		return getAction(replacement);
+		
 	
 	if(action.type == "spell") {
 		var scale = 2.5 / 2.5; //2.5/2.5 = no spell speed. figure out how to do a setting for it later

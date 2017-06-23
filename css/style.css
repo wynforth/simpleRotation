@@ -1,32 +1,64 @@
 body {
   color: #fff;
   background-color: #494b4c;
+  padding-top: 2em;
 }
 
 .splitter {
 	display: flex;
-	border: 1px solid transparent;
-	padding: 2px;
 }
 
-.resources {
+.resource-split {
 	width: 200px;
+	margin-right: .5em;
 }
 
-.statuses {
+.status-split {
 	flex: 1;
 }
 
-.progress-tp {
-	background-color: orange;
+.resources,
+.statuses {
+	border-color: #494b4c;
+	background-color: #737373;
 }
 
-.progress-mana {
-	background-color: #283593;
-}
 
+
+.tp-text {
+	color: #fff3e5;
+	text-shadow: 0 0 2px #ff8c00, 0 0 2px #ff8c00;
+}
+.progress-tp {	background-color: #ff8c00; }
+.tp-bg { background-color: #663800; }
+
+.mp-text {
+	color: #e5f1ff;
+	text-shadow: 0 0 2px #0073ff, 0 0 2px #0073ff;
+}
+.progress-mana { background-color: #0073ff; }
+.mana-bg { background-color: #002e66; }
+
+/**
+ * Progress bars with centered text
+ */
 .progress {
-	margin: .2em .5em .5em 0em;
+	margin: .2em .0em .5em 0em;
+    position: relative;
+}
+
+.progress .bar {
+    z-index: 1;
+    position: absolute;
+}
+
+.progress span {
+    position: absolute;
+    top: 0;
+    z-index: 2;
+    color: white; // You might need to change it
+    text-align: center;
+    width: 100%;
 }
 
 .active {
@@ -43,7 +75,7 @@ body {
 	margin-bottom: 1em;
 }
 
-.actions {
+.actions, .resources, .statuses {
   #margin-top: 0.5em;
   border: 1px solid transparent;
   padding: 2px;
@@ -83,7 +115,7 @@ body {
 
 .rotation .actions,
 .result .actions,
-.rotation .splitter {
+.resources, .statuses {
 	border-color: #494b4c;
 	background-color: #737373;
 }
@@ -122,6 +154,16 @@ body {
   text-shadow: 0 0 2px black, 0 0 2px black;
   font-weight: bold;
   color: #fff;
+}
+
+.actions .action .cost {
+  display: block;
+  position: absolute;
+  top: 90%;
+  left: 50%;
+  transform: translate(-80%, -35%);
+  #font-weight: bold;
+  font-size: 10px;
 }
 
 .actions .action,
