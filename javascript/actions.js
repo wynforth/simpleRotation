@@ -778,9 +778,37 @@ const jobActions = {
 }
 
 const roles = {
-	BLM: 'caster'
+	DRK: 'tank',
+	PLD: 'tank',
+	WAR: 'tank',
+	AST: 'healer',
+	SCH: 'healer',
+	WHM: 'healer',
+	DRG: 'melee',
+	MNK: 'melee',
+	NIN: 'melee',
+	SAM: 'melee',
+	BRD: 'ranged',
+	MCH: 'ranged',
+	BLM: 'caster',
+	RDM: 'caster',
+	SMN: 'caster'
 }
 
 const maxMana = {
-	BLM: 15480
+	DRK: 0,
+	PLD: 0,
+	WAR: 0,
+	AST: 0,
+	SCH: 0,
+	WHM: 0,
+	DRG: 0,
+	MNK: 0,
+	NIN: 0,
+	SAM: 0,
+	BRD: 0,
+	MCH: 0,
+	BLM: 15480,
+	RDM: 0,
+	SMN: 0
 }

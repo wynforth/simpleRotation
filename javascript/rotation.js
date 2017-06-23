@@ -1,5 +1,5 @@
 //initialization
-const currentJob = 'BLM';
+var currentJob = '';
 
 var rotation = [];
 var state = {};
@@ -212,4 +212,10 @@ $(".actions .action").click(function(e) {
 	var name = $(this).data("action");
 	console.log("Adding: " + name);
 	addAction(name);
+});
+
+$(".jobs .job").click(function(e) {
+	var name = $(this).data("name");
+	console.log("changing to : " + name);
+	changeJob(name);
 });

@@ -23,8 +23,6 @@ body {
 	background-color: #737373;
 }
 
-
-
 .tp-text {
 	color: #fff3e5;
 	text-shadow: 0 0 2px #ff8c00, 0 0 2px #ff8c00;
@@ -75,7 +73,7 @@ body {
 	margin-bottom: 1em;
 }
 
-.actions, .resources, .statuses {
+.actions, .resources, .statuses, .jobs {
   #margin-top: 0.5em;
   border: 1px solid transparent;
   padding: 2px;
@@ -87,14 +85,11 @@ body {
 	padding-bottom: 1px;
 	border-radius: 7px 24px 0px 0px;
 	margin-top: 0.5em;
+	background-color: #494b4c;
 }
 
-.header.rotation,
-.header.statuses {
-	background-color: #494b4c;
-}	
-
-.rotation-action {
+.rotation-action,
+.jobs .job {
   display: inline-block;
   position: relative;
   border: 2px dashed transparent;
@@ -115,10 +110,11 @@ body {
 
 .rotation .actions,
 .result .actions,
-.resources, .statuses {
+.resources, .statuses, .jobs {
 	border-color: #494b4c;
 	background-color: #737373;
 }
+
 .rotation .actions img {
 	width: 24px;
 	height: 24px;
@@ -161,6 +157,11 @@ DPS
 .BLM, .SMN, .RDM, .MNK, .DRG, .SAM, .BRD, .MCH,
 .caster, .melee, .ranged {
 	background-color: rgb(115, 40, 40);
+}
+
+.jobs img {
+	width: 48px;
+	height: 48px;
 }
 
 .border-BLM, .border-SMN, .border-RDM, 

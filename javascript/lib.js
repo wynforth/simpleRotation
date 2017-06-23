@@ -24,6 +24,11 @@ function initialize(){
 	updateActionButtons();
 }
 
+function changeJob(name){
+	currentJob = name;
+	initialize();
+}
+
 /*----------------
 
 DISPLAY FUNCTIONS
