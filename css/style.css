@@ -27,15 +27,28 @@ body {
 	color: #fff3e5;
 	text-shadow: 0 0 2px #ff8c00, 0 0 2px #ff8c00;
 }
-.progress-tp {	background-color: #ff8c00; }
+.progress-tp {	
+	background: rgb(215, 144, 58); 
+    background: -webkit-linear-gradient(left, rgb(110, 53, 5) , rgb(215, 144, 58)); 
+    background: -o-linear-gradient(right, rgb(110, 53, 5) , rgb(215, 144, 58)); 
+    background: -moz-linear-gradient(right, rgb(110, 53, 5) , rgb(215, 144, 58)); /
+    background: linear-gradient(to right, rgb(110, 53, 5) , rgb(215, 144, 58)); 
+	}
 .tp-bg { background-color: #663800; }
 
 .mp-text {
-	color: #e5f1ff;
-	text-shadow: 0 0 2px #0073ff, 0 0 2px #0073ff;
+	color: #FFD9FA;
+	text-shadow: 0 0 2px #0073ff, 0 0 2px #2c111d;
 }
-.progress-mana { background-color: #0073ff; }
-.mana-bg { background-color: #002e66; }
+.progress-mana { 
+	#background-color: #E05793; 
+	background: rgb(225, 88, 148); 
+    background: -webkit-linear-gradient(left, rgb(120, 7, 63) , rgb(225, 88, 148)); 
+    background: -o-linear-gradient(right, rgb(120, 7, 63), rgb(225, 88, 148)); 
+    background: -moz-linear-gradient(right, rgb(120, 7, 63), rgb(225, 88, 148)); /
+    background: linear-gradient(to right, rgb(120, 7, 63), rgb(225, 88, 148)); 
+  }
+.mana-bg { background-color: #2c111d; }
 
 /**
  * Progress bars with centered text
@@ -188,11 +201,11 @@ DPS
 .actions .action .cost {
   display: block;
   position: absolute;
-  top: 90%;
-  left: 50%;
-  transform: translate(-80%, -35%);
-  #font-weight: bold;
-  font-size: 10px;
+  top: 70%;
+  left: .2em;
+  #transform: translate(-80%, -35%);
+  font-weight: bold;
+  font-size: 12px;
 }
 
 .actions .action,

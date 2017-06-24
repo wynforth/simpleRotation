@@ -20,8 +20,11 @@ function resetState(job){
 function initialize(){
 	state = resetState(currentJob);
 	actions = getActions(state);
+	setMana(state.maxMana);
+	setTP(state.maxTP);
+	rotation = [];
 	createActionButtons();
-	updateActionButtons();
+	update();
 }
 
 function changeJob(name){
@@ -67,6 +70,11 @@ function createActionButtons(){
 	$(".header.role .image-role").attr("src","img/icons/role_"+state.role+".png");
 	$(".actions.role").addClass(`border-${state.role}`);
 	$(".actions.role").html(actionArr.map(Action).join(''));
+	
+	$(".actions .action").click(function(e) {
+		var name = $(this).data("action");
+		addAction(name);
+	});
 }
 
 function updateActionButtons(){
@@ -110,8 +118,10 @@ function addRotationAction(id, key){
         </div>`;
 		
 	$(".rotation .actions").append([{'id': id, 'key': key }].map(Rotation_Action).join(''));
+	
 	var last = $(".rotation .actions .rotation-action").last();
 	last.toggleClass("error", !actionUsable(key));
+	
 	last.click(function(e) {
 		var name = $(this).data("action");
 		var index = $(this).data("id");
@@ -196,17 +206,25 @@ function getAction(name) {
 
 function actionUsable(key) {
 	const action = getAction(key);
-	if(!action)
+	if(!action) {
+		//console.log("not an action");
 		return false;
-
-	if(!!getRecast(action.recastGroup()))
-		return false;
-
-	if(action.getManaCost(state) > state.mana)
-		return false;
+	}
 	
-	if(action.getTPCost(state) > state.tp)
+	if(!!getRecast(action.recastGroup())){
+		//console.log("action on cooldown");
 		return false;
+	}
+
+	if(action.getManaCost(state) > state.mana) {
+		//console.log("not enough mana: " + state.mana + "/" + action.getManaCost(state) );
+		return false;
+	}
+	
+	if(action.getTPCost(state) > state.tp){
+		//console.log("not enough tp: " + state.tp + "/" + action.getTPCost(state) );
+		return false;
+	}
 
 	return action.isUseable(state);
 }

@@ -94,14 +94,15 @@ function playRotation(){
 	for(var i=0; i< rotation.length; i++){
 		var row = {};
 		var action = rotation[i];
-		//display rotation action
-		addRotationAction(i,action.id);
+		
 		
 		//console.log(action.name);
 		if(action.type != 'ability'){
 			//not oGCD we advance to targetTime;
 			advanceTime(state.targetTime-state.currentTime);
 		}
+		//display rotation action
+		addRotationAction(i,action.id);
 		
 		row.name = action.name;
 		row.startTime = state.currentTime;
@@ -147,10 +148,10 @@ function playRotation(){
 		advanceTime(delay);
 
 		//remove cost
-		var mana = calculateManaCost(action.getManaCost());
+		var mana = calculateManaCost(action.getManaCost(state));
 		setMana(state.mana - mana);
 		row.mana = mana;
-		var tp = calculateTPCost(action.getTPCost());
+		var tp = calculateTPCost(action.getTPCost(state));
 		setTP(state.tp - tp);
 		row.tp = tp;
 		
