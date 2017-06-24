@@ -214,7 +214,7 @@ const BLMactions = {
 	fire_iv: {
 		name: "Fire IV",
 		type: "spell",
-		potency: 460,
+		potency: 260,
 		mana: 1200,
 		cast: 3.0,
 		execute(state){
@@ -716,6 +716,27 @@ const roleActions = {
 			name: "Erase",
 			recast: 90
 		},
+		wait_for_mana: {
+			name: "Wait for Mana",
+			recast: 0,
+			cast: 0,
+			animTime: 0,
+			type: "spell",
+			getCast(state){
+				return state.nextTick - state.currentTime;
+			}
+		},
+		infusion_intelligence: {
+			name: "Infusion of Intelligence",
+			cast: 0,
+			recast: 270,
+			recastGroup(state){
+				return 'potion';
+			},
+ 			execute(state) {
+				setStatus("medicated", true);
+			}
+		}
 	}
 };
 
@@ -753,6 +774,7 @@ const statuses = {
 	
 	//general
 	heavy:  {name:"Heavy", duration: 20},
+	medicated:  {name:"Medicated", duration: 30},
 }
 
 

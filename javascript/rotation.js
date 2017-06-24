@@ -110,6 +110,7 @@ function playRotation(){
 		
 		//determine cast time, and next action time
 		var castTime = action.getCast(state);
+		
 		if(action.type == "spell" && hasAnyStatus(["swiftcast","triplecast","dualcast"])){
 			castTime = 0;
 		}
@@ -135,6 +136,9 @@ function playRotation(){
 			//state.cast.end = castTime;
 			//time till next action, longest of cast time, recast time, or animation lock
 			delay = Math.max(castTime, delay);
+			console.log(action.id + " delay " + delay);
+			console.log(action.id + " recast " + action.recast);
+			console.log(action.id + " target " +  (state.targetTime-state.currentTime));
 			state.targetTime = state.currentTime + Math.max(action.recast, delay, state.targetTime-state.currentTime);
 		} else {
 			state.targetTime = state.currentTime + Math.max(delay, state.targetTime-state.currentTime);
@@ -144,7 +148,6 @@ function playRotation(){
 		
 		//update current time to when this action is ussuable: 
 		addRecast(action.recastGroup(),action.recast);
-		console.log(delay);
 		advanceTime(delay);
 
 		//remove cost
@@ -167,6 +170,8 @@ function playRotation(){
 		resultTable.push(row);
 	}
 	advanceTime(state.targetTime-state.currentTime);
+	if(resultTable.length > 1)
+		resultTable[resultTable.length-1].endTime = state.currentTime; //update the final end time
 	console.log(state);
 	console.log(resultTable);
 }
