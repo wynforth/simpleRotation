@@ -938,5 +938,6 @@ const maxMana = {
 	MCH: 0,
 	BLM: 15480,
 	RDM: 0,
-	SMN: 0
+	SMN: 0,
+	'': 0
 }

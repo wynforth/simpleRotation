@@ -28,6 +28,7 @@ function initialize(){
 }
 
 function changeJob(name){
+	cleanActionButtonHeaders();
 	currentJob = name;
 	initialize();
 }
@@ -38,8 +39,21 @@ DISPLAY FUNCTIONS
 
 -----------------*/
 
+function cleanActionButtonHeaders(){
+	$(".header.job").removeClass(state.job);
+	$(".header.job .image-job").attr("src","img/icons/none.png");
+	$(".actions.job").removeClass(`border-${state.job}`);
+	
+	$(".header.role").removeClass(state.role);
+	$(".header.role .image-role").attr("src","img/icons/none.png");
+	$(".actions.role").removeClass(`border-${state.role}`);
+}
+
 
 function createActionButtons(){
+	if(state.job === undefined || state.job =="")
+		return;
+	console.log(state.job);
 	const Action = ({ name, url }) => `
 		<div class="action" data-action="${name}">
           <img src="img/${url}.png" />

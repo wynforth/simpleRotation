@@ -167,7 +167,7 @@ HEALER
 /* 
 DPS
 */
-.BLM, .SMN, .RDM, .MNK, .DRG, .SAM, .BRD, .MCH,
+.BLM, .SMN, .RDM, .MNK, .DRG, .NIN, .SAM, .BRD, .MCH,
 .caster, .melee, .ranged {
 	background-color: rgb(115, 40, 40);
 }
@@ -295,6 +295,10 @@ DPS
 	padding-top: 0px;
 	padding-bottom: 0px;
 	border: none;
+}
+
+table thead td {
+	font-weight: bold;
 }
 
 table tr td {
