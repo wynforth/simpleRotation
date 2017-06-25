@@ -32,6 +32,7 @@ function advanceTime(time){
 		//general tick
 		if(!hasStatus('astral_fire'))
 			setMana(state.mana + (state.maxMana*.02));
+		setTP(state.tp + 60);
 		state.nextTick += 3;
 	}
 	
@@ -87,12 +88,14 @@ function calculateTPCost(tp){
 
 function playRotation(){
 	var resultTable = [];
+	resultTable.push([]); //first row is list of statuses;
 	
 	state = resetState(state.job);
 	clearRotationButtons();
 	
 	for(var i=0; i< rotation.length; i++){
 		var row = {};
+		row.statuses = {};
 		var action = rotation[i];
 		
 		
@@ -105,6 +108,7 @@ function playRotation(){
 		addRotationAction(i,action.id);
 		
 		row.name = action.name;
+		row.id = action.id;
 		row.startTime = state.currentTime;
 		
 		
@@ -136,9 +140,9 @@ function playRotation(){
 			//state.cast.end = castTime;
 			//time till next action, longest of cast time, recast time, or animation lock
 			delay = Math.max(castTime, delay);
-			console.log(action.id + " delay " + delay);
-			console.log(action.id + " recast " + action.recast);
-			console.log(action.id + " target " +  (state.targetTime-state.currentTime));
+			//console.log(action.id + " delay " + delay);
+			//console.log(action.id + " recast " + action.recast);
+			//console.log(action.id + " target " +  (state.targetTime-state.currentTime));
 			state.targetTime = state.currentTime + Math.max(action.recast, delay, state.targetTime-state.currentTime);
 		} else {
 			state.targetTime = state.currentTime + Math.max(delay, state.targetTime-state.currentTime);
@@ -166,14 +170,22 @@ function playRotation(){
 		
 		
 		action.execute(state);
+		
+		for(var key in state.statuses){
+			if(resultTable[0].indexOf(key) < 0)
+				resultTable[0].push(key);
+			//row.statuses[key] = {id: key, stacks: getStacks(key), duration: state.statuses[key].duration};
+			row.statuses[key] = state.statuses[key];
+		}
+		
 		row.endTime = state.currentTime;
 		resultTable.push(row);
 	}
 	advanceTime(state.targetTime-state.currentTime);
 	if(resultTable.length > 1)
 		resultTable[resultTable.length-1].endTime = state.currentTime; //update the final end time
-	console.log(state);
-	console.log(resultTable);
+	//console.log(state);
+	return resultTable;
 }
 
 /*
@@ -204,13 +216,64 @@ function addAction(name){
 	update();
 }
 
-function update(){
+function drawResultTable(result){
+	console.log(result);
+	if(result.length < 2) return;
 	
-	playRotation();
+	var statuses = result[0].sort();
+	
+	var tbl_body = "";
+    var odd_even = false;
+	
+	
+	$(".rotation-table thead .status-col").remove();
+	for(var i=0; i < statuses.length; i++){
+		var tbl_hdr = "";
+		tbl_hdr += "<td class=\"status-col\"><img src=\"img/status/" + statuses[i] + ".png\" /></td>";
+		$(".rotation-table thead tr").append(tbl_hdr);
+	}
+	
+	for(var i=1; i < result.length; i++)
+	{
+		var row = result[i];
+		var tbl_row = "";
+		tbl_row += "<td><img src=\"img/" + row.id + ".png\" /> " + result[i].name + "</td>";
+		tbl_row += "<td>" + row.startTime.toFixed(2) + "</td>";
+		tbl_row += "<td>" + (row.endTime - row.startTime).toFixed(2) + "</td>";
+		tbl_row += "<td>" + row.potency.toFixed(2) + "</td>";
+		tbl_row += "<td class=\"mp-text\">" + row.mana + "</td>";
+		tbl_row += "<td class=\"tp-text\">" + row.tp + "</td>";
+
+		
+		for(var j=0; j < statuses.length; j++){
+			console.log(row.statuses.hasOwnProperty(statuses[j]));
+			if(row.statuses.hasOwnProperty(statuses[j])){
+				tbl_row += "<td>X</td>";
+			} else {
+				tbl_row += "<td></td>";
+			}
+		}
+		
+		
+        tbl_body += "<tr>" + tbl_row + "</tr>";
+		
+		
+        odd_even = !odd_even;               
+	}
+	
+	$(".rotation-table tbody").html(tbl_body);
+	
+}
+
+
+function update(){
+	var result;
+	result = playRotation();
 	updateStatuses();
 	//updateRotationButtons();
 	updateActionButtons();
 	updateStats();	
+	drawResultTable(result);
 }
 
 // Click Handlers

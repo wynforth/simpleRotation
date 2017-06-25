@@ -274,3 +274,22 @@ DPS
 .orange {
   color: #f80;
 }
+
+.rotation-table tbody img {
+	width: 20px;
+	height: 20px;
+}
+
+.rotation-table thead img {
+	width: 18px;
+	height: 24px;
+}
+
+.status-col {
+	width: 20px;
+}
+
+.rotation-table tbody td {
+	#padding-top: 0px;
+	#padding-bottom: 0px;
+}
