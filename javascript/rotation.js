@@ -246,9 +246,10 @@ function drawResultTable(result){
 
 		
 		for(var j=0; j < statuses.length; j++){
-			console.log(row.statuses.hasOwnProperty(statuses[j]));
+			//console.log(row.statuses.hasOwnProperty(statuses[j]));
 			if(row.statuses.hasOwnProperty(statuses[j])){
-				tbl_row += "<td>X</td>";
+				var status = row.statuses[statuses[j]];
+				tbl_row += `<td><div class="center status-block" style="background-color: ${status.color}"></div></td>`;
 			} else {
 				tbl_row += "<td></td>";
 			}

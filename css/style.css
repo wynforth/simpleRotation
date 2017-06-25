@@ -287,9 +287,26 @@ DPS
 
 .status-col {
 	width: 20px;
+	magin: 0px;
+	padding: 0px;
 }
 
 .rotation-table tbody td {
-	#padding-top: 0px;
-	#padding-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border: none;
+}
+
+table tr td {
+	height: 100%;
+}
+
+table tr td .center {
+	margin: auto;
+}
+
+table .status-block {
+	width: 12px;
+	height: 100%;
+	display: block;
 }

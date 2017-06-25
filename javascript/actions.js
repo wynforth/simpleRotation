@@ -740,42 +740,148 @@ const roleActions = {
 	}
 };
 
-const baseStatus = {name: "status", duration: 0, stacks: 1, maxStacks: 1, tick(state){ }};
+const baseStatus = {name: "status", duration: 0, stacks: 1, maxStacks: 1, tick(state){ }, color: '#888888'};
 
-const statuses = {
-	//BLM
-	astral_fire: {name: "Astral Fire", duration: 13, maxStacks: 3},
+
+const blm_status = {
+		//BLM
+	astral_fire: {
+		name: "Astral Fire", 
+		duration: 13, 
+		maxStacks: 3,
+		color: "#F05F2F"
+	},
 	umbral_ice: {
-		name: "Umbral Ice", duration: 13, maxStacks: 3,
+		name: "Umbral Ice", 
+		duration: 13, 
+		maxStacks: 3,
+		color: "#5FD0F0",
 		tick(state){
 			setMana(state.mana + (state.maxMana * (.15 + (.15 * getStacks('umbral_ice')))));
 		}			
 	},
-	ley_lines: {name: "Ley Lines", duration: 30},
-	triplecast: {name: "Triplecast", duration: 15, maxStacks: 3},
-	umbral_heart: {name: "Umbral Hearts", duration: 30, maxStacks: 3},
-	enochian: {name: "Enochian", duration: 30},
-	polyglot: {name: "Polyglot", duration: 30},
-	thundercloud: {name: "Thundercloud", duration: 12},
-	sharpcast: {name: "Sharpcast", duration: 15},
-	firestarter: {name: "Firestarter", duration: 12},
-	thunder: {name: "Thunder I", duration: 18, tick(state){ state.potency += 40; }},
-	thunder_ii: {name: "Thunder II", duration: 12, tick(state){ state.potency += 30; }},
-	thunder_iii: {name: "Thunder III", duration: 24, tick(state){ state.potency += 40; }},
-	thunder_iv: {name: "Thunder IV", duration: 18, tick(state){ state.potency += 30; }},
-	
-	//caster
-	addle: {name: "Addle", duration: 10},
-	swiftcast: {name: "Swiftcast", duration: 10, stacks: 1 },
-	lucid_dreaming: {name: "Lucid Dreaming", duration: 21},
-	diversion: {name: "Diversion", duration: 15},
-	surecast: {name: "Surecast", duration: 10},
-	apocatastasis: {name: "Apocatastasis", duration: 10},
-	
+	ley_lines: {
+		name: "Ley Lines", 
+		duration: 30,
+		color: "#A05FF0"
+	},
+	triplecast: {
+		name: "Triplecast", 
+		duration: 15, 
+		maxStacks: 3,
+		color: "#1F1F6F"
+	},
+	umbral_heart: {
+		name: "Umbral Hearts", 
+		duration: 30, 
+		maxStacks: 3,
+		color: "#005FF0"
+	},
+	enochian: {
+		name: "Enochian", 
+		duration: 30,
+		color: "#7F5FB0"
+	},
+	polyglot: {
+		name: "Polyglot", 
+		duration: 30,
+		color: "#FFB2FE"
+	},
+	thundercloud: {
+		name: "Thundercloud", 
+		duration: 12,
+		color: "#C0B0F0"
+	},
+	sharpcast: {
+		name: "Sharpcast", 
+		duration: 15,
+		color: "#A05F7F"
+	},
+	firestarter: {
+		name: "Firestarter", 
+		duration: 12,
+		color: "#7F0F0F"
+	},
+	thunder: {
+		name: "Thunder I", 
+		duration: 18,
+		color: "#C0B02F", 
+		tick(state){ state.potency += 40; }
+	},
+	thunder_ii: {
+		name: "Thunder II", 
+		duration: 12,
+		color: "#C0B02F", 
+		tick(state){ state.potency += 30; }
+	},
+	thunder_iii: {
+		name: "Thunder III", 
+		duration: 24,
+		color: "#C0B02F", 
+		tick(state){ state.potency += 40; }
+	},
+	thunder_iv: {
+		name: "Thunder IV", 
+		duration: 18,
+		color: "#C0B02F", 
+		tick(state){ state.potency += 30; }
+	},
+	mana_ward: {
+		name: " Manaward", 
+		duration: 20, 
+		color: "#C0A0C0",
+	},
+};
+
+const general_status = {
 	//general
-	heavy:  {name:"Heavy", duration: 20},
-	medicated:  {name:"Medicated", duration: 30},
-}
+	heavy:  {
+		name:"Heavy", 
+		duration: 20,
+		color: "#A02F2F"
+	},
+	medicated:  {
+		name:"Medicated", 
+		duration: 30,
+		color: "#2F5F90"
+	},
+};
+
+const caster_status = {
+		//caster
+	addle: {
+		name: "Addle", 
+		duration: 10,
+		color: "#6F3FA0"
+	},
+	swiftcast: {
+		name: "Swiftcast", 
+		duration: 10, 
+		color: "#E090C0"
+	},
+	lucid_dreaming: {
+		name: "Lucid Dreaming", 
+		duration: 21,
+		color: "#905F7F"
+	},
+	diversion: {
+		name: "Diversion", 
+		duration: 15,
+		color: "#6FF07F"
+	},
+	surecast: {
+		name: "Surecast", 
+		duration: 10,
+		color: "#7FA0A0"
+	},
+	apocatastasis: {
+		name: "Apocatastasis", 
+		duration: 10,
+		color: "#904FC0"
+	},
+};
+
+const statuses = Object.assign({}, general_status, caster_status, blm_status);
 
 
 
