@@ -252,10 +252,13 @@ DPS
 	height: 32px;
 }
 
+.hidden {
+	display: none;
+}
 
 
 .actions .action.highlight {
-  border-color: #d0a21a;
+  border-color: #FFAD38;
   
 }
 
@@ -314,3 +317,33 @@ table .status-block {
 	height: 100%;
 	display: block;
 }
+
+
+
+.kenki-text {
+	color: #FFD9FA;
+	text-shadow: 0 0 2px #0073ff, 0 0 2px #2c111d;
+}
+.progress-kenki { 
+	#background-color: #E05793; 
+	background: rgb(255, 45, 45); 
+    background: -webkit-linear-gradient(top, rgb(255, 45, 45) , rgb(255, 220, 220)); 
+    background: -o-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+    background: -moz-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); /
+    background: linear-gradient(to bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+  }
+.kenki-bg { background-color: #525252; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

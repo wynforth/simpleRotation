@@ -15,6 +15,20 @@ function resetState(job){
 		nextTick: 3.0,
 		spd: 2.41,
 		sks: 2.41,
+		lastAction: '',
+		lastActionTime: 0,
+		lastCombo: false,
+		kenki: 0,
+		black: 0,
+		white: 0,
+		oath: 0,
+		beast: 0,
+		blood: 0,
+		faerie: 0,
+		ninki: 0,
+		heat: 0,
+		
+		
 	};
 }
 
@@ -24,6 +38,9 @@ function initialize(){
 	actions = getActions(state);
 	setMana(state.maxMana);
 	setTP(state.maxTP);
+	
+	$(".progress.kenki-bg").toggleClass('hidden', currentJob!="SAM");
+	
 	rotation = [];
 	createActionButtons();
 	update();
@@ -264,6 +281,12 @@ function setTP(tp) {
 	state.tp = Math.min(tp, state.maxTP);
 	$(".progress-tp").css('width', (state.tp/state.maxTP*100)+'%').attr('aria-valuenow', state.tp);
 	$(".tp").text(`${state.tp} / ${state.maxTP}`);
+}
+
+function setKenki(kenki) {
+	state.kenki = Math.min(kenki, 100);
+	$(".progress-kenki").css('width', (state.kenki/100*100)+'%').attr('aria-valuenow', state.kenki);
+	$(".kenki").text(`${state.kenki}`);
 }
 
 /*------------------

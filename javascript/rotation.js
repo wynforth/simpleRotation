@@ -185,6 +185,11 @@ function playRotation(){
 		
 		
 		action.execute(state);
+		if(action.type != 'ability'){
+			state.lastActionTime = state.currentTime;
+			state.lastCombo = action.isCombo(state);
+			state.lastAction = action.id;
+		}
 		
 		for(var key in state.statuses){
 			if(resultTable[0].indexOf(key) < 0)
