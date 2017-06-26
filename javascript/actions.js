@@ -818,7 +818,10 @@ const blm_status = {
 		name: "Thunder III", 
 		duration: 24,
 		color: "#C0B02F", 
-		tick(state){ state.potency += 40; }
+		tick(state){ 
+			state.potency += 40; 
+			//console.log(state.currentTime + " - thunder iii");
+		}
 	},
 	thunder_iv: {
 		name: "Thunder IV", 

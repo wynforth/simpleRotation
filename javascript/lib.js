@@ -12,7 +12,9 @@ function resetState(job){
 		recast: {},
 		currentTime: 0,
 		targetTime: 0,
-		nextTick: 3.0
+		nextTick: 3.0,
+		spd: 2.41,
+		sks: 2.41,
 	};
 }
 
@@ -206,11 +208,16 @@ function getAction(name) {
 		
 	
 	if(action.type == "spell") {
-		var scale = 2.5 / 2.5; //2.5/2.5 = no spell speed. figure out how to do a setting for it later
+		var scale = state.spd / 2.5; //2.5/2.5 = no spell speed. figure out how to do a setting for it later
 		
 		if(hasStatus('ley_lines'))
-			scale -=0.1;
+			scale -=0.15;
 		
+		action.cast *= scale;
+		action.recast *= scale;
+	}
+	if(action.type == "weaponskill"){
+		var scale = state.sks / 2.5; 
 		action.cast *= scale;
 		action.recast *= scale;
 	}
@@ -273,18 +280,21 @@ function setStatus(name, active){
 	var status = getStatus(name);
 	if(active){
 		//add/update status
+		//console.log("Gaining " + name + " @ " + state.currentTime + "-" + (state.currentTime + status.duration));
 		if(hasStatus(name)){
 			state.statuses[name].duration = status.duration //reset duration of existing
 		} else {
 			state.statuses[name] = status; //create new status
 		}
 	} else {
-		console.log("losing status " + name);
+		
+		//console.log("losing status " + name);
 		delete state.statuses[name];
 		//drop enochian if fire or ice are lost
 		if(hasStatus('enochian') && !hasAnyStatus(["astral_fire","umbral_ice"])){
 			delete state.statuses['enochian'];
 		}
+	
 	}
 }
 

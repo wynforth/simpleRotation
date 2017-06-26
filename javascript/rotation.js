@@ -25,49 +25,64 @@ row:
  -- if buff time remaining < end time = striped/dark fill
  */
 function advanceTime(time){
-	state.currentTime = state.currentTime + time;
-	var doTick = state.nextTick <= state.currentTime;
-	//mana ticks
-	if(doTick){
-		//general tick
+	if(time == 0) return;
+	//do up to just the next tick clock
+	//console.log(state.currentTime + " advancing by " + time + "s delay");
+	if(time >= state.nextTick - state.currentTime){
+		//console.log(state.currentTime + ' dot/mana tick happening first');
+		
+		var tick = state.nextTick - state.currentTime;
+		state.currentTime += tick;
+		//console.log(state.currentTime + " dot tick then " + (time-tick) + "s delay");
 		if(!hasStatus('astral_fire'))
 			setMana(state.mana + (state.maxMana*.02));
 		setTP(state.tp + 60);
 		state.nextTick += 3;
-	}
+		
+		updateDots(tick);
+		tickDots();
+		
+		time -= tick;
+		
+	} 
+	state.currentTime = state.currentTime + time;
+	updateDots(time);
 	
-	
-	//dot ticks
-	
-	
-	
-	//update statuses
-	var toremove = [];
+}
+
+function tickDots() {
 	for(var key in state.statuses){
-		if(doTick) 
-			state.statuses[key].tick(state);
+		//console.log(state.statuses[key].name + " - " + state.statuses[key].duration);
+		state.statuses[key].tick(state);
+	}
+}
+
+function updateDots(time){
+	//update statuses
+	var toRemove = [];
+	for(var key in state.statuses){
 		state.statuses[key].duration -= time;
 		if(state.statuses[key].duration <= 0)
-			toremove.push(key);
+			toRemove.push(key);
 	}
+	//console.log(toRemove);
 	
-	for(var i=0; i < toremove.length; i++){
-		if(toremove[i] == "enochian"){
+	for(var i=0; i < toRemove.length; i++){
+		if(toRemove[i] == "enochian"){
 			if(hasAnyStatus(['astral_fire','umbral_ice'])){
 				var status = getStatus('enochian');
 				state.statuses['enochian'].duration += status.duration;
 				setStatus('polyglot',true);
 				
 			} else {
-				setStatus(toremove[i],false);
+				setStatus(toRemove[i],false);
 			}
 
 		} else {
 		
-			setStatus(toremove[i],false);
+			setStatus(toRemove[i],false);
 		}
 	}
-	
 }
 
 function calculatePotency(potency){
