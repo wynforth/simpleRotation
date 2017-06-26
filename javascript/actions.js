@@ -662,7 +662,7 @@ const BLMactions = {
 };
 
 const roleActions = {
-	'caster': {
+	caster: {
 		addle: {
 			name: "Addle",
 			recast: 120,
@@ -737,7 +737,82 @@ const roleActions = {
 				setStatus("medicated", true);
 			}
 		}
-	}
+	},
+	melee: {
+		second_wind: {
+			name: "Second Wind",
+			recast: 120,
+		},
+		arms_length: {
+			name:"Arm's Length",
+			recast: 60,
+		},
+		leg_sweep: {
+			name: "Leg Sweep",
+			recast: 40,
+		},
+		diversion: {
+			name: "Diversion",
+			recast: 120,
+			execute(state){ setStatus("diversion",true); }
+		},
+		invigorate: {
+			name: "Invigorate",
+			recast: 120,
+		},
+		bloodbath: {
+			name: "Bloodbath",
+			recast: 90,
+			execute(state) {
+				setStatus('bloodbath', true);
+			}
+		},
+		goad: {
+			name: "Goad",
+			recast: 180
+		},
+		feint: {
+			name: "Feint",
+			recast: 120
+		},
+		crutch: {
+			name: "Crutch",
+			recast: 90,
+		},
+		true_north: {
+			name: "True North",
+			recast: 150,
+			execute(state) {
+				setStatus('true_north', true);
+			}
+		},
+		infusion_dexterity: {
+			name: "Infusion of Dexterity",
+			cast: 0,
+			recast: 270,
+			recastGroup(state){
+				return 'potion';
+			},
+ 			execute(state) {
+				setStatus("medicated", true);
+			}
+		},
+		infusion_strength: {
+			name: "Infusion of Strength",
+			cast: 0,
+			recast: 270,
+			recastGroup(state){
+				return 'potion';
+			},
+ 			execute(state) {
+				setStatus("medicated", true);
+			}
+		}
+		
+	},
+	ranged: {},
+	tank: {},
+	healer: {},
 };
 
 const baseStatus = {name: "status", duration: 0, stacks: 1, maxStacks: 1, tick(state){ }, color: '#888888'};
