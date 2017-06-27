@@ -182,12 +182,13 @@ const blm_actions = {
 		name: "Flare",
 		type: "spell",
 		potency: 260,
-		mana: 0,
+		mana: 1200,
 		cast: 4,
 		execute(state){
 			updateStatus("astral_fire",3,true);
 			if(hasStatus("umbral_ice"))
 				setStatus("umbral_ice",false);
+			setStatus('umbral_heart',false);
 			
 		},
 		getCast(state){
@@ -213,7 +214,7 @@ const blm_actions = {
 			return state.mana;
 		},
 		isUseable(state) {
-			return state.mana > 1200;
+			return state.mana >= this.mana;
 		}
 	},
 	blizzard_i: {
@@ -527,7 +528,7 @@ const blm_actions = {
 			if(hasStatus('umbral_ice')){
 				setStatus('astral_fire',true);
 				setStatus('umbral_ice',false);
-			} else if(hasStatus('astral-fire')){
+			} else if(hasStatus('astral_fire')){
 				setStatus('umbral_ice',true);
 				setStatus('astral_fire',false);
 			}

@@ -133,9 +133,28 @@ const roleActions = {
 				return state.nextTick - state.currentTime;
 			}
 		},
+		max_elixer: {
+			name: "Max-Elixer",
+			recast: 300,
+			recastGroup(state){
+				return 'potion';
+			},
+			execute(state){
+				setMana(state.mana + Math.min(state.maxMana * .16, 1360));
+			}
+		},
+		max_elixer_hq: {
+			name: "Max-Elixer HQ",
+			recast: 270,
+			recastGroup(state){
+				return 'potion';
+			},
+			execute(state){
+				setMana(state.mana + Math.min(state.maxMana * .2, 1700));
+			}
+		},
 		infusion_intelligence: {
 			name: "Infusion of Intelligence",
-			cast: 0,
 			recast: 270,
 			recastGroup(state){
 				return 'potion';
