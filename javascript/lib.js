@@ -104,7 +104,7 @@ function createActionButtons(){
 	console.log(state.job);
 	const Action = ({ name, url }) => `
 		<div class="action" data-action="${name}">
-          <img src="img/${url}.png" />
+          <a rel="nofollow" href=""><img src="img/${url}.png" /></a>
           <small class="cooldown"></small>
 		  <small class="cost"></small>
         </div>`;
@@ -169,6 +169,22 @@ function updateActionButtons(){
 	else
 		label.text('');
   });
+  /*
+  $("body").tooltip({
+    selector: "[data-action]",
+    html: true,
+    title() {
+      const action = getAction($(this).data("action"));
+      var tooltip = "";
+      tooltip = `
+		<div>
+			<div
+		</div>
+		`
+      return tooltip.trim().replace(/\n/g, "<br />").replace(/^\s+/mg, "");
+    }
+  });
+  */
 }
 
 function addRotationAction(id, key){
@@ -177,7 +193,7 @@ function addRotationAction(id, key){
 <div class="rotation-action" data-id="${id}" data-action="${key}">
           <img src="img/${key}.png" />
           <small class="cooldown"></small>
-        </div>`;
+        </div>&#9654;`;
 		
 	$(".rotation .actions").append([{'id': id, 'key': key }].map(Rotation_Action).join(''));
 	

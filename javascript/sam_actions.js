@@ -34,7 +34,7 @@ const sam_actions = {
 	gekko: {
 		name: "Gekko",
 		type: "weaponskill",
-		potenchy: 100,
+		potency: 100,
 		comboPotency: 400,
 		comboActions: ['jinpu'],
 		tp: 50,
@@ -59,7 +59,7 @@ const sam_actions = {
 	shifu: {
 		name: "Shifu",
 		type: "weaponskill",
-		potenchy: 100,
+		potency: 100,
 		comboPotency: 280,
 		comboActions: ['hakaze'],
 		tp: 60,
@@ -81,7 +81,7 @@ const sam_actions = {
 	kasha: {
 		name: "Kasha",
 		type: "weaponskill",
-		potenchy: 100,
+		potency: 100,
 		comboPotency: 400,
 		comboActions: ['shifu'],
 		tp: 50,
@@ -387,7 +387,7 @@ const sam_actions = {
 		level: 62,
 		kenki: 50,
 		potency: 800,
-		recast: 1,
+		recast: 120,
 		isUseable(state){
 			return state.kenki >= this.kenki;
 		},
