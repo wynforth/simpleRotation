@@ -104,7 +104,7 @@ function createActionButtons(){
 	console.log(state.job);
 	const Action = ({ name, url }) => `
 		<div class="action" data-action="${name}">
-          <a rel="nofollow" href=""><img src="img/${url}.png" /></a>
+          <img src="img/${url}.png" />
           <small class="cooldown"></small>
 		  <small class="cost"></small>
         </div>`;
