@@ -235,6 +235,11 @@ function getAction(name) {
 	}
 	if(action.type == "weaponskill"){
 		var scale = state.sks / 2.5; 
+		
+		if(hasStatus('shifu'))
+			scale -= 0.1;
+			
+		
 		action.cast *= scale;
 		action.recast *= scale;
 	}
@@ -322,6 +327,7 @@ function setStatus(name, active){
 }
 
 function updateStatus(name, stack, set=false) {
+	//console.log(name);
 	var isNew = !hasStatus(name);
 	if(isNew && stack <= 0) //no-op
 		return

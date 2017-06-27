@@ -126,64 +126,11 @@ const brd_actions = {
 		level: 52,
 		potency: 100,
 		recast: 80,
-		execute(state): {
+		execute(state) {
 			setStatus('the_wanderers_minuet', true);
 		},
 	},
-		
 	
-	
-	
-	//ranged
-	second_wind: {
-		name: "Second Wind",
-		recast: 120,
-	},
-	foot_graze: {
-		name: "Foot Graze",
-		recast: 30,
-	},
-	leg_graze: {
-		name: "Leg Graze",
-		recast: 30,
-	},
-	peloton: {
-		name: "Peloton",
-		recast: 5
-	},
-	invigorate: {
-		name: "Invigorate",
-		recast: 120,
-		execute(state){
-			setTP(state.tp + 400);
-		}
-	},
-	tactician: {
-		name: "Tactician",
-		recast: 180,
-		execute(state) {
-			setStatus("tactician", 30);
-		}
-	},
-	refresh: {
-		name: "Refresh",
-		recast: 180,
-		execute(state) {
-			setStatus("refresh", 30);
-		}
-	},
-	head_graze: {
-		name: "Head Graze",
-		recast: 30,
-	},
-	arm_graze: {
-		name: "Arm Graze",
-		recast: 25
-	},
-	palisade: {
-		name: "Palisade",
-		recast: 150
-	}
 };
 
 
@@ -253,24 +200,4 @@ const brd_status = {
 		duration: 30,
 		color: "#4F6F1F",
 	},
-		
-		
-		
-	//ranged
-	tactician: {
-		name: "Tactitian",
-		duration: 30,
-		color: "#E0901F",
-		tick(state) {
-			setTP(state.tp + 50);
-		}
-	},
-	refresh: {
-		name: "Refresh",
-		duration: 30,
-		color: "#7F7FC0",
-		tick(state) {
-			setMana(state.mana + (state.maxMana * .02));
-		}
-	}
 };

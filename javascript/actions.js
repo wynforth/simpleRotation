@@ -217,7 +217,68 @@ const roleActions = {
 		}
 		
 	},
-	ranged: {},
+	ranged: {
+		second_wind: {
+			name: "Second Wind",
+			recast: 120,
+		},
+		foot_graze: {
+			name: "Foot Graze",
+			recast: 30,
+		},
+		leg_graze: {
+			name: "Leg Graze",
+			recast: 30,
+		},
+		peloton: {
+			name: "Peloton",
+			recast: 5
+		},
+		invigorate: {
+			name: "Invigorate",
+			recast: 120,
+			execute(state){
+				setTP(state.tp + 400);
+			}
+		},
+		tactician: {
+			name: "Tactician",
+			recast: 180,
+			execute(state) {
+				setStatus("tactician", 30);
+			}
+		},
+		refresh: {
+			name: "Refresh",
+			recast: 180,
+			execute(state) {
+				setStatus("refresh", 30);
+			}
+		},
+		head_graze: {
+			name: "Head Graze",
+			recast: 30,
+		},
+		arm_graze: {
+			name: "Arm Graze",
+			recast: 25
+		},
+		palisade: {
+			name: "Palisade",
+			recast: 150
+		},
+		infusion_dexterity: {
+			name: "Infusion of Dexterity",
+			cast: 0,
+			recast: 270,
+			recastGroup(state){
+				return 'potion';
+			},
+ 			execute(state) {
+				setStatus("medicated", true);
+			}
+		}
+	},
 	tank: {},
 	healer: {},
 };
@@ -237,10 +298,8 @@ const general_status = {
 		duration: 30,
 		color: "#2F5F90"
 	},
-};
 
-const caster_status = {
-		//caster
+	//caster
 	addle: {
 		name: "Addle", 
 		duration: 10,
@@ -271,9 +330,40 @@ const caster_status = {
 		duration: 10,
 		color: "#904FC0"
 	},
+	
+	//ranged
+	tactician: {
+		name: "Tactitian",
+		duration: 30,
+		color: "#E0901F",
+		tick(state) {
+			setTP(state.tp + 50);
+		}
+	},
+	refresh: {
+		name: "Refresh",
+		duration: 30,
+		color: "#7F7FC0",
+		tick(state) {
+			setMana(state.mana + (state.maxMana * .02));
+		}
+	},
+	
+	//melee
+	true_north: {
+		name: "True North",
+		duration: 15,
+		color: "#C07F4F",
+	},
+	bloodbath: {
+		name: "Bloodbath",
+		duration: 20,
+		color: "#D00F0F",
+	}
+	
 };
 
-const statuses = Object.assign({}, general_status, caster_status, blm_status, sam_status);
+const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status);
 
 
 
@@ -294,8 +384,9 @@ function getActions(state){
 }
 
 const jobActions = {
-	BLM: BLMactions,
-	SAM: SAMactions
+	BLM: blm_actions,
+	SAM: sam_actions,
+	BRD: brd_actions,
 }
 
 const roles = {

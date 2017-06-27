@@ -85,10 +85,18 @@ function updateDots(time){
 	}
 }
 
-function calculatePotency(potency){
+function calculatePotency(action){
+	var potency = action.getPotency(state);
 	var mod = 1;
 	
-	if(hasStatus('enochian')) mod += 0.05;
+	if(action.type == "spell"){
+		if(hasStatus('enochian')) mod += 0.05;
+	} else if(action.type == "weaponskill"){
+		if(hasStatus("hissatsu_kaiten")) {
+			mod += .5;
+			setStatus('hissatsu_kaiten', false);
+		}
+	}
 	
 	return potency*mod;
 }
@@ -178,7 +186,7 @@ function playRotation(){
 		row.tp = tp;
 		
 		//add potency
-		var potency = calculatePotency(action.getPotency(state))
+		var potency = calculatePotency(action);
 		state.potency += potency;
 		row.potency = potency;
 		

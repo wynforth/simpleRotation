@@ -1,4 +1,4 @@
-const BLMactions = {
+const blm_actions = {
 	fire_i: {
 		name: "Fire I",
 		type: "spell",
