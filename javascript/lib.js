@@ -27,8 +27,6 @@ function resetState(job){
 		faerie: 0,
 		ninki: 0,
 		heat: 0,
-		
-		
 	};
 }
 
@@ -39,11 +37,15 @@ function initialize(){
 	setMana(state.maxMana);
 	setTP(state.maxTP);
 	
+	setKenki(0);
 	$(".progress.kenki-bg").toggleClass('hidden', currentJob!="SAM");
 	
 	rotation = [];
 	createActionButtons();
 	update();
+	//clear previous rotation
+	$(".rotation-table thead .status-col").remove();
+	$(".rotation-table tbody").html('');
 }
 
 function changeJob(name){

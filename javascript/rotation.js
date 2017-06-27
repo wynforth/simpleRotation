@@ -245,7 +245,7 @@ function addAction(name){
 }
 
 function drawResultTable(result){
-	console.log(result);
+	//console.log(result);
 	if(result.length < 2) return;
 	
 	var statuses = result[0].sort();
