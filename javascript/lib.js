@@ -30,8 +30,31 @@ function resetState(job){
 	};
 }
 
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+function replaceQueryParam(param, newval, search) {
+    var regex = new RegExp("([?;&])" + param + "[^&;]*[;&]?");
+    var query = search.replace(regex, "$1").replace(/&$/, '');
+
+    return (query.length > 2 ? query + "&" : "?") + (newval ? param + "=" + newval : '');
+}
+
 //initialize state
 function initialize(){
+	//currentJob = getUrlParameter('job');
 	state = resetState(currentJob);
 	actions = getActions(state);
 	setMana(state.maxMana);
@@ -51,6 +74,10 @@ function initialize(){
 function changeJob(name){
 	cleanActionButtonHeaders();
 	currentJob = name;
+	//var str = window.location.search;
+	//str = replaceQueryParam('job', currentJob, str);
+	//window.location = window.location.pathname + str;
+	
 	initialize();
 }
 

@@ -10,7 +10,7 @@ const blm_actions = {
 				setStatus("umbral_ice",false);
 			} else if(hasStatus("astral_fire")){
 				updateStatus("astral_fire",1);
-				updateStatus("umbral-heart",-1);
+				updateStatus("umbral_heart",-1);
 			} else {
 				setStatus("astral_fire",true);
 			}

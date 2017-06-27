@@ -4,6 +4,7 @@ var currentJob = '';
 var rotation = [];
 var state = {};
 
+
 initialize();
 
 function removeRotationAction(index){
@@ -194,9 +195,12 @@ function playRotation(){
 		
 		action.execute(state);
 		if(action.type != 'ability'){
-			state.lastActionTime = state.currentTime;
-			state.lastCombo = action.isCombo(state);
-			state.lastAction = action.id;
+			//array of weaponskills or spells that dont break combos
+			if(["iaijutsu", "higanbana", "midare_setsugekka", "tenka_goken"].indexOf(action.id) == -1){
+				state.lastActionTime = state.currentTime;
+				state.lastCombo = action.isCombo(state);
+				state.lastAction = action.id;
+			}
 		}
 		
 		for(var key in state.statuses){
