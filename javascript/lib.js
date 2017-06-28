@@ -171,49 +171,13 @@ function updateActionButtons(){
 	
 	
 	
-  $(this).tooltip({html: true, title: getTitle(action)});
+  $(this).tooltip({html: true, title: getTitle(action), placement: 'bottom'});
   });
-  /*
-  $("body").tooltip({
-    selector: "[data-action]",
-    html: true,
-    title() {
-      const action = getAction($(this).data("action"));
-      var tooltip = "";
-      tooltip = `
-		<div class="ffxiv-tooltip rounded">
-			<div class="highlight"></div>
-			<div class="tooltip-header">
-				<div class="distance"><span class="grey">Range:</span> ${action.range}y <span class="grey">Radius:</span> ${action.radius}y</div>
-				<img src="img/${action.id}.png"/>
-				<div class="name">${action.name}</div>
-				<div class="type"><span class="beige">${action.type}</span></div>
-			</div>
-			<div class="costs">
-				<div class="cost">
-					<div class="type"><span class="beige">Cast</span></div>
-					<span class="value">${action.getCast(state) == 0 ? 'Instant':action.getCast(state).toFixed(2)+'s'}</span>
-				</div>
-				<div class="cost">
-					<div class="type"><span class="beige">Recast</span></div>
-					<span class="value">${action.recast.toFixed(2)}s</span>
-			</div>`;
-		if(action.getManaCost(state) > 0){
-			tooltip += `<div class="cost">
-				<div class="type"><span class="beige">Mana Cost</span></div>
-				<span class="value">${action.getManaCost(state)}</span>
-			</div>`;
-		} else if(action.getTPCost(state)){
-			tooltip += `<div class="cost">
-				<div class="type"><span class="beige">TP Cost</span></div>
-				<span class="value">${action.getTPCost(state)}</span>
-			</div>`;
-		}
-		tooltip += `</div><div class="desc">${action.description}</div></div>`;
-      return tooltip.trim();
-    }
-  });
-  */
+}
+
+function jsUcfirst(string) 
+{
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 function getTitle(action){
@@ -225,7 +189,7 @@ function getTitle(action){
 				<div class="distance"><span class="grey">Range:</span> ${action.range}y <span class="grey">Radius:</span> ${action.radius}y</div>
 				<img src="img/${action.id}.png"/>
 				<div class="name">${action.name}</div>
-				<div class="type"><span class="beige">${action.type}</span></div>
+				<div class="type"><span class="beige">${jsUcfirst(action.type)}</span></div>
 			</div>
 			<div class="costs">
 				<div class="cost">

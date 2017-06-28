@@ -5,6 +5,15 @@ const blm_actions = {
 		potency: 180,
 		mana: 1440,
 		cast: 2.5,
+		level: 2,
+		range: 25,
+		description: `
+			Deals fire damage with a potency of 180.<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire</span> or removes <span class="yellow">Umbral Ice</span><br/>
+			<span class="green">Duration:</span> 13s<br/>
+			<span class="green">Additional Effect:</span> 40% chance next <span class="orange">Fire III</span> will cost no MP and have no casting time<br/>
+			<span class="green">Duration:</span> 12s
+		`,
 		execute(state){
 			if(hasStatus("umbral_ice")) {
 				setStatus("umbral_ice",false);
@@ -52,6 +61,14 @@ const blm_actions = {
 		potency: 80,
 		mana: 1800,
 		cast: 3.0,
+		level: 18,
+		radius: 5,
+		range: 25,
+		description: `
+			Deals fire damage with a potency of 80 to target and all enemies nearby it.<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire</span> or removes <span class="yellow">Umbral Ice</span><br/>
+			<span class="green">Duration:</span> 13s
+		`,
 		execute(state){
 			if(hasStatus("umbral_ice")) {
 				setStatus("umbral_ice",false);
@@ -94,6 +111,13 @@ const blm_actions = {
 		potency: 240,
 		mana: 2400,
 		cast: 3.5,
+		level: 34,
+		range: 25,
+		description: `
+			Deals fire damage with a potency of 240.<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire III</span> and removes <span class="yellow">Umbral Ice</span><br/>
+			<span class="green">Duration:</span> 13s
+		`,
 		execute(state){
 			if(hasStatus("astral_fire") && !hasStatus("firestarter"))
 				updateStatus("umbral_heart",-1);
@@ -145,6 +169,12 @@ const blm_actions = {
 		potency: 260,
 		mana: 1200,
 		cast: 3.0,
+		range: 25,
+		level: 60,
+		description: `
+			Deals fire damage with a potency of 260.
+			Can only be executed while under the effect of both <span class="yellow">Enochian</span> and <span class="yellow">Astral Fire</span>.
+		`,
 		execute(state){
 			if(hasStatus("astral_fire"))
 				updateStatus("umbral_heart",-1);
@@ -184,6 +214,14 @@ const blm_actions = {
 		potency: 260,
 		mana: 1200,
 		cast: 4,
+		range: 25,
+		radius: 5,
+		level: 50,
+		description: `
+			Deals fire damage to a target and all enemies nearby it with a potency of 260 for the first enemy, 15% less for the second, 30% less for the third, 45% less for the fourth, 60% less for the fifth, and 70% less for all remaining enemies.<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire III</span> and removes <span class="yellow">Umbral Ice</span><br/>
+			<span class="green">Duration:</span> 13s
+		`,
 		execute(state){
 			updateStatus("astral_fire",3,true);
 			if(hasStatus("umbral_ice"))
@@ -223,6 +261,13 @@ const blm_actions = {
 		potency: 180,
 		mana: 480,
 		cast: 2.5,
+		range: 25,
+		level: 1,
+		description: `
+			Deals ice damage with a potency of 180.<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice</span> or removes <span class="yellow">Astral Fire</span><br/>
+			<span class="green">Duration:</span> 13s
+		`,
 		execute(state){
 			if(hasStatus("astral_fire"))
 				setStatus("astral_fire",false);
@@ -251,6 +296,15 @@ const blm_actions = {
 		potency: 50,
 		mana: 960,
 		cast: 3,
+		radius: 5,
+		level: 12,
+		description: `
+			Deals ice damage with a potency of 50 to all nearby enemies.<br/>
+			<span class="green">Additional Effect:</span> <span class="yellow">Bind</span><br/>
+			<span class="green">Duration:</span> 8s<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice</span> or removes <span class="yellow">Astral Fire</span><br/>
+			<span class="green">Duration:</span> 13s
+		`,
 		execute(state){
 			if(hasStatus("astral_fire"))
 				setStatus("astral_fire",false);
@@ -279,6 +333,13 @@ const blm_actions = {
 		potency: 240,
 		mana: 1440,
 		cast: 3.5,
+		range: 25,
+		level: 40,
+		description: `
+			Deals ice damage with a potency of 240.<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice III</span> and removes <span class="yellow">Astral Fire</span><br/>
+			<span class="green">Duration:</span> 13s
+		`,
 		execute(state){
 			updateStatus("umbral_ice",3,true);
 			if(hasStatus("astral_fire"))
@@ -306,6 +367,14 @@ const blm_actions = {
 		potency: 260,
 		mana: 1200,
 		cast: 3,
+		level: 58,
+		range: 25,
+		description: `
+			Deals ice damage with a potency of 260.<br/>
+			<span class="green">Additional Effect:</span> Grants 3 <span class="yellow">Umbral Hearts</span><br/>
+			<span class="green">Umbral Heart Bonus:</span> Nullifies <span class="yellow">Astral Fire</span>'s MP cost increase for <span class="orange">Fire spells</span> and reduces MP cost for <span class="orange">Flare</span> by two-thirds<br/>
+			Can only be executed while under the effect of both <span class="yellow">Enochian</span> and <span class="yellow">Umbral Ice</span>.
+		`,
 		execute(state){
 			updateStatus("umbral_heart",3,true);
 		},
@@ -334,6 +403,16 @@ const blm_actions = {
 		potency: 100,
 		mana: 2400,
 		cast: 3,
+		level: 35,
+		range: 25,
+		radius: 5,
+		description: `
+			Covers a designated area in ice, dealing ice damage with a potency of 100.<br/>
+			<span class="green">Additional Effect:</span> <span class="yellow">Bind</span><br/>
+			<span class="green">Duration:</span> 15s<br/>
+			<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice</span> or removes <span class="yellow">Astral Fire</span><br/>
+			<span class="green">Duration:</span> 13s
+		`,
 		execute(state){
 			if(hasStatus("astral_fire"))
 				setStatus("astral_fire",false);
@@ -362,6 +441,17 @@ const blm_actions = {
 		potency: 30,
 		mana: 960,
 		cast: 2.5,
+		level: 6,
+		range: 25,
+		description: `
+			Deals lightning damage with a potency of 30.<br/>
+			<span class="green">Additional Effect:</span> Lightning damage over time<br/>
+			<span class="green">Potency:</span> 40<br/>
+			<span class="green">Duration:</span> 18s<br/>
+			<span class="green">Additional Effect:</span> 10% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
+			<span class="green">Duration:</span> 12s<br/>
+			Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.
+		`,
 		getCast(state){
 			if(hasStatus("thundercloud")) return 0;
 			return this.cast;
@@ -394,6 +484,18 @@ const blm_actions = {
 		potency: 30,
 		mana: 1440,
 		cast: 3,
+		level: 26,
+		range: 25,
+		radius: 5,
+		description: `
+			Deals lightning damage with a potency of 30 to target and all enemies nearby it.<br/>
+			<span class="green">Additional Effect:</span> Lightning damage over time<br/>
+			<span class="green">Potency:</span> 30<br/>
+			<span class="green">Duration:</span> 12s<br/>
+			<span class="green">Additional Effect:</span> 3% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
+			<span class="green">Duration:</span> 12s<br/>
+			Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.
+		`,
 		getCast(state){
 			if(hasStatus("thundercloud")) return 0;
 			return this.cast;
@@ -428,6 +530,16 @@ const blm_actions = {
 		cast: 2.5,
 		hidden: true,
 		level: 45,
+		range: 25,
+		description: `
+			Deals lightning damage with a potency of 70.<br/>
+			<span class="green">Additional Effect:</span> Lightning damage over time<br/>
+			<span class="green">Potency:</span> 40<br/>
+			<span class="green">Duration:</span> 24s<br/>
+			<span class="green">Additional Effect:</span> 10% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
+			<span class="green">Duration:</span> 12s<br/>
+			Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.
+		`,
 		getCast(state){
 			if(hasStatus("thundercloud")) return 0;
 			return this.cast;
@@ -459,6 +571,17 @@ const blm_actions = {
 		cast: 3,
 		hidden: true,
 		level: 64,
+		range: 25,
+		radius: 5,
+		description: `
+			Deals lightning damage with a potency of 50 to target and all enemies nearby it.<br/>
+			<span class="green">Additional Effect:</span> Lightning damage over time<br/>
+			<span class="green">Potency:</span> 30<br/>
+			<span class="green">Duration:</span> 18s<br/>
+			<span class="green">Additional Effect:</span> 3% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
+			<span class="green">Duration:</span> 12s<br/>
+			Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.
+		`,
 		getCast(state){
 			if(hasStatus("thundercloud")) return 0;
 			return this.cast;
@@ -488,6 +611,12 @@ const blm_actions = {
 		potency: 100,
 		mana: 960,
 		cast: 0,
+		level: 15,
+		range: 25,
+		description: `
+			Deals unaspected damage with a potency of 100.<br/>
+			<span class="green">Additional Effect:</span> 20% chance potency will double
+		`,
 		execute(state){
 			setStatus('sharpcast',false);
 		},
@@ -504,6 +633,13 @@ const blm_actions = {
 		potency: 650,
 		mana: 240,
 		cast: 2.5,
+		level: 70,
+		range: 25,
+		radius: 5,
+		description: `
+			Deals unaspected damage to a target and all enemies nearby it with a potency of 650 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
+			Can only be executed while under the effect of <span class="yellow">Polyglot</span>. <span class="yellow">Polyglot</span> effect ends upon use.
+		`,
 		execute(state){
 			setStatus('polyglot',false);
 		},
@@ -519,11 +655,23 @@ const blm_actions = {
 		name: "Sleep",
 		type: "spell",
 		mana: 1200,
-		cast: 2.5
+		cast: 2.5,
+		level: 10,
+		range: 25,
+		radius: 5,
+		description:  `
+			Puts target to sleep.<br/>
+			<span class="green">Duration:</span> 30s<br/>
+			Cancels auto-attack upon execution.
+		`,
 	},
 	transpose: {
 		name: "Transpose",
 		recast: 12,
+		level: 4,
+		description:  `
+			Swaps <span class="yellow">Astral Fire</span> with a single <span class="yellow">Umbral Ice</span>, or <span class="yellow">Umbral Ice</span> with a single <span class="yellow">Astral Fire</span>.
+		`,
 		execute(state){
 			if(hasStatus('umbral_ice')){
 				setStatus('astral_fire',true);
@@ -537,22 +685,41 @@ const blm_actions = {
 	},
 	manaward: {
 		name: "Manaward",
-		recast: 120
+		recast: 120,
+		level: 30,
+		description: `
+			Creates a barrier that nullifies damage totaling up to 30% of maximum HP.<br/>
+			<span class="green">Duration:</span> 20s
+		`,
 	},
 	convert: {
 		name: "Convert",
 		recast: 180,
+		levle: 30,
+		description: `Sacrifices 20% of maximum HP to restore 30% of MP. Cannot be executed when current HP is lower than 20%.`,
 		execute(state){
 			setMana(state.mana + (state.maxMana * .2));
 		}
 	},
 	aetherial_manipulation: {
 		name: "Aetherial Manipulation",
-		recast: 30
+		recast: 30,
+		level: 50,
+		range: 25,
+		description: `
+			Rush to a target party member's side.<br/>
+			Unable to cast if bound.
+			`,
 	},
 	ley_lines: {
 		name: "Ley Lines",
 		recast: 30,
+		level: 52,
+		radius: 3,
+		description: `
+			Connects naturally occurring ley lines to create a circle of power which, while standing within it, reduces spell cast time and recast time, and auto-attack delay by 15%.<br/>
+			<span class="green">Duration:</span> 30s
+		`,
 		execute(state){ 
 			setStatus("ley_lines",true); 
 		}
@@ -560,6 +727,10 @@ const blm_actions = {
 	sharpcast: {
 		name: "Sharpcast",
 		recast: 60,
+		level: 54,
+		description: `
+			Ensures the next <span class="orange">Scathe</span>, <span class="orange">Fire</span>, or <span class="orange">Thunder</span> spell cast will, for the first hit, trigger <span class="orange">Scathe</span>'s additional effect, <span class="yellow">Firestarter</span>, or <span class="yellow">Thundercloud</span> respectively.<br/>
+			<span class="green">Duration:</span> 15s`,
 		execute(state){ 
 			setStatus("sharpcast",true); 
 		}
@@ -567,6 +738,12 @@ const blm_actions = {
 	enochian: {
 		name: "Enochian",
 		recast: 30,
+		level: 56,
+		description: `
+			Increases magic damage dealt by 5%. Also allows the casting of <span class="orange">Blizzard IV</span> and <span class="orange">Fire IV</span>.<br/>
+			<span class="green">Additional Effect</span>: Grants <span class="yellow">Polyglot</span> if <span class="yellow">Enochian</span> is maintained for 30s<br/>
+			Can only be executed while under the effect of <span class="yellow">Astral Fire</span> or <span class="yellow">Umbral Ice</span>. Effect is canceled if <span class="yellow">Astral Fire</span> or <span class="yellow">Umbral Ice</span> end.
+		`,
 		execute(state){
 			setStatus("enochian",true);
 		},
@@ -577,6 +754,11 @@ const blm_actions = {
 	between_the_lines: {
 		name: "Between the Lines",
 		recast: 3,
+		level: 64,
+		range: 25,
+		description: `
+			Move instantly to <span class="yellow">Ley Lines</span> drawn by you.<br/>
+			Cannot be executed while bound.`,
 		isUseable(state){
 			return hasStatus('ley_lines');
 		}
@@ -584,6 +766,10 @@ const blm_actions = {
 	triplecast: {
 		name: "Triplecast",
 		recast: 90,
+		level: 68,
+		description: `
+			The next three spells will require no cast time.<br/>
+			<span class="green">Duration:</span> 15s`,
 		execute(state){
 			updateStatus("triplecast",3,true);
 		},
