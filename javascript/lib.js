@@ -169,9 +169,8 @@ function updateActionButtons(){
 	else
 		label.text('');
 	
-	
-	
-  $(this).tooltip({html: true, title: getTitle(action), placement: 'bottom'});
+	$(this).tooltip('dispose');
+	$(this).tooltip({html: true, title: getTitle(action), placement: 'bottom'});
   });
 }
 
