@@ -342,9 +342,15 @@ table .status-block {
 	color: #C4B49B;
 }
 
-.ffxiv-tooltip {
+.tooltip.show {
+	opacity: 1 !important;
+}
+
+.tooltip-inner {
 	position: relative;
-	width: 366px;
+	width: 366px !important;
+	max-width: 336px !important;
+	text-align: left;
 	border: 1px solid black;
 	padding: 7px;
 	box-shadow: 2px 2px 10px #000;
@@ -352,7 +358,7 @@ table .status-block {
 	background-image: url("../img/tooltip_bg.png");
 }
 
-.ffxiv-tooltip .highlight{
+.tooltip .highlight{
 	position: absolute;
 	top: 0px;
 	width: 100%;
@@ -365,13 +371,13 @@ table .status-block {
     background: linear-gradient(to bottom, rgba(255, 255, 255, .25) , rgba(255, 255, 255, 0)); 
 }
 
-.ffxiv-tooltip .tooltip-header{
+.tooltip .tooltip-header{
 	position: relative;
 	width: 100%;
 	height: 40px;
 }
 
-.ffxiv-tooltip img {
+.tooltip img {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -381,33 +387,33 @@ table .status-block {
 	
 }
 
-.ffxiv-tooltip .name{
+.tooltip .name{
 	position: relative;
 	margin-left: 50px;
 }
 
-.ffxiv-tooltip .type{
+.tooltip .type{
 	position: relative;
 	margin-left: 50px;
 	top: -5px;
 	font-size: .9em;
 }
 
-.ffxiv-tooltip .distance {
+.tooltip .distance {
 	position: absolute;
 	right: 0px;
 	bottom: 0px;
 	font-size: .8em;
 }
 
-.ffxiv-tooltip .costs{
+.tooltip .costs{
 	position: relative;
 	width: 100%;
 	margin-bottom: 0px;
 	border-bottom: 1px solid #1b1b1b;
 }
 
-.ffxiv-tooltip .cost{
+.tooltip .cost{
 	position: relative;
 	display: inline-block;
 	width: 32%;
@@ -417,7 +423,7 @@ table .status-block {
 	background-repeat: no-repeat;
 	
 }
-.ffxiv-tooltip .cost .value{
+.tooltip .cost .value{
 	position: absolute;
 	bottom: 0px;
 	right: 0px;
@@ -425,7 +431,7 @@ table .status-block {
 	font-size: 1.3em;
 }
 
-.ffxiv-tooltip .cost .type{
+.tooltip .cost .type{
 	position: absolute;
 	top: 0px;
 	right: 0px;
@@ -434,13 +440,14 @@ table .status-block {
 	font-size: .8em;
 }
 
-.ffxiv-tooltip hr {
+.tooltip hr {
 	margin-top: 0x;
 	padding-top: 0px;
 }
 
-.ffxiv-tooltip .desc{
+.tooltip .desc{
 	position: relative;
+	padding-top: 3px;
 	width: 100%;
 	border-top: 1px solid #5e5e5e;
 	font-size: .9em;

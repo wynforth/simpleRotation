@@ -168,6 +168,10 @@ function updateActionButtons(){
 		label.text(`${value.toFixed(1)}s`);
 	else
 		label.text('');
+	
+	
+	
+  $(this).tooltip({html: true, title: getTitle(action)});
   });
   /*
   $("body").tooltip({
@@ -177,15 +181,76 @@ function updateActionButtons(){
       const action = getAction($(this).data("action"));
       var tooltip = "";
       tooltip = `
-		<div>
-			<div
-		</div>
-		`
-      return tooltip.trim().replace(/\n/g, "<br />").replace(/^\s+/mg, "");
+		<div class="ffxiv-tooltip rounded">
+			<div class="highlight"></div>
+			<div class="tooltip-header">
+				<div class="distance"><span class="grey">Range:</span> ${action.range}y <span class="grey">Radius:</span> ${action.radius}y</div>
+				<img src="img/${action.id}.png"/>
+				<div class="name">${action.name}</div>
+				<div class="type"><span class="beige">${action.type}</span></div>
+			</div>
+			<div class="costs">
+				<div class="cost">
+					<div class="type"><span class="beige">Cast</span></div>
+					<span class="value">${action.getCast(state) == 0 ? 'Instant':action.getCast(state).toFixed(2)+'s'}</span>
+				</div>
+				<div class="cost">
+					<div class="type"><span class="beige">Recast</span></div>
+					<span class="value">${action.recast.toFixed(2)}s</span>
+			</div>`;
+		if(action.getManaCost(state) > 0){
+			tooltip += `<div class="cost">
+				<div class="type"><span class="beige">Mana Cost</span></div>
+				<span class="value">${action.getManaCost(state)}</span>
+			</div>`;
+		} else if(action.getTPCost(state)){
+			tooltip += `<div class="cost">
+				<div class="type"><span class="beige">TP Cost</span></div>
+				<span class="value">${action.getTPCost(state)}</span>
+			</div>`;
+		}
+		tooltip += `</div><div class="desc">${action.description}</div></div>`;
+      return tooltip.trim();
     }
   });
   */
 }
+
+function getTitle(action){
+	var tooltip = "";
+	tooltip = `
+		<div class="ffxiv-tooltip rounded">
+			<div class="highlight"></div>
+			<div class="tooltip-header">
+				<div class="distance"><span class="grey">Range:</span> ${action.range}y <span class="grey">Radius:</span> ${action.radius}y</div>
+				<img src="img/${action.id}.png"/>
+				<div class="name">${action.name}</div>
+				<div class="type"><span class="beige">${action.type}</span></div>
+			</div>
+			<div class="costs">
+				<div class="cost">
+					<div class="type"><span class="beige">Cast</span></div>
+					<span class="value">${action.getCast(state) == 0 ? 'Instant':action.getCast(state).toFixed(2)+'s'}</span>
+				</div>
+				<div class="cost">
+					<div class="type"><span class="beige">Recast</span></div>
+					<span class="value">${action.recast.toFixed(2)}s</span>
+			</div>`;
+		if(action.getManaCost(state) > 0){
+			tooltip += `<div class="cost">
+				<div class="type"><span class="beige">Mana Cost</span></div>
+				<span class="value">${action.getManaCost(state)}</span>
+			</div>`;
+		} else if(action.getTPCost(state)){
+			tooltip += `<div class="cost">
+				<div class="type"><span class="beige">TP Cost</span></div>
+				<span class="value">${action.getTPCost(state)}</span>
+			</div>`;
+		}
+	tooltip += `</div><div class="desc">${action.description}</div></div>`;
+	return tooltip.trim().replace(/^\s+/mg, "");
+}
+
 
 function addRotationAction(id, key){
 	

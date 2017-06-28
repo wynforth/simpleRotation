@@ -13,6 +13,8 @@ const baseAction = {
 	comboPotency: 0,
 	hidden: false,
 	level: 1,
+	radius: 0,
+	range: 0,
 	
 	recastGroup(){
 		return this.type=='ability' ? this.id : 'global';
