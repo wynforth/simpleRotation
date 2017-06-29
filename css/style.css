@@ -330,6 +330,11 @@ table .status-block {
   color: #0c0;
 }
 
+.lightgreen {
+	color: #84AB16;
+}
+}
+
 .yellow {
   color: #ff0;
 }
@@ -377,7 +382,7 @@ table .status-block {
 	height: 40px;
 }
 
-.tooltip img {
+.tooltip .tooltip-header img {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -448,12 +453,40 @@ table .status-block {
 .tooltip .desc{
 	position: relative;
 	padding-top: 3px;
+	margin-bottom: 4px;
 	width: 100%;
 	border-top: 1px solid #5e5e5e;
 	font-size: .9em;
 	line-height: 100%;
 }
 
+.tooltip .acquired{
+	display: flex;
+	#padding-top: 2px;
+	width: 100%;
+	font-size: .9em;
+	line-height: 110%;
+}
+
+
+.tooltip .footer {
+	#position: relative;
+	#display: inline;
+	width: 20%;
+}
+
+.tooltip .spaced {
+	#position: absolute;
+	#margin-left: 20%;
+	flex: 1;
+}
+
+.tooltip .spaced img {
+	width: 18px;
+	height: 18px;
+	transform: translate(0, -2px);
+	padding-right: 2px;
+}
 
 
 

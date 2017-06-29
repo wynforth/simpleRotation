@@ -118,7 +118,7 @@ function createActionButtons(){
 		}
 	}
 	$(".header.job").addClass(state.job);
-	$(".header.job .image-job").attr("src","img/icons/job_"+state.job+".png");
+	$(".header.job .image-job").attr("src","img/icons/"+state.job+".png");
 	$(".actions.job").addClass(`border-${state.job}`);
 	$(".actions.job").html(actionArr.map(Action).join(''));
 	
@@ -131,7 +131,7 @@ function createActionButtons(){
 		}
 	}
 	$(".header.role").addClass(state.role);
-	$(".header.role .image-role").attr("src","img/icons/role_"+state.role+".png");
+	$(".header.role .image-role").attr("src","img/icons/"+state.role+".png");
 	$(".actions.role").addClass(`border-${state.role}`);
 	$(".actions.role").html(actionArr.map(Action).join(''));
 	
@@ -213,19 +213,35 @@ function getTitle(action){
 			</div>`;
 		}
 	tooltip += `</div><div class="desc">${action.description}</div></div>`;
+	if(action.affinity[0] == 'role'){
+		var affins = "";
+		tooltip += `<div class="acquired"><div class="footer beige">Acquired</div><div class="spaced">`;
+		for(var i = 1; i <action.affinity.length; i++){
+			tooltip += `<img src="img/icons/${action.affinity[i]}.png"/>`;
+			affins += role2jobs[action.affinity[i]];
+		}
+		console.log(affins);
+		tooltip += `<span class="lightgreen">Lv.</span> ${action.level}</div></div>`;
+		tooltip += `<div class="acquired"><div class="footer beige">Affinity</div><div class="spaced">${affins.trim()}</div></div>`;
+	} else {
+		tooltip += `<div class="acquired"><div class="footer beige">Acquired</div><div class="spaced"><img src="img/icons/${action.affinity[0]}.png"/><span class="lightgreen">Lv.</span> ${action.level}</div></div>`;
+		tooltip += `<div class="acquired"><div class="footer beige">Affinity</div><div class="spaced">${action.affinity.join(", ")}</div></div>`;
+	}
+	
+	
 	return tooltip.trim().replace(/^\s+/mg, "");
 }
 
 
 function addRotationAction(id, key){
-	
+	var action = getAction(key);
 	const Rotation_Action = ({ id, key }) => `
 <div class="rotation-action" data-id="${id}" data-action="${key}">
           <img src="img/${key}.png" />
           <small class="cooldown"></small>
         </div>&#9654;`;
 		
-	$(".rotation .actions").append([{'id': id, 'key': key }].map(Rotation_Action).join(''));
+	$(".rotation .actions").append([{'id': id, 'key': action.getImage() }].map(Rotation_Action).join(''));
 	
 	var last = $(".rotation .actions .rotation-action").last();
 	last.toggleClass("error", !actionUsable(key));

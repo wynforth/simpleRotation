@@ -789,6 +789,14 @@ const roles = {
 	SMN: 'caster'
 }
 
+const role2jobs = {
+	healer: "AST SCH WHM ",
+	caster: "BLM RDM SMN ",
+	melee: "DRG MNK NIN SAM ",
+	tank: "DRK PLD WAR ",
+	ranged: "BRD MCH ",
+}
+
 const maxMana = {
 	DRK: 0,
 	PLD: 0,
