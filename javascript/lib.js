@@ -1,3 +1,33 @@
+const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status);
+
+const jobActions = {
+	BLM: blm_actions,
+	SAM: sam_actions,
+	BRD: brd_actions,
+}
+
+function getRole(job){
+	return roles[job];
+}
+
+function getJobActions(job){
+	return jobActions[job];
+}
+
+function getRoleActions(role){
+	var actions = {};
+	for(var key in roleActions){
+		var action = roleActions[key];
+		if(action.affinity.indexOf(role) > -1)
+			actions[key] = action;
+	}
+	return actions;
+}
+
+function getActions(state){
+	return Object.assign({},getJobActions(state.job),getRoleActions(state.role));
+}
+
 function resetState(job){
 	return {
 		level: 70,
@@ -199,7 +229,7 @@ function getTitle(action){
 				</div>
 				<div class="cost">
 					<div class="type"><span class="beige">Recast</span></div>
-					<span class="value">${action.recast.toFixed(2)}s</span>
+					<span class="value">${action.getRecast(state).toFixed(2)}s</span>
 			</div>`;
 		if(action.getManaCost(state) > 0){
 			tooltip += `<div class="cost">
@@ -220,7 +250,7 @@ function getTitle(action){
 			tooltip += `<img src="img/icons/${action.affinity[i]}.png"/>`;
 			affins += role2jobs[action.affinity[i]];
 		}
-		console.log(affins);
+		//console.log(affins);
 		tooltip += `<span class="lightgreen">Lv.</span> ${action.level}</div></div>`;
 		tooltip += `<div class="acquired"><div class="footer beige">Affinity</div><div class="spaced">${affins.trim()}</div></div>`;
 	} else {
@@ -306,15 +336,20 @@ ACTION FUNCTIONS
 function getAction(name) {
 	if(typeof actions[name] === "undefined")
 		return false;
-
-	var action = Object.assign({ id: name }, baseAction, actions[name]);
+	var action;
+	if(actions[name].constructor.name == "Object")
+		action = Object.assign({ id: name }, baseAction, actions[name]);
+	else {
+		action = actions[name];
+		action.id = name;
+	}
 	
 	var replacement = action.getReplacement(state);
 
 	if(replacement != false)
 		return getAction(replacement);
 		
-	
+	/*
 	if(action.type == "spell") {
 		var scale = state.spd / 2.5; //2.5/2.5 = no spell speed. figure out how to do a setting for it later
 		
@@ -334,7 +369,7 @@ function getAction(name) {
 		action.cast *= scale;
 		action.recast *= scale;
 	}
-  
+	*/
 	return action;
 }
 

@@ -1,3 +1,137 @@
+class BaseAction {
+	constructor(name){
+		this.name = name;
+		
+		this.type = "ability";
+		this.description = `Does an action`;
+		this.cast = 0;
+		this.recast = 2.5;
+		this.potency = 0;
+		this.mana = 0;
+		this.tp = 0;
+		this.animTime = 0.8;
+		this.comboActions = [];
+		this.comboPotency = 0;
+		this.hidden = false;
+		this.level = 1;
+		this.radius = 0;
+		this.range = 0;
+		this.affinity = ['role',''];
+	}
+	
+	recastGroup(){
+		return this.type=='ability' ? this.id : 'global';
+	}
+	
+	isCombo(state) {
+		if(state.lastActionTime + 8 > state.currentTime && this.comboActions.includes(state.lastAction)) {
+			var action = getAction(state.lastAction);
+			return action.comboActions.length > 0 ? state.lastCombo : true;
+		}
+		return false;
+	}
+	
+	execute(state) { }
+	
+	isLevel(state) {
+		return this.level <= state.level;
+	}
+	
+	isUseable(state) {
+		return this.isLevel(state);
+	}
+	
+	isHighlighted(state) {
+		return false;
+	}
+	
+	getReplacement(state) {
+		return false;
+	}
+	
+	getPotency(state) {
+		if(this.comboActions.length == 0)
+			return this.potency;
+		return this.isCombo(state) ? this.comboPotency : this.potency;
+	}
+	
+	getManaCost(state) {
+		return this.mana;
+	}
+	
+	getTPCost(state) {
+		return this.tp;
+	}
+	
+	getCast(state) {
+		return this.cast;
+	}
+	
+	getRecast(state) {
+		return this.recast;
+		//return Math.max(0, this.nextCast - state.currentTime);
+	}
+	
+	getImage(){
+		return this.affinity[0] + "/" + this.id;
+	}
+}
+
+class Buff extends BaseAction{
+	constructor(name, level, recast){
+		super(name);
+		this.level = level;
+		this.recast = recast;
+	}
+	
+	execute(state){
+		setStatus(this.id,true);
+	}
+}
+
+class Spell extends BaseAction{
+	constructor(name, potency, cast, mana, level, range, radius){
+		super(name);
+		this.potency = potency;
+		this.cast = cast;
+		this.mana = mana,
+		this.level = level,
+		this.range = range, 
+		this.radius = radius,
+		this.type = "spell";
+	}
+	
+	getCast(state) {
+		var scale = state.spd / 2.5;
+		return this.cast * scale;
+	}
+	
+	getRecast(state) {
+		var scale = state.spd / 2.5;
+		return this.recast * scale;
+	}
+}
+
+class WeaponSkill extends BaseAction{
+	constructor(name, potency, cast, tp, level, range, radius){
+		super(name);
+		this.potency = potency;
+		this.cast = cast;
+		this.tp = tp,
+		this.level = level,
+		this.range = range, 
+		this.radius = radius,
+		this.type = "weaponskill";
+	}
+	
+	getCast(state) {
+		var scale = state.sks / 2.5;
+		return this.cast * scale;
+	}
+}
+
+
+
 const baseAction = {
 	name: "Action",
 	type: "ability",
@@ -75,18 +209,36 @@ const baseAction = {
 	}
 };
 
+class RoleAction extends BaseAction {
+	constructor(name, level, recast, range, roles, desc){
+		super(name);
+		this.level = level;
+		this.recast = recast;
+		this.range = range;
+		this.description = desc;
+		this.affinity = roles;
+	}
+	
+	getImage(){
+		return `role/${this.id}`;
+	}
+}
+
 const roleActions = {
 	//level 8
-	addle: {
+	addle: new RoleAction("Addle", 8, 120, 25, ['caster'],
+		`Lowers target's intelligence and mind by 10%.<br/>
+		<span class="green">Duration:</span> 10s`
+	),
+	/*{
 		name: "Addle",
 		recast: 120,
 		level: 8,
 		range: 25,
 		affinity: ['role','caster'],
-		description: `Lowers target's intelligence and mind by 10%.<br/>
-			<span class="green">Duration:</span> 10s`,
+		description: ,
 		execute(state) { setStatus('addle',true); }
-	},
+	},*/
 	cleric_stance: {
 		name: "Cleric Stance",
 		recast: 90,
@@ -739,37 +891,7 @@ const general_status = {
 	},
 };
 
-const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status);
 
-
-
-function getRole(job){
-	return roles[job];
-}
-
-function getJobActions(job){
-	return jobActions[job];
-}
-
-function getRoleActions(role){
-	var actions = {};
-	for(var key in roleActions){
-		var action = roleActions[key];
-		if(action.affinity.indexOf(role) > -1)
-			actions[key] = action;
-	}
-	return actions;
-}
-
-function getActions(state){
-	return Object.assign({},getJobActions(state.job),getRoleActions(state.role));
-}
-
-const jobActions = {
-	BLM: blm_actions,
-	SAM: sam_actions,
-	BRD: brd_actions,
-}
 
 const roles = {
 	DRK: 'tank',
