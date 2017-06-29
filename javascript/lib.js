@@ -111,8 +111,9 @@ function createActionButtons(){
 	
 	var actionArr = [];
 	for(var key in getJobActions(state.job)){
+		var action = getAction(key);
 		if(actions.hasOwnProperty(key) && !actions[key].hidden){
-			actionArr.push({'name': key, 'url': key});
+			actionArr.push({'name': key, 'url': action.getImage()});
 			//console.log(action.name.replace(/\ /g,'_').toLowerCase());
 		}
 	}
@@ -123,8 +124,9 @@ function createActionButtons(){
 	
 	var actionArr = [];
 	for(var key in getRoleActions(state.role)){
+		var action = getAction(key);
 		if(actions.hasOwnProperty(key)){
-			actionArr.push({'name': key, 'url': key});
+			actionArr.push({'name': key, 'url': action.getImage()});
 			//console.log(action.name.replace(/\ /g,'_').toLowerCase());
 		}
 	}
@@ -146,7 +148,7 @@ function updateActionButtons(){
 
 	//update image incase the action was replaced
 	if(key != action.id)
-		$("img", this).prop("src", `img/${action.id}.png`);
+		$("img", this).prop("src", `img/${action.getImage()}.png`);
 
 	$(this).toggleClass("disabled", !actionUsable(key));
     $(this).toggleClass("highlight", action.isHighlighted(state));
@@ -186,7 +188,7 @@ function getTitle(action){
 			<div class="highlight"></div>
 			<div class="tooltip-header">
 				<div class="distance"><span class="grey">Range:</span> ${action.range}y <span class="grey">Radius:</span> ${action.radius}y</div>
-				<img src="img/${action.id}.png"/>
+				<img src="img/${action.getImage()}.png"/>
 				<div class="name">${action.name}</div>
 				<div class="type"><span class="beige">${jsUcfirst(action.type)}</span></div>
 			</div>

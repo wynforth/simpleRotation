@@ -15,6 +15,7 @@ const baseAction = {
 	level: 1,
 	radius: 0,
 	range: 0,
+	affinity: ['role',''],
 	
 	recastGroup(){
 		return this.type=='ability' ? this.id : 'global';
@@ -67,6 +68,10 @@ const baseAction = {
 	
 	getRecast(state) {
 		return Math.max(0, this.nextCast - state.currentTime);
+	},
+	
+	getImage(){
+		return this.affinity[0] + "/" + this.id;
 	}
 };
 
@@ -77,7 +82,7 @@ const roleActions = {
 		recast: 120,
 		level: 8,
 		range: 25,
-		affinity: ['caster'],
+		affinity: ['role','caster'],
 		description: `Lowers target's intelligence and mind by 10%.<br/>
 			<span class="green">Duration:</span> 10s`,
 		execute(state) { setStatus('addle',true); }
@@ -86,28 +91,26 @@ const roleActions = {
 		name: "Cleric Stance",
 		recast: 90,
 		level: 8,
-		affinity: ['healer'],
+		affinity: ['role','healer'],
 		description: `Increases attack magic potency by 5%.<br/>
-			<span class="green">Duration:</span> 15s`,
-		execute(state) { setStatus('cleric_stance', true); }
+			<span class="green">Duration:</span> 15s`
 	},
 	rampart: {
 		name: "Rampart",
 		level: 8,
 		recast: 90,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Reduces damage taken by 20%.<br/>
-			<span class="green">Duration:</span> 20s`,
-		execute(state) { setStatus('rampart',true); }
+			<span class="green">Duration:</span> 20s`
 	},
 	second_wind: {
 		name: "Second Wind",
 		recast: 120,
 		level: 8,
-		affinity: ['melee','ranged'],
+		affinity: ['role','melee','ranged'],
 		description: `Instantly restores own HP.<br/>
 			<span class="green">Cure Potency:</span> 500<br/>
-			Cure potency varies with current attack power.`,
+			Cure potency varies with current attack power.`
 	},
 	
 	//level 12
@@ -115,11 +118,11 @@ const roleActions = {
 		name:"Arm's Length",
 		recast: 60,
 		level: 12,
-		affinity: ['melee'],
+		affinity: ['role','melee'],
 		description: `Creates a barrier nullifying knockback and draw-in effects.<br/>
 			<span class="green">Duration:</span> 5s<br/>
 			<span class="green">Additional Effect:</span> <span class="yellow">Slow</span> +20% when barrier is struck<br/>
-			<span class="green">Duration:</span> 15s<br/>`,
+			<span class="green">Duration:</span> 15s<br/>`
 	},
 	'break': {
 		name: "Break",
@@ -129,31 +132,30 @@ const roleActions = {
 		potency: 50,
 		level: 12,
 		range: 25,
-		affinity: ['caster','healer'],
+		affinity: ['role','caster','healer'],
 		description: `Deals unaspected damage with a potency of 50.<br/>
 			<span class="green">Additional Effect:</span> <span class="yellow">Heavy</span> +20%<br/>
-			<span class="green">Duration:</span> 20s`,
-		execute(state){ setStatus('heavy',true); }
+			<span class="green">Duration:</span> 20s`
 	},
 	foot_graze: {
 		name: "Foot Graze",
 		recast: 30,
 		level: 12,
 		range: 3,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Binds target.<br/>
 			<span class="green">Duration:</span> 10s<br/>
 			Cancels auto-attack upon execution.<br/>
-			Target unbound if damage taken.`,
+			Target unbound if damage taken.`
 	},
 	low_blow: {
 		name: "Low Blow",
 		level: 12,
 		recast: 25,
 		range: 3,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Stuns target.<br/>
-			<span class="green">Duration:</span> 5s`,
+			<span class="green">Duration:</span> 5s`
 	},
 	
 	//level 16
@@ -165,27 +167,27 @@ const roleActions = {
 		potency: 80,
 		level: 16,
 		range: 25,
-		affinity: ['caster'],
+		affinity: ['role','caster'],
 		description: `Deals unaspected damage with a potency of 80.<br/>
-			<span class="green">Additional Effect:</span> Absorbs a portion of damage dealt as HP`,
+			<span class="green">Additional Effect:</span> Absorbs a portion of damage dealt as HP`
 	},
 	leg_graze: {
 		name: "Leg Graze",
 		recast: 30,
 		level: 16,
 		range: 3,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Inflicts target with <span class="yellow">Heavy</span> +40%.<br/>
-			<span class="green">Duration:</span> 10s`,
+			<span class="green">Duration:</span> 10s`
 	},
 	leg_sweep: {
 		name: "Leg Sweep",
 		recast: 40,
 		level: 16,
 		range: 3,
-		affinity: ['melee'],
+		affinity: ['role','melee'],
 		description: `Stuns target.<br/>
-			<span class="green">Duration:</span> 3s`,
+			<span class="green">Duration:</span> 3s`
 	},
 	protect: {
 		name: "Protect",
@@ -195,17 +197,17 @@ const roleActions = {
 		range: 25,
 		radius: 15,
 		mana: 1200,
-		affinity: ['healer'],
+		affinity: ['role','healer'],
 		description: `Increases the physical and magic defense of target and all party members nearby target.<br/>
-			<span class="green">Duration:</span> 30m`,
+			<span class="green">Duration:</span> 30m`
 	},
 	provoke: {
 		name: "Provoke",
 		level: 16,
 		recast: 40,
 		range: 25,
-		affinity: ['tank'],
-		description: `Gesture threateningly, placing yourself at the top of a target's enmity list.`,
+		affinity: ['role','tank'],
+		description: `Gesture threateningly, placing yourself at the top of a target's enmity list.`
 	},
 	
 	//level 20
@@ -213,7 +215,7 @@ const roleActions = {
 		name: "Convalescence",
 		level: 16,
 		recast: 120,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Increases own HP recovery via healing magic by 20%.<br/>
 			<span class="green">Duration:</span> 20s`,
 		execute(state) { setStatus('convalescence',true); }
@@ -222,7 +224,7 @@ const roleActions = {
 		name: "Diversion",
 		recast: 120,
 		level: 20,
-		affinity: ['caster', 'melee'],
+		affinity: ['role','caster', 'melee'],
 		description: `Reduces enmity generation.<br/><br/>
 			<span class="green">Duration:</span> 15s`,
 		execute(state){ setStatus("diversion",true); }
@@ -234,7 +236,7 @@ const roleActions = {
 		cast: 1,
 		range: 25,
 		mana: 840,
-		affinity: ['healer'],
+		affinity: ['role','healer'],
 		description: `Removes a single detrimental effect from target.`,
 	},		
 	peloton: {
@@ -242,7 +244,7 @@ const roleActions = {
 		recast: 5,
 		level: 20,
 		radius: 25,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Increases movement speed of self and nearby party members as long as they remain within distance.<br/>
 			<span class="green">Duration:</span> 30s<br/>
 			Effect also ends upon reuse or when enmity is generated. Cannot be used in battle.`,
@@ -253,7 +255,7 @@ const roleActions = {
 		name: "Anticipation",
 		level: 24,
 		recast: 60,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Increases parry rate by 30%.<br/>
 			<span class="green">Duration:</span> 20s`,
 		execute(state) { setStatus('anticipation',true); }
@@ -262,14 +264,14 @@ const roleActions = {
 		name: "Invigorate",
 		recast: 120,
 		level: 24,
-		affinity: ['melee', 'ranged'],
+		affinity: ['role','melee', 'ranged'],
 		description: `Instantly restores 400 TP.`,
 	},
 	lucid_dreaming: {
 		name: "Lucid Dreaming",
 		recast: 120,
 		level: 24,
-		affinity: ['caster', 'healer'],
+		affinity: ['role','caster', 'healer'],
 		description: `Reduces enmity by half.<br/>
 			<span class="green">Additional Effect:</span> <span class="yellow">Refresh</span><br/>
 			<span class="green">Refresh Potency:</span> 80<br/>
@@ -282,7 +284,7 @@ const roleActions = {
 		name: "Bloodbath",
 		recast: 90,
 		level: 32,
-		affinity: ['melee'],
+		affinity: ['role','melee'],
 		description: `Converts a portion of physical damage dealt into HP.<br/>
 			<span class="green">Duration:</sapn> 20s`,
 		execute(state) {
@@ -294,7 +296,7 @@ const roleActions = {
 		level: 24,
 		recast: 60,
 		range: 3,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Increases parry rate by 30%.<br/>
 			<span class="green">Duration:</span> 20s`,
 	},
@@ -302,7 +304,7 @@ const roleActions = {
 		name: "Swiftcast",
 		recast: 60,
 		level: 32,
-		affinity: ['caster','healer'],
+		affinity: ['role','caster','healer'],
 		description: `Next spell is cast immediately.<br/>
 			<span class="green">Duration:</span> 10s`,
 		execute(state){ setStatus("swiftcast",true); }
@@ -312,7 +314,7 @@ const roleActions = {
 		recast: 180,
 		level: 32,
 		radius: 25,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Gradually restores own TP and the TP of all nearby party members.<br/>
 			<span class="green">Duration:</span> 30s<br/>
 			<span class="green">Additional Effect:</span> Halves enmity`,
@@ -326,7 +328,7 @@ const roleActions = {
 		name: "Awareness",
 		level: 36,
 		recast: 120,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Nullifies chance of suffering critical damage.<br/>
 			<span class="green">Duration:</span> 25s`,
 		execute(state) { setStatus('awareness',true); }
@@ -336,7 +338,7 @@ const roleActions = {
 		recast: 180,
 		level: 36,
 		range: 25,
-		affinity: ['healer'],
+		affinity: ['role','healer'],
 		description: `Erects a magicked barrier around a single party member or pet.<br/>
 			<span class="green">Duration:</span> 20s<br/>
 			<span class="green">Barrier Effect:</span> 20% chance that when barrier is struck, the striker will deal 10% less damage<br/>
@@ -347,7 +349,7 @@ const roleActions = {
 		recast: 180,
 		level: 36,
 		range: 25,
-		affinity: ['melee'],
+		affinity: ['role','melee'],
 		description: `Refreshes TP of a single party member.<br/>
 			<span class="green">Duration:</span> 30s`,
 	},
@@ -356,7 +358,7 @@ const roleActions = {
 		recast: 150,
 		level: 36,
 		range: 25,
-		affinity: ['caster'],
+		affinity: ['role','caster'],
 		description: `Transfers up to 20% of own maximum MP to target party member.`
 	},
 	refresh: {
@@ -364,7 +366,7 @@ const roleActions = {
 		recast: 180,
 		level: 36,
 		radius: 25,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Gradually restores own MP and the MP of all nearby party members.<br/>
 			<span class="green">Duration:</span> 30s<br/>
 			<span class="green">Additional Effect:</span> Halves enmity`,
@@ -379,7 +381,7 @@ const roleActions = {
 		recast: 150,
 		level: 40,
 		range: 25,
-		affinity: ['caster'],
+		affinity: ['role','caster'],
 		description: `Reduces a party member's magic vulnerability by 20%.<br/>
 			<span class="green">Duration:</span> 10s`,
 		execute(state) { setStatus('apocatastasis',true); }
@@ -389,7 +391,7 @@ const roleActions = {
 		recast: 120,
 		level: 40,
 		range: 3,
-		affinity: ['melee'],
+		affinity: ['role','melee'],
 		description: `Lowers target's strength and dexterity by 10%.<br/>
 			<span class="green">Duration:</span> 10s`,
 	},
@@ -398,7 +400,7 @@ const roleActions = {
 		recast: 30,
 		level: 40,
 		range: 25,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Silences target.<br/>
 			<span class="green">Duration:</span> 1s`,
 	},
@@ -407,7 +409,7 @@ const roleActions = {
 		level: 36,
 		recast: 120,
 		range: 3,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Silences target.<br/>
 			<span class="green">Duration:</span> 1s`,
 	},
@@ -415,7 +417,7 @@ const roleActions = {
 		name: "Largesse",
 		level: 40,
 		recast: 90,
-		affinity: ['healer'],
+		affinity: ['role','healer'],
 		description: `Increases healing magic potency by 20%.<br/>
 			<span class="green">Duration:</span> 20s`,
 		execute(state) { setStatus('largesse', true); },
@@ -427,7 +429,7 @@ const roleActions = {
 		recast: 25,
 		level: 44,
 		range: 25,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Stuns target.<br/>
 			<span class="green">Duration:</span> 2s`,
 	},
@@ -436,14 +438,14 @@ const roleActions = {
 		recast: 90,
 		level: 44,
 		range: 25,
-		affinity: ['melee'],
+		affinity: ['role','melee'],
 		description: `Removes <span class="yellow">Bind</span> and <span class="yellow">Heavy</span> from target party member other than self.`,
 	},
 	surecast: {
 		name: "Surecast",
 		recast: 30,
 		level: 44,
-		affinity: ['caster','healer'],
+		affinity: ['role','caster','healer'],
 		description: `Next spell is cast without interruption.<br/>
 			<span class="green">Additional Effect:</span> Nullifies knockback and draw-in effects<br/>
 			<span class="green">Duration:</span> 10s`,
@@ -454,7 +456,7 @@ const roleActions = {
 		level: 44,
 		recast: 90,
 		radius: 5,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Provoke nearby enemies, placing yourself at the top of their enmity list.`,
 	},
 	
@@ -464,7 +466,7 @@ const roleActions = {
 		recast: 90,
 		level: 48,
 		range: 25,
-		affinity: ['caster'],
+		affinity: ['role','caster'],
 		description: `Removes a single damage over time effect from target party member other than self.<br/>
 			<span class="green">Additional Effect:</span> Restores target's HP<br/>
 			<span class="green">Cure Potency:</span> 200`,
@@ -474,7 +476,7 @@ const roleActions = {
 		recast: 150,
 		level: 48,
 		range: 25,
-		affinity: ['ranged'],
+		affinity: ['role','ranged'],
 		description: `Reduces physical damage taken by a party member by 20%.<br/>
 			<span class="green">Duration:</span> 10s`,
 	},
@@ -483,7 +485,7 @@ const roleActions = {
 		level: 48,
 		recast: 150,
 		range: 25,
-		affinity: ['healer'],
+		affinity: ['role','healer'],
 		description: `Instantly draw target party member to your side. Cannot be used outside of combat or when target is suffering from certain enfeeblements.`,
 	},
 	shirk: {
@@ -491,14 +493,14 @@ const roleActions = {
 		level: 48,
 		recast: 120,
 		range: 25,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Diverts 25% of enmity to target party member.`,
 	},
 	true_north: {
 		name: "True North",
 		recast: 150,
 		level: 48,
-		affinity: ['melee'],
+		affinity: ['role','melee'],
 		description: `Nullifies all action direction requirements.<br/>
 			<span class="green">Duration:</span> 15s`,
 		execute(state) {
@@ -512,7 +514,7 @@ const roleActions = {
 		recast: 0,
 		cast: 0,
 		animTime: 0,
-		affinity: ['caster'],
+		affinity: ['role','caster'],
 		description: `Take no action until the next mana tick.`,
 		type: "spell",
 		getCast(state){
@@ -522,7 +524,7 @@ const roleActions = {
 	max_ether: {
 		name: "Max-Ether",
 		recast: 300,
-		affinity: ['caster','healer'],
+		affinity: ['role','caster','healer'],
 		description: `Restores up to 16% of MP (1360 points max).<br/>Processed via the alchemical extraction of aetheric essence occurring in elemental crystals, the contents of this vial instantly restore a considerable amount of MP.`,
 		recastGroup(state){
 			return 'potion';
@@ -534,7 +536,7 @@ const roleActions = {
 	max_ether_hq: {
 		name: "Max-Ether HQ",
 		recast: 270,
-		affinity: ['caster','healer'],
+		affinity: ['role','caster','healer'],
 		description: `Restores up to 20% of MP (1700 points max).<br/>Processed via the alchemical extraction of aetheric essence occurring in elemental crystals, the contents of this vial instantly restore a considerable amount of MP.`,
 		recastGroup(state){
 			return 'potion';
@@ -546,7 +548,7 @@ const roleActions = {
 	infusion_intelligence: {
 		name: "Infusion of Intelligence",
 		recast: 270,
-		affinity: ['caster'],
+		affinity: ['role','caster'],
 		description: `Intelligence +10% (Max 137)<br/>
 			This diluted brew temporarily increases intelligence, but for twice the duration of similar potions.<br/>
 			<span class="green">Duration:</span> 30s`,
@@ -560,7 +562,7 @@ const roleActions = {
 	infusion_mind: {
 		name: "Infusion of Mind",
 		recast: 270,
-		affinity: ['healer'],
+		affinity: ['role','healer'],
 		description: `Mind +10% (Max 137)<br/>
 			This diluted brew temporarily increases mind, but for twice the duration of similar potions.<br/>
 			<span class="green">Duration:</span> 30s`,
@@ -574,7 +576,7 @@ const roleActions = {
 	infusion_vitality: {
 		name: "Infusion of Vitality",
 		recast: 270,
-		affinity: ['tank'],
+		affinity: ['role','tank'],
 		description: `Vitality +10% (Max 137)<br/>
 			This diluted brew temporarily increases vitality, but for twice the duration of similar potions.<br/>
 			<span class="green">Duration:</span> 30s`,
@@ -592,7 +594,7 @@ const roleActions = {
 		description: `Dexterity +10% (Max 137)<br/>
 			This diluted brew temporarily increases dexterity, but for twice the duration of similar potions.<br/>
 			<span class="green">Duration:</span> 30s`,
-		affinity: ['melee', 'ranged'],
+		affinity: ['role','melee', 'ranged'],
 		recastGroup(state){
 			return 'potion';
 		},
@@ -607,7 +609,7 @@ const roleActions = {
 		description: `Strength +10% (Max 137)<br/>
 			This diluted brew temporarily increases strength, but for twice the duration of similar potions.<br/>
 			<span class="green">Duration:</span> 30s`,
-		affinity: ['melee', 'tank'],
+		affinity: ['role','melee', 'tank'],
 		recastGroup(state){
 			return 'potion';
 		},
