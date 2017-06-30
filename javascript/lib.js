@@ -463,7 +463,7 @@ function updateStatus(name, stack, set=false) {
 	if(set) {
 		state.statuses[name].stacks = stack;
 	} else if(!isNew) {
-		state.statuses[name].stacks = Math.min(state.statuses[name].stacks+stack, state.statuses[name].maxStacks);
+		state.statuses[name].addStacks(stack);
 	}
 
 	if(state.statuses[name].stacks <= 0){

@@ -89,14 +89,7 @@ function updateDots(time){
 function calculatePotency(action){
 	var potency = action.getPotency(state);
 	var mod = 1;
-	
-	if(action.type == "weaponskill"){
-		if(hasStatus("hissatsu_kaiten")) {
-			mod += .5;
-			setStatus('hissatsu_kaiten', false);
-		}
-	}
-	
+		
 	return potency*mod;
 }
 

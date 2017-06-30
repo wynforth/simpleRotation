@@ -3,7 +3,7 @@ class BaseAction {
 		this.name = name;
 		
 		this.type = "ability";
-		this.description = `Does an action`;
+		this.description = ``;
 		this.cast = 0;
 		this.recast = 2.5;
 		this.potency = 0;
@@ -16,7 +16,7 @@ class BaseAction {
 		this.level = 1;
 		this.radius = 0;
 		this.range = 0;
-		this.affinity = ['role',''];
+		this.affinity = [];
 	}
 	
 	recastGroup(){
@@ -42,7 +42,7 @@ class BaseAction {
 	}
 	
 	isHighlighted(state) {
-		return false;
+		return this.isCombo(state);
 	}
 	
 	getReplacement(state) {
@@ -90,7 +90,7 @@ class Buff extends BaseAction{
 }
 
 class Spell extends BaseAction{
-	constructor(name, potency, cast, mana, level, range, radius){
+	constructor(name,level, potency, cast, mana,  range, radius){
 		super(name);
 		this.potency = potency;
 		this.cast = cast;
@@ -113,13 +113,13 @@ class Spell extends BaseAction{
 }
 
 class WeaponSkill extends BaseAction{
-	constructor(name, potency, cast, tp, level, range, radius){
+	constructor(name,level,  potency, cast, tp, range, radius){
 		super(name);
 		this.potency = potency;
 		this.cast = cast;
 		this.tp = tp,
 		this.level = level,
-		this.range = range, 
+		this.range = 3, 
 		this.radius = radius,
 		this.type = "weaponskill";
 	}
@@ -131,19 +131,40 @@ class WeaponSkill extends BaseAction{
 }
 
 class Status {
-	constructor(name, duration, color){
+	constructor(name, duration, color) {
 		this.name = name;
 		this.duration = duration;
 		this.color = color;
 		this.stacks = 1;
 		this.maxStacks = 1;
 	};
-	
-	tick(state) {
-		
-	};
+
+	tick(state) {};
 }
 
+class StatusStack extends Status {
+	constructor(name, duration, color, initial, max) {
+		super(name, duration, color);
+		this.stacks = initial;
+		this.maxStacks = 3;
+	};
+	
+	addStacks(amt){
+		this.stacks = Math.min(this.stacks+amt, this.maxStacks);
+	}
+
+	tick(state) {};
+}
+
+class Dot extends Status {
+	constructor(name, duration, potency, color) {
+		super(name, duration, color);
+		this.potency = potency;
+	}
+	tick(state) {
+		state += potency;
+	};
+}
 const baseAction = {
 	name: "Action",
 	type: "ability",
@@ -471,8 +492,12 @@ const baseStatus = {
 	duration: 0,
 	stacks: 1,
 	maxStacks: 1,
+	color: '#888888',
 	tick(state) {},
-	color: '#888888'
+	
+	addStacks(amt){
+		this.stacks = Math.min(this.stacks+amt, this.maxStacks);
+	},
 };
 
 const general_status = {
