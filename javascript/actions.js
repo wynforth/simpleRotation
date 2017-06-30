@@ -130,7 +130,19 @@ class WeaponSkill extends BaseAction{
 	}
 }
 
-
+class Status {
+	constructor(name, duration, color){
+		this.name = name;
+		this.duration = duration;
+		this.color = color;
+		this.stacks = 1;
+		this.maxStacks = 1;
+	};
+	
+	tick(state) {
+		
+	};
+}
 
 const baseAction = {
 	name: "Action",
@@ -210,12 +222,11 @@ const baseAction = {
 };
 
 class RoleAction extends BaseAction {
-	constructor(name, level, recast, range, roles, desc){
+	constructor(name, level, recast, range, roles){
 		super(name);
 		this.level = level;
 		this.recast = recast;
 		this.range = range;
-		this.description = desc;
 		this.affinity = roles;
 	}
 	
@@ -224,552 +235,236 @@ class RoleAction extends BaseAction {
 	}
 }
 
-const roleActions = {
-	//level 8
-	addle: new RoleAction("Addle", 8, 120, 25, ['caster'],
-		`Lowers target's intelligence and mind by 10%.<br/>
-		<span class="green">Duration:</span> 10s`
-	),
-	/*{
-		name: "Addle",
-		recast: 120,
-		level: 8,
-		range: 25,
-		affinity: ['role','caster'],
-		description: ,
-		execute(state) { setStatus('addle',true); }
-	},*/
-	cleric_stance: {
-		name: "Cleric Stance",
-		recast: 90,
-		level: 8,
-		affinity: ['role','healer'],
-		description: `Increases attack magic potency by 5%.<br/>
-			<span class="green">Duration:</span> 15s`
-	},
-	rampart: {
-		name: "Rampart",
-		level: 8,
-		recast: 90,
-		affinity: ['role','tank'],
-		description: `Reduces damage taken by 20%.<br/>
-			<span class="green">Duration:</span> 20s`
-	},
-	second_wind: {
-		name: "Second Wind",
-		recast: 120,
-		level: 8,
-		affinity: ['role','melee','ranged'],
-		description: `Instantly restores own HP.<br/>
-			<span class="green">Cure Potency:</span> 500<br/>
-			Cure potency varies with current attack power.`
-	},
+class RoleBuff extends RoleAction {
+	constructor(name, level, recast, roles){
+		super(name, level, recast, 0, roles)
+	}
 	
-	//level 12
-	arms_length: {
-		name:"Arm's Length",
-		recast: 60,
-		level: 12,
-		affinity: ['role','melee'],
-		description: `Creates a barrier nullifying knockback and draw-in effects.<br/>
-			<span class="green">Duration:</span> 5s<br/>
-			<span class="green">Additional Effect:</span> <span class="yellow">Slow</span> +20% when barrier is struck<br/>
-			<span class="green">Duration:</span> 15s<br/>`
-	},
-	'break': {
-		name: "Break",
-		type: "spell",
-		cast: 2.5,
-		recast: 2.5,
-		potency: 50,
-		level: 12,
-		range: 25,
-		affinity: ['role','caster','healer'],
-		description: `Deals unaspected damage with a potency of 50.<br/>
-			<span class="green">Additional Effect:</span> <span class="yellow">Heavy</span> +20%<br/>
-			<span class="green">Duration:</span> 20s`
-	},
-	foot_graze: {
-		name: "Foot Graze",
-		recast: 30,
-		level: 12,
-		range: 3,
-		affinity: ['role','ranged'],
-		description: `Binds target.<br/>
-			<span class="green">Duration:</span> 10s<br/>
-			Cancels auto-attack upon execution.<br/>
-			Target unbound if damage taken.`
-	},
-	low_blow: {
-		name: "Low Blow",
-		level: 12,
-		recast: 25,
-		range: 3,
-		affinity: ['role','tank'],
-		description: `Stuns target.<br/>
-			<span class="green">Duration:</span> 5s`
-	},
+	execute(state){
+		setStatus(this.id,true);
+	}
+}
+
+
+const roleActions = {};
+
+//level 8
+roleActions.addle = new RoleAction("Addle", 8, 120, 25, ['caster']);
+roleActions.addle.description = `Lowers target's intelligence and mind by 10%.<br/><span class="green">Duration:</span> 10s`;
+
+roleActions.cleric_stance = new RoleBuff("Cleric Stance", 8, 90, ['healer']);
+roleActions.cleric_stance.description = `Increases attack magic potency by 5%.<br/><span class="green">Duration:</span> 15s`;
+
+roleActions.rampart = new RoleBuff("Rampart", 8, 90, ['tank']);
+roleActions.rampart.description = `Reduces damage taken by 20%.<br/><span class="green">Duration:</span> 20s`;
+
+roleActions.second_wind = new RoleAction("Second Wind", 8, 120, 0, ['melee','ranged']);
+roleActions.second_wind.description = `Instantly restores own HP.<br/><span class="green">Cure Potency:</span> 500<br/>Cure potency varies with current attack power.`;
 	
-	//level 16
-	drain: {
-		name: "Drain",
-		type: "spell",
-		cast: 2.5,
-		recast: 2.5,
-		potency: 80,
-		level: 16,
-		range: 25,
-		affinity: ['role','caster'],
-		description: `Deals unaspected damage with a potency of 80.<br/>
-			<span class="green">Additional Effect:</span> Absorbs a portion of damage dealt as HP`
-	},
-	leg_graze: {
-		name: "Leg Graze",
-		recast: 30,
-		level: 16,
-		range: 3,
-		affinity: ['role','ranged'],
-		description: `Inflicts target with <span class="yellow">Heavy</span> +40%.<br/>
-			<span class="green">Duration:</span> 10s`
-	},
-	leg_sweep: {
-		name: "Leg Sweep",
-		recast: 40,
-		level: 16,
-		range: 3,
-		affinity: ['role','melee'],
-		description: `Stuns target.<br/>
-			<span class="green">Duration:</span> 3s`
-	},
-	protect: {
-		name: "Protect",
-		type: "spell",
-		cast: 3,
-		level: 16,
-		range: 25,
-		radius: 15,
-		mana: 1200,
-		affinity: ['role','healer'],
-		description: `Increases the physical and magic defense of target and all party members nearby target.<br/>
-			<span class="green">Duration:</span> 30m`
-	},
-	provoke: {
-		name: "Provoke",
-		level: 16,
-		recast: 40,
-		range: 25,
-		affinity: ['role','tank'],
-		description: `Gesture threateningly, placing yourself at the top of a target's enmity list.`
-	},
+//level 12
+roleActions.arms_length = new RoleAction("Arm's Length", 12, 60, 0, ['melee']);
+roleActions.arms_length.description = `Creates a barrier nullifying knockback and draw-in effects.<br/><span class="green">Duration:</span> 5s<br/>
+			<span class="green">Additional Effect:</span> <span class="yellow">Slow</span> +20% when barrier is struck<br/><span class="green">Duration:</span> 15s<br/>`;
+			
+roleActions.break = new RoleAction("Break", 12, 2.5, 25, ['caster','healer']);
+roleActions.break.cast = 2.5;
+roleActions.break.type = "spell";
+roleActions.break.potency = 50;
+roleActions.break.range = 25;
+roleActions.break.description = `Deals unaspected damage with a potency of 50.<br/><span class="green">Additional Effect:</span> <span class="yellow">Heavy</span> +20%<br/><span class="green">Duration:</span> 20s`;
 	
-	//level 20
-	convalescence: {
-		name: "Convalescence",
-		level: 16,
-		recast: 120,
-		affinity: ['role','tank'],
-		description: `Increases own HP recovery via healing magic by 20%.<br/>
-			<span class="green">Duration:</span> 20s`,
-		execute(state) { setStatus('convalescence',true); }
-	},
-	diversion: {
-		name: "Diversion",
-		recast: 120,
-		level: 20,
-		affinity: ['role','caster', 'melee'],
-		description: `Reduces enmity generation.<br/><br/>
-			<span class="green">Duration:</span> 15s`,
-		execute(state){ setStatus("diversion",true); }
-	},
-	esuna: {
-		name: "Esuna",
-		type: "spell",
-		level: 20,
-		cast: 1,
-		range: 25,
-		mana: 840,
-		affinity: ['role','healer'],
-		description: `Removes a single detrimental effect from target.`,
-	},		
-	peloton: {
-		name: "Peloton",
-		recast: 5,
-		level: 20,
-		radius: 25,
-		affinity: ['role','ranged'],
-		description: `Increases movement speed of self and nearby party members as long as they remain within distance.<br/>
-			<span class="green">Duration:</span> 30s<br/>
-			Effect also ends upon reuse or when enmity is generated. Cannot be used in battle.`,
-	},
+roleActions.foot_graze = new RoleAction("Foot Graze", 12, 30, 25, ['ranged']);
+roleActions.foot_graze.description = `Binds target.<br/><span class="green">Duration:</span> 10s<br/>Cancels auto-attack upon execution.<br/>Target unbound if damage taken.`;
+
+roleActions.low_blow = new RoleAction("Low Blow", 12, 30, 3, ['tank']);
+roleActions.low_blow.description = `Stuns target.<br/><span class="green">Duration:</span> 5s`;
+
+//level 16
+roleActions.drain = new RoleAction("Drain", 16, 2.5, 25, ['caster']);
+roleActions.drain.type ="spell";
+roleActions.drain.cast = 2.5;
+roleActions.drain.potency = 80;
+roleActions.drain.description = `Deals unaspected damage with a potency of 80.<br/><span class="green">Additional Effect:</span> Absorbs a portion of damage dealt as HP`;
+
+roleActions.leg_graze = new RoleAction("Leg Graze", 16, 30, 3, ['ranged']);
+roleActions.leg_graze.description = `Inflicts target with <span class="yellow">Heavy</span> +40%.<br/><span class="green">Duration:</span> 10s`;
+
+roleActions.leg_sweep = new RoleAction("Leg Sweep", 16, 40, 3, ['melee']);
+roleActions.leg_sweep.description = `Stuns target.<br/><span class="green">Duration:</span> 3s`;
+
+roleActions.protect = new RoleAction("Protect", 16, 2.5, 25, ['healer']);
+roleActions.protect.type = "spell";
+roleActions.protect.cast = 3;
+roleActions.protect.radius = 15;
+roleActions.protect.mana = 1200;
+roleActions.protect.description = `Increases the physical and magic defense of target and all party members nearby target.<br/><span class="green">Duration:</span> 30m`;
+
+roleActions.provoke = new RoleAction("Provoke", 16, 40, 25, ['tank']);
+roleActions.provoke.description = `Gesture threateningly, placing yourself at the top of a target's enmity list.`;
+
+//level 20
+roleActions.convalescence = new RoleBuff("Convalescence", 16, 120, ['tank']);
+roleActions.convalescence.description = `Increases own HP recovery via healing magic by 20%.<br/><span class="green">Duration:</span> 20s`;
+
+roleActions.diversion = new RoleBuff("Diversion", 20, 120, ['caster', 'melee']);
+roleActions.diversion.description = `Reduces enmity generation.<br/><br/><span class="green">Duration:</span> 15s`;
+
+roleActions.esuna = new RoleAction("Esuna", 20, 2.5, 25, ['healer']);
+roleActions.esuna.cast = 1;
+roleActions.esuna.mana = 840;
+roleActions.esuna.description = `Removes a single detrimental effect from target.`;
+
+roleActions.peloton = new RoleAction("Peloton", 20, 5, 25, ['ranged'])
+roleActions.peloton.description = `Increases movement speed of self and nearby party members as long as they remain within distance.<br/>
+			<span class="green">Duration:</span> 30s<br/>Effect also ends upon reuse or when enmity is generated. Cannot be used in battle.`;
+
+//level 24
+roleActions.anticipation = new RoleBuff("Anticipation", 24, 60, ['tank']);
+roleActions.anticipation.description = `Increases parry rate by 30%.<br/><span class="green">Duration:</span> 20s`;
+
+roleActions.invigorate = new RoleAction("Invigorate", 24, 120, 0, ['melee', 'ranged']);
+roleActions.invigorate.description = `Instantly restores 400 TP.`;
+roleActions.invigorate.execute = function(state) { setTP(state.tp + 400); };
+
+roleActions.lucid_dreaming = new RoleBuff("Lucid Dreaming", 24, 120, ['caster', 'healer']);
+roleActions.lucid_dreaming.description = `Reduces enmity by half.<br/><span class="green">Additional Effect:</span> <span class="yellow">Refresh</span><br/>
+			<span class="green">Refresh Potency:</span> 80<br/><span class="green">Duration:</span> 21s`;
+			
+//level 32
+
+roleActions.bloodbath = new RoleBuff("Bloodbath", 32, 90, ['melee']);
+roleActions.bloodbath.description = `Converts a portion of physical damage dealt into HP.<br/><span class="green">Duration:</sapn> 20s`;
+
+roleActions.reprisal = new RoleBuff("Reprisal", 24, 60, ['tank']);
+roleActions.reprisal.description = `Increases parry rate by 30%.<br/><span class="green">Duration:</span> 20s`;
+
+roleActions.swiftcast = new RoleBuff("Swiftcast", 32, 60, ['caster','healer']);
+roleActions.swiftcast.description = `Next spell is cast immediately.<br/><span class="green">Duration:</span> 10s`;
+
+roleActions.tactician = new RoleBuff("Tactician", 32, 180, ['ranged']);
+roleActions.tactician.range = 25;
+roleActions.tactician.description = `Gradually restores own TP and the TP of all nearby party members.<br/>
+			<span class="green">Duration:</span> 30s<br/><span class="green">Additional Effect:</span> Halves enmity`;
+
+//level 36
+roleActions.awareness = new RoleBuff("Awareness", 36, 120, ['tank']);
+roleActions.awareness.description = `Nullifies chance of suffering critical damage.<br/><span class="green">Duration:</span> 25s`;
+
+roleActions.eye_for_an_eye = new RoleAction("Eye for an Eye", 36, 180,  25, ['healer']);
+roleActions.eye_for_an_eye.description = `Erects a magicked barrier around a single party member or pet.<br/><span class="green">Duration:</span> 20s<br/>
+			<span class="green">Barrier Effect:</span> 20% chance that when barrier is struck, the striker will deal 10% less damage<br/><span class="green">Duration:</span> 10s`;
+			
+roleActions.goad = new RoleAction("Goad", 36, 180, 25, ['melee']);
+roleActions.goad.description = `Refreshes TP of a single party member.<br/><span class="green">Duration:</span> 30s`;
 	
-	//level 24
-	anticipation: {
-		name: "Anticipation",
-		level: 24,
-		recast: 60,
-		affinity: ['role','tank'],
-		description: `Increases parry rate by 30%.<br/>
-			<span class="green">Duration:</span> 20s`,
-		execute(state) { setStatus('anticipation',true); }
-	},
-	invigorate: {
-		name: "Invigorate",
-		recast: 120,
-		level: 24,
-		affinity: ['role','melee', 'ranged'],
-		description: `Instantly restores 400 TP.`,
-	},
-	lucid_dreaming: {
-		name: "Lucid Dreaming",
-		recast: 120,
-		level: 24,
-		affinity: ['role','caster', 'healer'],
-		description: `Reduces enmity by half.<br/>
-			<span class="green">Additional Effect:</span> <span class="yellow">Refresh</span><br/>
-			<span class="green">Refresh Potency:</span> 80<br/>
-			<span class="green">Duration:</span> 21s`,
-		execute(state){ setStatus("lucid_dreaming",true); }
-	},
-	
-	//level 32
-	bloodbath: {
-		name: "Bloodbath",
-		recast: 90,
-		level: 32,
-		affinity: ['role','melee'],
-		description: `Converts a portion of physical damage dealt into HP.<br/>
-			<span class="green">Duration:</sapn> 20s`,
-		execute(state) {
-			setStatus('bloodbath', true);
-		}
-	},
-	reprisal: {
-		name: "Reprisal",
-		level: 24,
-		recast: 60,
-		range: 3,
-		affinity: ['role','tank'],
-		description: `Increases parry rate by 30%.<br/>
-			<span class="green">Duration:</span> 20s`,
-	},
-	swiftcast: {
-		name: "Swiftcast",
-		recast: 60,
-		level: 32,
-		affinity: ['role','caster','healer'],
-		description: `Next spell is cast immediately.<br/>
-			<span class="green">Duration:</span> 10s`,
-		execute(state){ setStatus("swiftcast",true); }
-	},
-	tactician: {
-		name: "Tactician",
-		recast: 180,
-		level: 32,
-		radius: 25,
-		affinity: ['role','ranged'],
-		description: `Gradually restores own TP and the TP of all nearby party members.<br/>
-			<span class="green">Duration:</span> 30s<br/>
-			<span class="green">Additional Effect:</span> Halves enmity`,
-		execute(state) {
-			setStatus("tactician", 30);
-		}
-	},
-	
-	//level 36
-	awareness: {
-		name: "Awareness",
-		level: 36,
-		recast: 120,
-		affinity: ['role','tank'],
-		description: `Nullifies chance of suffering critical damage.<br/>
-			<span class="green">Duration:</span> 25s`,
-		execute(state) { setStatus('awareness',true); }
-	},
-	eye_for_an_eye: {
-		name: "Eye for an Eye",
-		recast: 180,
-		level: 36,
-		range: 25,
-		affinity: ['role','healer'],
-		description: `Erects a magicked barrier around a single party member or pet.<br/>
-			<span class="green">Duration:</span> 20s<br/>
-			<span class="green">Barrier Effect:</span> 20% chance that when barrier is struck, the striker will deal 10% less damage<br/>
-			<span class="green">Duration:</span> 10s`,
-	},
-	goad: {
-		name: "Goad",
-		recast: 180,
-		level: 36,
-		range: 25,
-		affinity: ['role','melee'],
-		description: `Refreshes TP of a single party member.<br/>
-			<span class="green">Duration:</span> 30s`,
-	},
-	mana_shift: {
-		name: "Mana Shift", 
-		recast: 150,
-		level: 36,
-		range: 25,
-		affinity: ['role','caster'],
-		description: `Transfers up to 20% of own maximum MP to target party member.`
-	},
-	refresh: {
-		name: "Refresh",
-		recast: 180,
-		level: 36,
-		radius: 25,
-		affinity: ['role','ranged'],
-		description: `Gradually restores own MP and the MP of all nearby party members.<br/>
-			<span class="green">Duration:</span> 30s<br/>
-			<span class="green">Additional Effect:</span> Halves enmity`,
-		execute(state) {
-			setStatus("refresh", 30);
-		}
-	},
-	
-	//level 40
-	apocatastasis: {
-		name: "Apocatastasis",
-		recast: 150,
-		level: 40,
-		range: 25,
-		affinity: ['role','caster'],
-		description: `Reduces a party member's magic vulnerability by 20%.<br/>
-			<span class="green">Duration:</span> 10s`,
-		execute(state) { setStatus('apocatastasis',true); }
-	},
-	feint: {
-		name: "Feint",
-		recast: 120,
-		level: 40,
-		range: 3,
-		affinity: ['role','melee'],
-		description: `Lowers target's strength and dexterity by 10%.<br/>
-			<span class="green">Duration:</span> 10s`,
-	},
-	head_graze: {
-		name: "Head Graze",
-		recast: 30,
-		level: 40,
-		range: 25,
-		affinity: ['role','ranged'],
-		description: `Silences target.<br/>
-			<span class="green">Duration:</span> 1s`,
-	},
-	interject: {
-		name: "Interject",
-		level: 36,
-		recast: 120,
-		range: 3,
-		affinity: ['role','tank'],
-		description: `Silences target.<br/>
-			<span class="green">Duration:</span> 1s`,
-	},
-	largesse: {
-		name: "Largesse",
-		level: 40,
-		recast: 90,
-		affinity: ['role','healer'],
-		description: `Increases healing magic potency by 20%.<br/>
-			<span class="green">Duration:</span> 20s`,
-		execute(state) { setStatus('largesse', true); },
-	},
-	
-	//level 44
-	arm_graze: {
-		name: "Arm Graze",
-		recast: 25,
-		level: 44,
-		range: 25,
-		affinity: ['role','ranged'],
-		description: `Stuns target.<br/>
-			<span class="green">Duration:</span> 2s`,
-	},
-	crutch: {
-		name: "Crutch",
-		recast: 90,
-		level: 44,
-		range: 25,
-		affinity: ['role','melee'],
-		description: `Removes <span class="yellow">Bind</span> and <span class="yellow">Heavy</span> from target party member other than self.`,
-	},
-	surecast: {
-		name: "Surecast",
-		recast: 30,
-		level: 44,
-		affinity: ['role','caster','healer'],
-		description: `Next spell is cast without interruption.<br/>
-			<span class="green">Additional Effect:</span> Nullifies knockback and draw-in effects<br/>
-			<span class="green">Duration:</span> 10s`,
-		execute(state){ setStatus("surecast",true); }
-	},
-	ultimatum: {
-		name: "Ultimatum",
-		level: 44,
-		recast: 90,
-		radius: 5,
-		affinity: ['role','tank'],
-		description: `Provoke nearby enemies, placing yourself at the top of their enmity list.`,
-	},
+roleActions.mana_shift = new RoleAction("Mana Shift",  36, 150, 25, ['caster']);
+roleActions.mana_shift.description = `Transfers up to 20% of own maximum MP to target party member.`;
+
+roleActions.refresh = new RoleBuff("Refresh", 36,  180, ['ranged']);
+roleActions.refresh.radius = 25;
+roleActions.refresh.description = `Gradually restores own MP and the MP of all nearby party members.<br/><span class="green">Duration:</span> 30s<br/><span class="green">Additional Effect:</span> Halves enmity`;
+
+//level 40
+roleActions.apocatastasis = new RoleAction("Apocatastasis", 40,  150, 25, ['caster']);
+roleActions.apocatastasis.description = `Reduces a party member's magic vulnerability by 20%.<br/><span class="green">Duration:</span> 10s`;
+
+roleActions.feint = new RoleAction("Feint", 40,  120, 3, ['melee']);
+roleActions.feint.description = `Lowers target's strength and dexterity by 10%.<br/><span class="green">Duration:</span> 10s`;
+
+roleActions.head_graze = new RoleAction("Head Graze", 40, 30, 25, ['ranged']);
+roleActions.head_graze.description = `Silences target.<br/><span class="green">Duration:</span> 1s`;
+
+roleActions.interject = new RoleAction("Interject", 36, 120, 3, ['tank']);
+roleActions.interject.description = `Silences target.<br/><span class="green">Duration:</span> 1s`;
+
+roleActions.largesse = new RoleBuff("Largesse",  40, 90, ['healer']);
+roleActions.largesse.description = `Increases healing magic potency by 20%.<br/><span class="green">Duration:</span> 20s`;
+
+
+//level 44
+roleActions.arm_graze = new RoleAction("Arm Graze", 44, 25, 25, ['ranged']);
+roleActions.arm_graze.description = `Stuns target.<br/><span class="green">Duration:</span> 2s`;
+
+roleActions.crutch = new RoleAction("Crutch", 44 ,90, 25, ['melee']);
+roleActions.crutch.description = `Removes <span class="yellow">Bind</span> and <span class="yellow">Heavy</span> from target party member other than self.`;
+
+roleActions.surecast = new RoleBuff("Surecast", 44, 30,  ['caster','healer']);
+roleActions.surecast.description = `Next spell is cast without interruption.<br/><span class="green">Additional Effect:</span> Nullifies knockback and draw-in effects<br/><span class="green">Duration:</span> 10s`;
+
+roleActions.ultimatum = new RoleAction("Ultimatum",  44, 90, 0, ['tank']);
+roleActions.ultimatum.radius = 5;
+roleActions.ultimatum.description = `Provoke nearby enemies, placing yourself at the top of their enmity list.`;
 	
 	//level 48
-	erase: {
-		name: "Erase",
-		recast: 90,
-		level: 48,
-		range: 25,
-		affinity: ['role','caster'],
-		description: `Removes a single damage over time effect from target party member other than self.<br/>
-			<span class="green">Additional Effect:</span> Restores target's HP<br/>
-			<span class="green">Cure Potency:</span> 200`,
-	},
-	palisade: {
-		name: "Palisade",
-		recast: 150,
-		level: 48,
-		range: 25,
-		affinity: ['role','ranged'],
-		description: `Reduces physical damage taken by a party member by 20%.<br/>
-			<span class="green">Duration:</span> 10s`,
-	},
-	rescue: {
-		name: "Rescue",
-		level: 48,
-		recast: 150,
-		range: 25,
-		affinity: ['role','healer'],
-		description: `Instantly draw target party member to your side. Cannot be used outside of combat or when target is suffering from certain enfeeblements.`,
-	},
-	shirk: {
-		name: "Shirk",
-		level: 48,
-		recast: 120,
-		range: 25,
-		affinity: ['role','tank'],
-		description: `Diverts 25% of enmity to target party member.`,
-	},
-	true_north: {
-		name: "True North",
-		recast: 150,
-		level: 48,
-		affinity: ['role','melee'],
-		description: `Nullifies all action direction requirements.<br/>
-			<span class="green">Duration:</span> 15s`,
-		execute(state) {
-			setStatus('true_north', true);
-		}
-	},
-	
+roleActions.erase = new RoleAction("Erase", 48, 90, 25,  ['caster']);
+roleActions.erase.description = `Removes a single damage over time effect from target party member other than self.<br/>
+			<span class="green">Additional Effect:</span> Restores target's HP<br/><span class="green">Cure Potency:</span> 200`;
+
+roleActions.palisade = new RoleAction("Palisade", 48, 150, 25, ['ranged']);
+roleActions.palisade.description = `Reduces physical damage taken by a party member by 20%.<br/><span class="green">Duration:</span> 10s`;
+
+roleActions.rescue = new RoleAction("Rescue", 48, 150, 25, ['healer']);
+roleActions.rescue.description = `Instantly draw target party member to your side. Cannot be used outside of combat or when target is suffering from certain enfeeblements.`;
+
+roleActions.shirk = new RoleAction("Shirk", 48, 120, 25, ['tank']);
+roleActions.shirk.description = `Diverts 25% of enmity to target party member.`;
+
+roleActions.true_north = new RoleBuff("True North", 48, 150,  ['melee']);
+roleActions.true_north.description = `Nullifies all action direction requirements.<br/><span class="green">Duration:</span> 15s`;
+
 	//potions/other
-	wait_for_mana: {
-		name: "Wait for Mana",
-		recast: 0,
-		cast: 0,
-		animTime: 0,
-		affinity: ['role','caster'],
-		description: `Take no action until the next mana tick.`,
-		type: "spell",
-		getCast(state){
-			return state.nextTick - state.currentTime;
-		}
-	},
-	max_ether: {
-		name: "Max-Ether",
-		recast: 300,
-		affinity: ['role','caster','healer'],
-		description: `Restores up to 16% of MP (1360 points max).<br/>Processed via the alchemical extraction of aetheric essence occurring in elemental crystals, the contents of this vial instantly restore a considerable amount of MP.`,
-		recastGroup(state){
-			return 'potion';
-		},
-		execute(state){
-			setMana(state.mana + Math.min(state.maxMana * .16, 1360));
-		}
-	},
-	max_ether_hq: {
-		name: "Max-Ether HQ",
-		recast: 270,
-		affinity: ['role','caster','healer'],
-		description: `Restores up to 20% of MP (1700 points max).<br/>Processed via the alchemical extraction of aetheric essence occurring in elemental crystals, the contents of this vial instantly restore a considerable amount of MP.`,
-		recastGroup(state){
-			return 'potion';
-		},
-		execute(state){
-			setMana(state.mana + Math.min(state.maxMana * .2, 1700));
-		}
-	},
-	infusion_intelligence: {
-		name: "Infusion of Intelligence",
-		recast: 270,
-		affinity: ['role','caster'],
-		description: `Intelligence +10% (Max 137)<br/>
+roleActions.wait_for_mana = new RoleAction("Wait for Mana", 1, 0, 0, ['caster']);
+roleActions.wait_for_mana.cast = 0;
+roleActions.wait_for_mana.animTime = 0;
+roleActions.wait_for_mana.description = `Take no action until the next mana tick.`;
+roleActions.wait_for_mana.type = "spell";
+roleActions.wait_for_mana.getCast = function(state){	return state.nextTick - state.currentTime; };
+
+roleActions.max_ether = new RoleAction("Max-Ether", 1, 300, 0, ['caster','healer']);
+roleActions.max_ether.description = `Restores up to 16% of MP (1360 points max).<br/>Processed via the alchemical extraction of aetheric essence occurring in elemental crystals, the contents of this vial instantly restore a considerable amount of MP.`,
+roleActions.max_ether.recastGroup = function(state){ return 'potion';	};
+roleActions.max_ether.execute = function(state){ setMana(state.mana + Math.min(state.maxMana * .16, 1360)); };
+
+roleActions.max_ether_hq = new RoleAction("Max-Ether HQ", 1, 270, 0, ['caster','healer']);
+roleActions.max_ether_hq.description = `Restores up to 20% of MP (1700 points max).<br/>Processed via the alchemical extraction of aetheric essence occurring in elemental crystals, the contents of this vial instantly restore a considerable amount of MP.`,
+roleActions.max_ether_hq.recastGroup = function(state){ return 'potion';	};
+roleActions.max_ether_hq.execute = function(state){ setMana(state.mana + Math.min(state.maxMana * .2, 1700)); };
+
+roleActions.infusion_intelligence = new RoleBuff("Infusion of Intelligence", 1, 270, ['caster']);
+roleActions.infusion_intelligence.description = `Intelligence +10% (Max 137)<br/>
 			This diluted brew temporarily increases intelligence, but for twice the duration of similar potions.<br/>
-			<span class="green">Duration:</span> 30s`,
-		recastGroup(state){
-			return 'potion';
-		},
-		execute(state) {
-			setStatus("medicated", true);
-		}
-	},
-	infusion_mind: {
-		name: "Infusion of Mind",
-		recast: 270,
-		affinity: ['role','healer'],
-		description: `Mind +10% (Max 137)<br/>
-			This diluted brew temporarily increases mind, but for twice the duration of similar potions.<br/>
-			<span class="green">Duration:</span> 30s`,
-		recastGroup(state){
-			return 'potion';
-		},
-		execute(state) {
-			setStatus("medicated", true);
-		}
-	},
-	infusion_vitality: {
-		name: "Infusion of Vitality",
-		recast: 270,
-		affinity: ['role','tank'],
-		description: `Vitality +10% (Max 137)<br/>
-			This diluted brew temporarily increases vitality, but for twice the duration of similar potions.<br/>
-			<span class="green">Duration:</span> 30s`,
-		recastGroup(state){
-			return 'potion';
-		},
-		execute(state) {
-			setStatus("medicated", true);
-		}
-	},
-	infusion_dexterity: {
-		name: "Infusion of Dexterity",
-		cast: 0,
-		recast: 270,
-		description: `Dexterity +10% (Max 137)<br/>
-			This diluted brew temporarily increases dexterity, but for twice the duration of similar potions.<br/>
-			<span class="green">Duration:</span> 30s`,
-		affinity: ['role','melee', 'ranged'],
-		recastGroup(state){
-			return 'potion';
-		},
-		execute(state) {
-			setStatus("medicated", true);
-		}
-	},
-	infusion_strength: {
-		name: "Infusion of Strength",
-		cast: 0,
-		recast: 270,
-		description: `Strength +10% (Max 137)<br/>
-			This diluted brew temporarily increases strength, but for twice the duration of similar potions.<br/>
-			<span class="green">Duration:</span> 30s`,
-		affinity: ['role','melee', 'tank'],
-		recastGroup(state){
-			return 'potion';
-		},
-		execute(state) {
-			setStatus("medicated", true);
-		}
-	},
-};
+			<span class="green">Duration:</span> 30s`;
+roleActions.infusion_intelligence.recastGroup = function(state) { return 'potion'; };
+roleActions.infusion_intelligence.execute = function(state) { setStatus("medicated", true); };
+
+roleActions.infusion_mind = new RoleBuff("Infusion of Mind", 1, 270, ['healer']);
+roleActions.infusion_mind.description = `Mind +10% (Max 137)<br/>
+			This diluted brew temporarily increases Mind, but for twice the duration of similar potions.<br/>
+			<span class="green">Duration:</span> 30s`;
+roleActions.infusion_mind.recastGroup = function(state){ return 'potion'; };
+roleActions.infusion_mind.execute = function(state) { setStatus("medicated", true);	};
+
+roleActions.infusion_strength = new RoleBuff("Infusion of Strength", 1, 270, ['melee', 'tank']);
+roleActions.infusion_strength.description = `Strength +10% (Max 137)<br/>
+			This diluted brew temporarily increases Strength, but for twice the duration of similar potions.<br/>
+			<span class="green">Duration:</span> 30s`;
+roleActions.infusion_strength.recastGroup = function(state){ return 'potion'; };
+roleActions.infusion_strength.execute = function(state) { setStatus("medicated", true);	};
+
+roleActions.infusion_dexterity = new RoleBuff("Infusion of Dexterity", 1, 270, ['melee','ranged']);
+roleActions.infusion_dexterity.description = `Dexterity +10% (Max 137)<br/>
+			This diluted brew temporarily increases Dexterity, but for twice the duration of similar potions.<br/>
+			<span class="green">Duration:</span> 30s`;
+roleActions.infusion_dexterity.recastGroup = function(state){ return 'potion'; };
+roleActions.infusion_dexterity.execute = function(state) { setStatus("medicated", true); };
+
+roleActions.infusion_vitality = new RoleBuff("Infusion of Vitality", 1, 270, ['tank']);
+roleActions.infusion_vitality.description = `Vitality +10% (Max 137)<br/>
+			This diluted brew temporarily increases Vitality, but for twice the duration of similar potions.<br/>
+			<span class="green">Duration:</span> 30s`;
+roleActions.infusion_vitality.recastGroup = function(state){ return 'potion';	};
+roleActions.infusion_vitality.execute = function(state) { setStatus("medicated", true);	};
+
 
 const baseStatus = {
 	name: "status",
@@ -780,118 +475,35 @@ const baseStatus = {
 	color: '#888888'
 };
 
-
 const general_status = {
 	//general
-	heavy: {
-		name: "Heavy",
-		duration: 20,
-		color: "#A02F2F"
-	},
-	medicated: {
-		name: "Medicated",
-		duration: 30,
-		color: "#2F5F90"
-	},
+	heavy: new Status( "Heavy", 20, "#A02F2F"),
+	medicated: new Status("Medicated", 30, "#2F5F90"),
 	//caster
-	addle: {
-		name: "Addle",
-		duration: 10,
-		color: "#6F3FA0"
-	},
-	swiftcast: {
-		name: "Swiftcast",
-		duration: 10,
-		color: "#E090C0"
-	},
-	lucid_dreaming: {
-		name: "Lucid Dreaming",
-		duration: 21,
-		color: "#905F7F"
-	},
-	diversion: {
-		name: "Diversion",
-		duration: 15,
-		color: "#6FF07F"
-	},
-	surecast: {
-		name: "Surecast",
-		duration: 10,
-		color: "#7FA0A0"
-	},
-	apocatastasis: {
-		name: "Apocatastasis",
-		duration: 10,
-		color: "#904FC0"
-	},
-
+	addle: new Status("Addle", 10, "#6F3FA0"),
+	swiftcast: new Status("Swiftcast",  10, "#E090C0"),
+	lucid_dreaming: new Status("Lucid Dreaming",  21, "#905F7F"),
+	diversion: new Status("Diversion", 15, "#6FF07F"),
+	surecast: new Status("Surecast", 10, "#7FA0A0"),
+	apocatastasis: new Status("Apocatastasis", 10, "#904FC0"),
 	//ranged
-	tactician: {
-		name: "Tactitian",
-		duration: 30,
-		color: "#E0901F",
-		tick(state) {
-			setTP(state.tp + 50);
-		}
-	},
-	refresh: {
-		name: "Refresh",
-		duration: 30,
-		color: "#7F7FC0",
-		tick(state) {
-			setMana(state.mana + (state.maxMana * .02));
-		}
-	},
-
+	tactician: new Status("Tactitian", 30,  "#E0901F"),
+	refresh: new Status("Refresh", 30, "#7F7FC0"),
 	//melee
-	true_north: {
-		name: "True North",
-		duration: 15,
-		color: "#C07F4F",
-	},
-	bloodbath: {
-		name: "Bloodbath",
-		duration: 20,
-		color: "#D00F0F",
-	},
-
+	true_north: new Status("True North", 15, "#C07F4F"),
+	bloodbath: new Status("Bloodbath", 20, "#D00F0F"),
 	//healer
-	cleric_stance: {
-		name: "Cleric Stance",
-		duration: 15,
-		color: "#B03F3F",
-	},
-
-	largesse: {
-		name: "Largesse",
-		duration: 20,
-		color: "#4FD03F",
-	},
-
+	cleric_stance: new Status("Cleric Stance", 15, "#B03F3F"),
+	largesse: new Status("Largesse", 20, "#4FD03F"),
 	//tank
-	rampart: {
-		name: "Rampart",
-		duration: 20,
-		color: "#406493",
-	},
-	convalescence: {
-		name: "Convalescence",
-		duration: 20,
-		color: "#2F7F5F"
-	},
-	anticipation: {
-		name: "Anticipation",
-		duration: 20,
-		color: "#0F90C0"
-	},
-	awareness: {
-		name: "Awareness",
-		duration: 25,
-		color: "#D06F00",
-	},
+	rampart: new Status("Rampart", 20, "#406493"),
+	convalescence: new Status("Convalescence", 20, "#2F7F5F"),
+	anticipation: new Status("Anticipation", 20, "#0F90C0"),
+	awareness: new Status("Awareness", 25, "#D06F00")
 };
 
-
+general_status.tactician.tick = function(state) { setTP(state.tp + 50); };
+general_status.refresh.tick = function(state) { setMana(state.mana + (state.maxMana * .02)); };
 
 const roles = {
 	DRK: 'tank',

@@ -1,10 +1,6 @@
 
 
-const blm_actions = {
-	
-	
-	
-};
+
 
 const blm_status = {
 	//BLM
@@ -238,6 +234,10 @@ class ThunderSpell extends BLMSpell {
 		return hasStatus('thundercloud');
 	}
 }
+
+
+
+const blm_actions = {}
 
 //Fire
 blm_actions.fire_i = new FireSpell("Fire I", 180, 2.5, 1400, 2, 25, 0);

@@ -1,4 +1,5 @@
 const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status);
+statuses.swiftcast = new Status('swiftcast', 20, '#E090C0');
 
 const jobActions = {
 	BLM: blm_actions,
@@ -18,6 +19,7 @@ function getRoleActions(role){
 	var actions = {};
 	for(var key in roleActions){
 		var action = roleActions[key];
+		//console.log(action);
 		if(action.affinity.indexOf(role) > -1)
 			actions[key] = action;
 	}
