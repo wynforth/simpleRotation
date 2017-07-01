@@ -89,16 +89,7 @@ function updateDots(time){
 function calculatePotency(action){
 	var potency = action.getPotency(state);
 	var mod = 1;
-	
-	if(action.type == "spell"){
-		if(hasStatus('enochian')) mod += 0.05;
-	} else if(action.type == "weaponskill"){
-		if(hasStatus("hissatsu_kaiten")) {
-			mod += .5;
-			setStatus('hissatsu_kaiten', false);
-		}
-	}
-	
+		
 	return potency*mod;
 }
 
@@ -165,9 +156,9 @@ function playRotation(){
 			//time till next action, longest of cast time, recast time, or animation lock
 			delay = Math.max(castTime, delay);
 			//console.log(action.id + " delay " + delay);
-			//console.log(action.id + " recast " + action.recast);
+			//console.log(action.id + " recast " + action.getRecast(state));
 			//console.log(action.id + " target " +  (state.targetTime-state.currentTime));
-			state.targetTime = state.currentTime + Math.max(action.recast, delay, state.targetTime-state.currentTime);
+			state.targetTime = state.currentTime + Math.max(action.getRecast(state), delay, state.targetTime-state.currentTime);
 		} else {
 			state.targetTime = state.currentTime + Math.max(delay, state.targetTime-state.currentTime);
 		}
@@ -175,7 +166,7 @@ function playRotation(){
 		
 		
 		//update current time to when this action is ussuable: 
-		addRecast(action.recastGroup(),action.recast);
+		addRecast(action.recastGroup(),action.getRecast(state));
 		advanceTime(delay);
 
 		//remove cost
@@ -267,9 +258,11 @@ function drawResultTable(result){
 	
 	for(var i=1; i < result.length; i++)
 	{
+		
 		var row = result[i];
+		var action = getAction(row.id);
 		var tbl_row = "";
-		tbl_row += "<td><img src=\"img/" + row.id + ".png\" /> " + result[i].name + "</td>";
+		tbl_row += `<td><img src="img/${action.getImage()}.png" title="${row.name}"/>${row.name}</td>`;
 		tbl_row += "<td>" + row.startTime.toFixed(2) + "</td>";
 		tbl_row += "<td>" + (row.endTime - row.startTime).toFixed(2) + "</td>";
 		tbl_row += "<td>" + row.potency.toFixed(2) + "</td>";
