@@ -6,8 +6,7 @@ CLASSES
 
 class BLMAction extends BaseAction {
 	constructor(name, level, recast, range) {
-		super(name);
-		this.level = level;
+		super(name, level);
 		this.recast = recast;
 		this.range = range;
 		this.affinity = ['BLM'];

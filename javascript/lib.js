@@ -339,39 +339,14 @@ function getAction(name) {
 	if(typeof actions[name] === "undefined")
 		return false;
 	var action;
-	if(actions[name].constructor.name == "Object")
-		action = Object.assign({ id: name }, baseAction, actions[name]);
-	else {
-		action = actions[name];
-		action.id = name;
-	}
+	
+	action = actions[name];
+	action.id = name;
 	
 	var replacement = action.getReplacement(state);
-
 	if(replacement != false)
 		return getAction(replacement);
 		
-	/*
-	if(action.type == "spell") {
-		var scale = state.spd / 2.5; //2.5/2.5 = no spell speed. figure out how to do a setting for it later
-		
-		if(hasStatus('ley_lines'))
-			scale -=0.15;
-		
-		action.cast *= scale;
-		action.recast *= scale;
-	}
-	if(action.type == "weaponskill"){
-		var scale = state.sks / 2.5; 
-		
-		if(hasStatus('shifu'))
-			scale -= 0.1;
-			
-		
-		action.cast *= scale;
-		action.recast *= scale;
-	}
-	*/
 	return action;
 }
 

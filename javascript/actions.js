@@ -1,6 +1,7 @@
 class BaseAction {
-	constructor(name){
+	constructor(name, level){
 		this.name = name;
+		this.level = level;
 		
 		this.type = "ability";
 		this.description = ``;
@@ -13,7 +14,6 @@ class BaseAction {
 		this.comboActions = [];
 		this.comboPotency = 0;
 		this.hidden = false;
-		this.level = 1;
 		this.radius = 0;
 		this.range = 0;
 		this.affinity = [];
@@ -79,8 +79,7 @@ class BaseAction {
 
 class Buff extends BaseAction{
 	constructor(name, level, recast){
-		super(name);
-		this.level = level;
+		super(name, level);
 		this.recast = recast;
 	}
 	
@@ -91,13 +90,12 @@ class Buff extends BaseAction{
 
 class Spell extends BaseAction{
 	constructor(name,level, potency, cast, mana,  range, radius){
-		super(name);
+		super(name, level);
 		this.potency = potency;
 		this.cast = cast;
-		this.mana = mana,
-		this.level = level,
-		this.range = range, 
-		this.radius = radius,
+		this.mana = mana;
+		this.range = range; 
+		this.radius = radius;
 		this.type = "spell";
 	}
 	
@@ -114,13 +112,12 @@ class Spell extends BaseAction{
 
 class WeaponSkill extends BaseAction{
 	constructor(name,level,  potency, cast, tp, range, radius){
-		super(name);
+		super(name, level);
 		this.potency = potency;
 		this.cast = cast;
-		this.tp = tp,
-		this.level = level,
-		this.range = 3, 
-		this.radius = radius,
+		this.tp = tp;
+		this.range = 3;
+		this.radius = radius;
 		this.type = "weaponskill";
 	}
 	
@@ -165,82 +162,6 @@ class Dot extends Status {
 		state += potency;
 	};
 }
-const baseAction = {
-	name: "Action",
-	type: "ability",
-	description: `Does an action`,
-	cast: 0,
-	recast: 2.5,
-	nextCast: 0,
-	potency: 0,
-	mana: 0,
-	tp: 0,
-	animTime: 0.8,
-	comboActions: [],
-	comboPotency: 0,
-	hidden: false,
-	level: 1,
-	radius: 0,
-	range: 0,
-	affinity: ['role',''],
-	
-	recastGroup(){
-		return this.type=='ability' ? this.id : 'global';
-	},
-	
-	isCombo(state) {
-		if(state.lastActionTime + 8 > state.currentTime && this.comboActions.includes(state.lastAction)) {
-			var action = getAction(state.lastAction);
-			return action.comboActions.length > 0 ? state.lastCombo : true;
-		}
-		return false;
-	},
-	
-	execute(state) { 
-	},
-	
-	isLevel(state) {
-		return this.level <= state.level;
-	},
-	
-	isUseable(state) {
-		return this.isLevel(state);
-	},
-	
-	isHighlighted(state) {
-		return false;
-	},
-	
-	getReplacement(state) {
-		return false;
-	},
-	
-	getPotency(state) {
-		if(this.comboActions.length == 0)
-			return this.potency;
-		return this.isCombo(state) ? this.comboPotency : this.potency;
-	},
-	
-	getManaCost(state) {
-		return this.mana;
-	},
-	
-	getTPCost(state) {
-		return this.tp;
-	},
-	
-	getCast(state) {
-		return this.cast;
-	},
-	
-	getRecast(state) {
-		return Math.max(0, this.nextCast - state.currentTime);
-	},
-	
-	getImage(){
-		return this.affinity[0] + "/" + this.id;
-	}
-};
 
 class RoleAction extends BaseAction {
 	constructor(name, level, recast, range, roles){
@@ -567,7 +488,7 @@ const maxMana = {
 	MNK: 0,
 	NIN: 0,
 	SAM: 0,
-	BRD: 0,
+	BRD: 5000,
 	MCH: 0,
 	BLM: 15480,
 	RDM: 0,
