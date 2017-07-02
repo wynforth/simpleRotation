@@ -1,5 +1,29 @@
+//initialize state
+function initialize(){
+	//currentJob = getUrlParameter('job');
+	state = resetState(currentJob);
+	actions = getActions(state);
+	
+	setMana(state.maxMana);
+	setTP(state.maxTP);
+	setSkillSpeed(state.sks);
+	setSpellSpeed(state.spd);
+	
+	//job specific clean it up later
+	setKenki(0);
+	$(".progress.kenki-bg").toggleClass('hidden', currentJob!="SAM");
+	
+	rotation = [];
+	createActionButtons();
+	update();
+	//clear previous rotation
+	$(".rotation-table thead .status-col").remove();
+	$(".rotation-table tbody").html('');
+}
+
+
 const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status);
-statuses.swiftcast = new Status('swiftcast', 20, '#E090C0');
+//statuses.swiftcast = new Status('swiftcast', 20, '#E090C0');
 
 const jobActions = {
 	BLM: blm_actions,
@@ -36,8 +60,8 @@ function resetState(job){
 		tp: 1000,
 		maxTP: 1000,
 		potency: 0,
-		maxMana: maxMana[job],
-		mana: maxMana[job],
+		maxMana: defaults[job].mana,
+		mana: defaults[job].mana,
 		job: job,
 		role: getRole(job),
 		statuses: {},
@@ -45,8 +69,8 @@ function resetState(job){
 		currentTime: 0,
 		targetTime: 0,
 		nextTick: 3.0,
-		spd: 2.41,
-		sks: 2.41,
+		spd: defaults[job].spd,
+		sks: defaults[job].sks,
 		lastAction: '',
 		lastActionTime: 0,
 		lastCombo: false,
@@ -60,6 +84,26 @@ function resetState(job){
 		ninki: 0,
 		heat: 0,
 	};
+}
+
+function setOptions()
+{
+	console.log("Setting options");
+	state.sks = parseFloat($("#skillSpeed").val());
+	state.spd = parseFloat($("#spellSpeed").val());
+	update();
+}
+
+function setSkillSpeed(value){
+	//console.log(value);
+	state.sks = value;
+	$("#skillSpeed").val(value);
+}
+
+function setSpellSpeed(value){
+	//console.log(value);
+	state.spd = value;
+	$("#spellSpeed").val(value);
 }
 
 var getUrlParameter = function getUrlParameter(sParam) {
@@ -84,24 +128,7 @@ function replaceQueryParam(param, newval, search) {
     return (query.length > 2 ? query + "&" : "?") + (newval ? param + "=" + newval : '');
 }
 
-//initialize state
-function initialize(){
-	//currentJob = getUrlParameter('job');
-	state = resetState(currentJob);
-	actions = getActions(state);
-	setMana(state.maxMana);
-	setTP(state.maxTP);
-	
-	setKenki(0);
-	$(".progress.kenki-bg").toggleClass('hidden', currentJob!="SAM");
-	
-	rotation = [];
-	createActionButtons();
-	update();
-	//clear previous rotation
-	$(".rotation-table thead .status-col").remove();
-	$(".rotation-table tbody").html('');
-}
+
 
 function changeJob(name){
 	cleanActionButtonHeaders();
@@ -404,7 +431,7 @@ STATUS FUNCTIONS
 ------------------*/
 
 function getStatus(name) {
-	return Object.assign({},baseStatus,statuses[name]);
+	return statuses[name];
 }
 
 function setStatus(name, active){

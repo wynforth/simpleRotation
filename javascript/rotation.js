@@ -295,11 +295,12 @@ function drawResultTable(result){
 function update(){
 	var result;
 	result = playRotation();
-	updateStatuses();
+	drawResultTable(result);
+	
 	//updateRotationButtons();
+	updateStatuses();
 	updateActionButtons();
 	updateStats();	
-	drawResultTable(result);
 }
 
 // Click Handlers
@@ -313,4 +314,11 @@ $(".jobs .job").click(function(e) {
 	var name = $(this).data("name");
 	console.log("changing to : " + name);
 	changeJob(name);
+});
+
+$("input").keypress(function(event) {
+    if (event.which == 13) {
+        event.preventDefault();
+        $("form").submit();
+    }
 });

@@ -12,10 +12,12 @@ class SAM_WeaponSkill extends WeaponSkill {
 	}
 
 	getCast(state) {
+		
 		return super.getCast(state) * (hasStatus('shifu') ? .85 : 1);
 	}
 
 	getRecast(state) {
+		//console.log(state);
 		return super.getRecast(state) * (hasStatus('shifu') ? .85 : 1);
 	}
 
@@ -126,7 +128,7 @@ const sam_actions = {
 	oka: new SAM_ComboWS("Oka", 45, 100, 0, 140, 0, 5, 0, 200, ['fuga'], 10, ['sen_ka']),
 	enpi: new SAM_WeaponSkill("Enpi", 15, 100, 0, 160, 15, 0, 10),
 
-	iaijutsu: new SAM_WeaponSkill("Iaijutsu", 30, 0, 0, 0, 0, 0, 0),
+	iaijutsu: new SAM_WeaponSkill("Iaijutsu", 30, 0, 1.8, 0, 0, 0, 0),
 	midare_setsugekka: new SAM_Iaijutsu("Midare Setsugekka", 50, 720, 3, 0),
 	tenka_goken: new SAM_Iaijutsu("Tenka Goken", 40, 360, 0, 5),
 	higanbana: new SAM_Iaijutsu("Higanbana", 30, 240, 3, 0),

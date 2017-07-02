@@ -68,10 +68,30 @@
 				</div>
 			</div>
 		</div>
+		
+		
+		
 		<div class="status-split">
-			<div class="header rotation">Status</div>
+			<div class="header rotation">Active Statuses</div>
 			<div class="statuses  border-top-0"></div>
 		</div>
+		
+		<div class="option-split">
+			<div class="header rotation">Options</div>	
+				<div class="resources  border-top-0">
+					<form name="options" onSubmit="setOptions(); return false;">
+					<div class="form-group">
+						<label for="skillSpeed">Skill Speed:</label><input type="text" class="form-control" id="skillSpeed">
+					</div>
+					<div class="form-group">
+						<label for="spellSpeed">Spell Speed:</label><input type="text" class="form-control" id="spellSpeed">
+					</div>
+					</form>
+				
+				</div>
+			</div>
+		</div>	
+		
 	</div>
 	
 	<!--
@@ -92,13 +112,15 @@
 		<div class="statuses"></div>
 	</div>
 	-->
-	<div class="header rotation">Rotation</div>
-    <div class="actions border-top-0"></div>
+	
 
   </div>
   
   <div class="container result">
-    <div class="header rotation">Results</div>
+	<div class="header rotation">Rotation</div>
+    <div class="actions border-top-0"></div>
+    
+	<div class="header rotation">Results</div>
 		
 	
     <div class="actions border-top-0">

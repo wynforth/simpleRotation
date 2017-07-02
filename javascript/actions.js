@@ -1,8 +1,8 @@
 class BaseAction {
-	constructor(name, level){
+	constructor(name, level) {
 		this.name = name;
 		this.level = level;
-		
+
 		this.type = "ability";
 		this.description = ``;
 		this.cast = 0;
@@ -18,100 +18,98 @@ class BaseAction {
 		this.range = 0;
 		this.affinity = [];
 	}
-	
-	recastGroup(){
-		return this.type=='ability' ? this.id : 'global';
+
+	recastGroup() {
+		return this.type == 'ability' ? this.id : 'global';
 	}
-	
+
 	isCombo(state) {
-		if(state.lastActionTime + 8 > state.currentTime && this.comboActions.includes(state.lastAction)) {
+		if (state.lastActionTime + 8 > state.currentTime && this.comboActions.includes(state.lastAction)) {
 			var action = getAction(state.lastAction);
 			return action.comboActions.length > 0 ? state.lastCombo : true;
 		}
 		return false;
 	}
-	
-	execute(state) { }
-	
+
+	execute(state) {}
+
 	isLevel(state) {
 		return this.level <= state.level;
 	}
-	
+
 	isUseable(state) {
 		return this.isLevel(state);
 	}
-	
+
 	isHighlighted(state) {
 		return this.isCombo(state);
 	}
-	
+
 	getReplacement(state) {
 		return false;
 	}
-	
+
 	getPotency(state) {
-		if(this.comboActions.length == 0)
+		if (this.comboActions.length == 0)
 			return this.potency;
 		return this.isCombo(state) ? this.comboPotency : this.potency;
 	}
-	
+
 	getManaCost(state) {
 		return this.mana;
 	}
-	
+
 	getTPCost(state) {
 		return this.tp;
 	}
-	
+
 	getCast(state) {
 		return this.cast;
 	}
-	
+
 	getRecast(state) {
 		return this.recast;
 		//return Math.max(0, this.nextCast - state.currentTime);
 	}
-	
-	getImage(){
+
+	getImage() {
 		return this.affinity[0] + "/" + this.id;
 	}
 }
 
-class Buff extends BaseAction{
-	constructor(name, level, recast){
+class Buff extends BaseAction {
+	constructor(name, level, recast) {
 		super(name, level);
 		this.recast = recast;
 	}
-	
-	execute(state){
-		setStatus(this.id,true);
+
+	execute(state) {
+		setStatus(this.id, true);
 	}
 }
 
-class Spell extends BaseAction{
-	constructor(name,level, potency, cast, mana,  range, radius){
+class Spell extends BaseAction {
+	constructor(name, level, potency, cast, mana, range, radius) {
 		super(name, level);
 		this.potency = potency;
 		this.cast = cast;
 		this.mana = mana;
-		this.range = range; 
+		this.range = range;
 		this.radius = radius;
 		this.type = "spell";
 	}
-	
+
 	getCast(state) {
-		var scale = state.spd / 2.5;
-		return this.cast * scale;
+		return this.cast * (state.spd / 2.5);
 	}
-	
+
 	getRecast(state) {
-		var scale = state.spd / 2.5;
-		return this.recast * scale;
+		return this.recast * (state.spd / 2.5);
 	}
 }
 
-class WeaponSkill extends BaseAction{
-	constructor(name,level,  potency, cast, tp, range, radius){
+class WeaponSkill extends BaseAction {
+	constructor(name, level, potency, cast, tp, range, radius) {
 		super(name, level);
 		this.potency = potency;
 		this.cast = cast;
@@ -120,10 +118,13 @@ class WeaponSkill extends BaseAction{
 		this.radius = radius;
 		this.type = "weaponskill";
 	}
-	
+
 	getCast(state) {
-		var scale = state.sks / 2.5;
-		return this.cast * scale;
+		return this.cast * (state.sks / 2.5);
+	}
+	
+	getRecast(state) {
+		return this.recast * (state.sks / 2.5);
 	}
 }
 
@@ -145,9 +146,9 @@ class StatusStack extends Status {
 		this.stacks = initial;
 		this.maxStacks = 3;
 	};
-	
-	addStacks(amt){
-		this.stacks = Math.min(this.stacks+amt, this.maxStacks);
+
+	addStacks(amt) {
+		this.stacks = Math.min(this.stacks + amt, this.maxStacks);
 	}
 
 	tick(state) {};
@@ -164,26 +165,26 @@ class Dot extends Status {
 }
 
 class RoleAction extends BaseAction {
-	constructor(name, level, recast, range, roles){
+	constructor(name, level, recast, range, roles) {
 		super(name);
 		this.level = level;
 		this.recast = recast;
 		this.range = range;
 		this.affinity = roles;
 	}
-	
-	getImage(){
+
+	getImage() {
 		return `role/${this.id}`;
 	}
 }
 
 class RoleBuff extends RoleAction {
-	constructor(name, level, recast, roles){
+	constructor(name, level, recast, roles) {
 		super(name, level, recast, 0, roles)
 	}
-	
-	execute(state){
-		setStatus(this.id,true);
+
+	execute(state) {
+		setStatus(this.id, true);
 	}
 }
 
@@ -407,20 +408,6 @@ roleActions.infusion_vitality.description = `Vitality +10% (Max 137)<br/>
 roleActions.infusion_vitality.recastGroup = function(state){ return 'potion';	};
 roleActions.infusion_vitality.execute = function(state) { setStatus("medicated", true);	};
 
-
-const baseStatus = {
-	name: "status",
-	duration: 0,
-	stacks: 1,
-	maxStacks: 1,
-	color: '#888888',
-	tick(state) {},
-	
-	addStacks(amt){
-		this.stacks = Math.min(this.stacks+amt, this.maxStacks);
-	},
-};
-
 const general_status = {
 	//general
 	heavy: new Status( "Heavy", 20, "#A02F2F"),
@@ -477,21 +464,85 @@ const role2jobs = {
 	ranged: "BRD MCH ",
 }
 
-const maxMana = {
-	DRK: 0,
-	PLD: 0,
-	WAR: 0,
-	AST: 0,
-	SCH: 0,
-	WHM: 0,
-	DRG: 0,
-	MNK: 0,
-	NIN: 0,
-	SAM: 0,
-	BRD: 5000,
-	MCH: 0,
-	BLM: 15480,
-	RDM: 0,
-	SMN: 0,
-	'': 0
+const defaults = {
+	DRK: {
+		mana: 0,
+		sks: 2.46,
+		spd: 2.5,
+	},
+	PLD: {
+		mana: 8000,
+		sks: 2.4,
+		spd: 2.5,
+	},
+	WAR: {
+		mana: 0,
+		sks: 2.46,
+		spd: 2.5,
+	},
+	AST: {
+		mana: 0,
+		sks: 2.5,
+		spd: 2.47,
+	},
+	SCH: {
+		mana: 0,
+		sks: 2.5,
+		spd: 2.42,
+	},
+	WHM: {
+		mana: 0,
+		sks: 2.5,
+		spd: 2.45,
+	},
+	DRG: {
+		mana: 0,
+		sks: 2.33,
+		spd: 2.5,
+	},
+	MNK: {
+		mana: 0,
+		sks: 2.43,
+		spd: 2.5,
+	},
+	NIN: {
+		mana: 0,
+		sks: 2.42,
+		spd: 2.5,
+	},
+	SAM: {
+		mana: 0,
+		sks: 2.38,
+		spd: 2.5,
+	},
+	BRD: {
+		mana: 0,
+		sks: 2.4,
+		spd: 2.5,
+	},
+	MCH: {
+		mana: 0,
+		sks: 2.42,
+		spd: 2.5,
+	},
+	RDM: {
+		mana: 0,
+		sks: 2.5,
+		spd: 2.35,
+	},
+	SMN: {
+		mana: 15480,
+		sks: 2.5,
+		spd: 2.29,
+	},
+	BLM: {
+		mana: 15480,
+		sks: 2.5,
+		spd: 2.39,
+	},
+	'': {
+		mana: 0,
+		sks: 2.5,
+		spd: 2.5,
+	}
 }
