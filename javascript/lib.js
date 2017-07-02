@@ -365,9 +365,8 @@ ACTION FUNCTIONS
 function getAction(name) {
 	if(typeof actions[name] === "undefined")
 		return false;
-	var action;
-	
-	action = actions[name];
+	var action = Object.assign(Object.create(actions[name]), actions[name]); //copy of action?
+	//console.log(action);
 	action.id = name;
 	
 	var replacement = action.getReplacement(state);
@@ -431,11 +430,15 @@ STATUS FUNCTIONS
 ------------------*/
 
 function getStatus(name) {
-	return statuses[name];
+	var status = Object.assign(Object.create(statuses[name]), statuses[name])
+	status.id = name;
+	return status;
+	//return Object.assign({},statuses[name]); //get a copy of the status not the status directly
 }
 
 function setStatus(name, active){
 	var status = getStatus(name);
+	//console.log(status);
 	if(active){
 		//add/update status
 		//console.log("Gaining " + name + " @ " + state.currentTime + "-" + (state.currentTime + status.duration));

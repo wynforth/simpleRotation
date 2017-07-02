@@ -160,7 +160,8 @@ class Dot extends Status {
 		this.potency = potency;
 	}
 	tick(state) {
-		state += potency;
+		//console.log("TICK: " + this.id + " for " + this.potency);
+		state.potency += this.potency;
 	};
 }
 
