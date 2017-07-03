@@ -44,6 +44,7 @@ class SAM_Iaijutsu extends SAM_WeaponSkill {
 		setStatus('sen_setsu', false);
 		setStatus('sen_getsu', false);
 		setStatus('sen_ka', false);
+		super.execute(state);
 	}
 }
 
