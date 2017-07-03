@@ -12,7 +12,7 @@ class SAM_WeaponSkill extends WeaponSkill {
 	}
 
 	getCast(state) {
-		
+
 		return super.getCast(state) * (hasStatus('shifu') ? .85 : 1);
 	}
 
@@ -271,103 +271,157 @@ DESCRIPTIONS
 
  ***************/
 
-sam_actions.hakaze.description = `Delivers an attack with a potency of 150. <br/>
+sam_actions.hakaze.getDesc = function (state) {
+	return `Delivers an attack with a potency of 150. <br/>
 	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
-sam_actions.jinpu.description = `Delivers an attack with a potency of 100. <br/>
+}
+sam_actions.jinpu.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100. <br/>
 	<span class="green">Combo Action:</span> <span class="orange">Hakaze</span> <br/>
 	<span class="green">Combo Potency:</span> 280 <br/>
 	<span class="green">Combo Bonus:</span> Increases damage dealt by 10% <br/>
 	<span class="green">Duration:</span> 30s <br/>
 	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
-sam_actions.gekko.description = `Delivers an attack with a potency of 100.<br/>
+}
+sam_actions.gekko.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Jinpu</span><br/>
 	<span class="green">Combo Potency:</span> 400<br/>
 	<span class="green">Rear Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
 	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Getsu</span>`;
-sam_actions.shifu.description = `Delivers an attack with a potency of 100.<br/>
+}
+sam_actions.shifu.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Hakaze</span><br/>
 	<span class="green">Combo Potency:</span> 280<br/>
 	<span class="green">Combo Bonus:</span> Reduces weaponskill cast time and recast time, spell cast time and recast time, and auto-attack delay by 10%<br/>
 	<span class="green">Duration:</span> 30s<br/>
 	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
-sam_actions.kasha.description = `Delivers an attack with a potency of 100.<br/>
+}
+sam_actions.kasha.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Shifu</span><br/>
 	<span class="green">Combo Potency:</span> 400<br/>
 	<span class="green">Side Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
 	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Ka</span>`;
-sam_actions.yukikaze.description = `Delivers an attack with a potency of 100.<br/>
+}
+sam_actions.yukikaze.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Hakaze</span><br/>
 	<span class="green">Combo Potency:</span> 340<br/>
 	<span class="green">Combo Bonus:</span> Reduces target's slashing resistance by 10%<br/>
 	<span class="green">Duration:</span> 30s<br/>
 	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 10<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Setsu</span>`;
-sam_actions.fuga.description = `Delivers an attack with a potency of 100 to all enemies in a cone before you.<br/>
+}
+sam_actions.fuga.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100 to all enemies in a cone before you.<br/>
 	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
-sam_actions.mangetsu.description = `Delivers an attack to all nearby enemies with a potency of 100 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
+}
+sam_actions.mangetsu.getDesc = function (state) {
+	return `Delivers an attack to all nearby enemies with a potency of 100 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Fuga</span><br/>
 	<span class="green">Combo Potency:</span> 200 for the first enemy, 5% less for the second, 10% less for the third, 15% less for the fourth, 20% less for the fifth, and 25% less for all remaining enemies.<br/>
 	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 10<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Getsu</span>`;
-sam_actions.oka.description = `Delivers an attack to nearby enemies with a potency of 100 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
+}
+sam_actions.oka.getDesc = function (state) {
+	return `Delivers an attack to nearby enemies with a potency of 100 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Fuga</span><br/>
 	<span class="green">Combo Potency:</span> 200 for the first enemy, 5% less for the second, 10% less for the third, 15% less for the fourth, 20% less for the fifth, and 25% less for all remaining enemies.<br/>
 	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 10<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Ka</span>`;
-sam_actions.enpi.description = `Delivers a ranged attack with a potency of 100.<br/>
+}
+sam_actions.enpi.getDesc = function (state) {
+	return `Delivers a ranged attack with a potency of 100.<br/>
 	<span class="green">Enhanced Enpi Bonus Potency:</span> 300<br/>
 	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 10`;
-sam_actions.hagakure.description = `Converts <span class="yellow">Setsu</span>, <span class="yellow">Getsu</span>, and <span class="yellow">Ka</span> into <span class="orange">Kenki</span>. Each <span class="yellow">Sen</span> converted increases your <span class="orange">Kenki Gauge</span> by 20. Can only be executed if under the effect of at least one of the three statuses.`;
-sam_actions.iaijutsu.description = `Executes a weaponskill depending on current number of <span class="yellow">Sen</span> stored in <span class="orange">Sen Gauge</span>.<br/>
+}
+sam_actions.hagakure.getDesc = function (state) {
+	return `Converts <span class="yellow">Setsu</span>, <span class="yellow">Getsu</span>, and <span class="yellow">Ka</span> into <span class="orange">Kenki</span>. Each <span class="yellow">Sen</span> converted increases your <span class="orange">Kenki Gauge</span> by 20. Can only be executed if under the effect of at least one of the three statuses.`;
+}
+sam_actions.iaijutsu.getDesc = function (state) {
+	return `Executes a weaponskill depending on current number of <span class="yellow">Sen</span> stored in <span class="orange">Sen Gauge</span>.<br/>
 	<span class="green">1 Sen:</span> <span class="orange">Higanbana</span><br/>
 	<span class="green">2 Sen:</span> <span class="orange">Tenka Goken</span><br/>
 	<span class="green">3 Sen:</span> <span class="orange">Midare Setsugekka</span>`;
-sam_actions.midare_setsugekka.description = `Delivers an attack with a potency of 720.`;
-sam_actions.tenka_goken.description = `Delivers an attack to all enemies in a cone before you with a potency of 360 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.`;
-sam_actions.higanbana.description = `Delivers an attack with a potency of 240.<br/>
+}
+sam_actions.midare_setsugekka.getDesc = function (state) {
+	return `Delivers an attack with a potency of 720.`;
+}
+sam_actions.tenka_goken.getDesc = function (state) {
+	return `Delivers an attack to all enemies in a cone before you with a potency of 360 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.`;
+}
+sam_actions.higanbana.getDesc = function (state) {
+	return `Delivers an attack with a potency of 240.<br/>
 	<span class="green">Additional Effect:</span> Damage over time<br/>
 	<span class="green">Potency:</span> 35<br/>
 	<span class="green">Duration:</span> 60s`;
-sam_actions.meikyo_shisui.description = `Execute up to 3 weaponskill combos without meeting combo prerequisites. Does not affect <span class="orange">Iaijutsu</span>.<br/>
+}
+sam_actions.meikyo_shisui.getDesc = function (state) {
+	return `Execute up to 3 weaponskill combos without meeting combo prerequisites. Does not affect <span class="orange">Iaijutsu</span>.<br/>
 	<span class="green">Duration:</span> 10s`;
-sam_actions.ageha.description = `Delivers an attack with a potency of 250.<br/>
+}
+sam_actions.ageha.getDesc = function (state) {
+	return `Delivers an attack with a potency of 250.<br/>
 	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 10 (30 if killing blow is dealt)<br/>
 	Can only be executed when target's HP is below 20%.`;
-sam_actions.third_eye.description = `Reduces the amount of damage taken by the next attack by 5%.<br/>
+}
+sam_actions.third_eye.getDesc = function (state) {
+	return `Reduces the amount of damage taken by the next attack by 5%.<br/>
 	<span class="green">Duration:</span> 3s<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Open Eyes</span> when hit<br/>
 	<span class="green">Duration:</span> 15s`;
-sam_actions.meditate.description = `Gradually increases your <span class="orange">Kenki Gauge</span>.<br/>
+}
+sam_actions.meditate.getDesc = function (state) {
+	return `Gradually increases your <span class="orange">Kenki Gauge</span>.<br/>
 	<span class="green">Duration:</span> 15s<br/>
 	<span class="orange">Kenki Gauge</span> not affected when used outside battle.<br/>
 	Effect ends upon executing another action or moving.<br/>
 	Cancels auto-attack upon execution.`;
-sam_actions.hissatsu_gyoten.description = `Rushes target and delivers an attack with a potency of 100.<br/>
+}
+sam_actions.hissatsu_gyoten.getDesc = function (state) {
+	return `Rushes target and delivers an attack with a potency of 100.<br/>
 	<span class="green">Kenki Gauge Cost:</span> 10<br/>
 	Cannot be executed while bound.`;
-sam_actions.hissatsu_shinten.description = `Delivers an attack with a potency of 300.<br/>
+}
+sam_actions.hissatsu_shinten.getDesc = function (state) {
+	return `Delivers an attack with a potency of 300.<br/>
 	<span class="green">Kenki Gauge Cost:</span> 25`;
-sam_actions.hissatsu_kyuten.description = `Delivers an attack with a potency of 150 to all nearby enemies.<br/>
+}
+sam_actions.hissatsu_kyuten.getDesc = function (state) {
+	return `Delivers an attack with a potency of 150 to all nearby enemies.<br/>
 	<span class="green">Kenki Gauge Cost:</span> 25`;
-sam_actions.hissatsu_guren.description = `Delivers an attack to all enemies in a straight line before you with a potency of 800 for the first enemy, 25% less for the second, and 50% less for all remaining enemies.<br/>
+}
+sam_actions.hissatsu_guren.getDesc = function (state) {
+	return `Delivers an attack to all enemies in a straight line before you with a potency of 800 for the first enemy, 25% less for the second, and 50% less for all remaining enemies.<br/>
 	<span class="green">Kenki Gauge Cost:</span> 50`;
-sam_actions.hissatsu_seigan.description = `Delivers an attack with a potency of 200.<br/>
+}
+sam_actions.hissatsu_seigan.getDesc = function (state) {
+	return `Delivers an attack with a potency of 200.<br/>
 	<span class="green">Kenki Gauge Cost:</span> 15<br/>
 	Can only be executed while under the effect of <span class="yellow">Open Eyes</span>.<br/>
 	Shares a recast timer with <span class="orange">Merciful Eyes</span>.`;
-sam_actions.merciful_eyes.description = `Instantly restores own HP.<br/>
+}
+sam_actions.merciful_eyes.getDesc = function (state) {
+	return `Instantly restores own HP.<br/>
 	<span class="green">Cure Potency:</span> 200<br/>
 	Cure potency varies with current attack power.<br/>
 	Can only be executed while under the effect of <span class="yellow">Open Eyes</span>.<br/>
 	Shares a recast timer with <span class="orange">Hissatsu: Seigan</span>.`;
-sam_actions.hissatsu_kaiten.description = `Increases potency of next weaponskill by 50%.<br/>
+}
+sam_actions.hissatsu_kaiten.getDesc = function (state) {
+	return `Increases potency of next weaponskill by 50%.<br/>
 	<span class="green">Duration:</span> 10s<br/>
 	<span class="green">Kenki Gauge Cost:</span> 20`;
-sam_actions.hissatsu_yaten.description = `Delivers an attack with a potency of 100.<br/>
+}
+sam_actions.hissatsu_yaten.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100.<br/>
 	<span class="green">Additional Effect:</span> 10-yalm backstep<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Enhanced Enpi</span><br/>
 	<span class="green">Duration:</span> 15s<br/>
 	<span class="green">Kenki Gauge Cost:</span> 10<br/>
 	Cannot be executed while bound.`;
+}

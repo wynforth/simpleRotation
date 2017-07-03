@@ -75,6 +75,10 @@ class BaseAction {
 	getImage() {
 		return this.affinity[0] + "/" + this.id;
 	}
+
+	getDesc(state) {
+		return `Description not set for ${this.id}`;
+	}
 }
 
 class Buff extends BaseAction {
@@ -163,6 +167,10 @@ class Dot extends Status {
 		//console.log("TICK: " + this.id + " for " + this.potency);
 		state.potency += this.potency;
 	};
+	
+	getTotalPotency(state) {
+		return (this.duration/3) * this.potency;
+	}
 }
 
 class RoleAction extends BaseAction {
@@ -517,7 +525,7 @@ const defaults = {
 		spd: 2.5,
 	},
 	BRD: {
-		mana: 0,
+		mana: 9000,
 		sks: 2.4,
 		spd: 2.5,
 	},

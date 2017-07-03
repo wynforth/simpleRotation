@@ -271,7 +271,7 @@ function getTitle(action){
 				<span class="value">${action.getTPCost(state)}</span>
 			</div>`;
 		}
-	tooltip += `</div><div class="desc">${action.description}</div></div>`;
+	tooltip += `</div><div class="desc">${action.getDesc(state)}</div></div>`;
 	if(action.affinity[0] == 'role'){
 		var affins = "";
 		tooltip += `<div class="acquired"><div class="footer beige">Acquired</div><div class="spaced">`;

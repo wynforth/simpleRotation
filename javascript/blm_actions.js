@@ -2,7 +2,7 @@
 
 CLASSES
 
-***************/
+ ***************/
 
 class BLMAction extends BaseAction {
 	constructor(name, level, recast, range) {
@@ -138,7 +138,8 @@ class ThunderSpell extends BLMSpell {
 	}
 
 	getPotency(state) {
-		return hasStatus('thundercloud') ? this.potency + 240 : this.potency;
+		var base = hasStatus('thundercloud') ? (this.potency + (statuses[this.id].getTotalPotency(state))) : this.potency;
+		return base * (hasStatus('enochian') ? 1.05 : 1);
 	}
 
 	isHighlighted(state) {
@@ -149,7 +150,7 @@ class ThunderSpell extends BLMSpell {
 
 ACTIONS
 
-***************/
+ ***************/
 
 const blm_actions = {
 	fire_i: new FireSpell("Fire I", 2, 180, 2.5, 1400, 25, 0),
@@ -308,7 +309,7 @@ blm_actions.between_the_lines.isUseable = function (state) {
 
 STATUSES
 
-***************/
+ ***************/
 
 const blm_status = {
 	//BLM
@@ -336,7 +337,7 @@ const blm_status = {
 STATUS OVERRIDES
 
  ***************/
- 
+
 blm_status.umbral_ice.tick = function (state) {
 	setMana(state.mana + (state.maxMana * (.15 + (.15 * this.stacks))));
 };
@@ -344,89 +345,142 @@ blm_status.umbral_ice.tick = function (state) {
 
 DESCRIPTIONS
 
-***************/
-blm_actions.fire_i.description = `Deals fire damage with a potency of 180.<br/>
+ ***************/
+blm_actions.fire_i.getDesc = function (state) {
+	return `Deals fire damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire</span> or removes <span class="yellow">Umbral Ice</span><br/>
 	<span class="green">Duration:</span> 13s<br/>
 	<span class="green">Additional Effect:</span> 40% chance next <span class="orange">Fire III</span> will cost no MP and have no casting time<br/>
-	<span class="green">Duration:</span> 12s`;
-blm_actions.fire_ii.description = `Deals fire damage with a potency of 80 to target and all enemies nearby it.<br/>
+	<span class="green">Duration:</span> 12s`
+};
+blm_actions.fire_ii.getDesc = function (state) {
+	return `Deals fire damage with a potency of ${this.getPotency(state).toFixed(0)} to target and all enemies nearby it.<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire</span> or removes <span class="yellow">Umbral Ice</span><br/>
-	<span class="green">Duration:</span> 13s`;
-blm_actions.fire_iii.description = `Deals fire damage with a potency of 240.<br/>
+	<span class="green">Duration:</span> 13s`
+};
+blm_actions.fire_iii.getDesc = function (state) {
+	return `Deals fire damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire III</span> and removes <span class="yellow">Umbral Ice</span><br/>
-	<span class="green">Duration:</span> 13s`;
-blm_actions.fire_iv.description = `Deals fire damage with a potency of 260.
-	Can only be executed while under the effect of both <span class="yellow">Enochian</span> and <span class="yellow">Astral Fire</span>.`;
-blm_actions.flare.description = `Deals fire damage to a target and all enemies nearby it with a potency of 260 for the first enemy, 15% less for the second, 30% less for the third, 45% less for the fourth, 60% less for the fifth, and 70% less for all remaining enemies.<br/>
+	<span class="green">Duration:</span> 13s`
+};
+blm_actions.fire_iv.getDesc = function (state) {
+	return `Deals fire damage with a potency of ${this.getPotency(state).toFixed(0)}.
+	Can only be executed while under the effect of both <span class="yellow">Enochian</span> and <span class="yellow">Astral Fire</span>.`
+};
+blm_actions.flare.getDesc = function (state) {
+	return `Deals fire damage to a target and all enemies nearby it with a potency of ${this.getPotency(state).toFixed(0)} for the first enemy, 15% less for the second, 30% less for the third, 45% less for the fourth, 60% less for the fifth, and 70% less for all remaining enemies.<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Astral Fire III</span> and removes <span class="yellow">Umbral Ice</span><br/>
-	<span class="green">Duration:</span> 13s`;
-blm_actions.blizzard_i.description = `Deals ice damage with a potency of 180.<br/>
+	<span class="green">Duration:</span> 13s`
+};
+blm_actions.blizzard_i.getDesc = function (state) {
+	return `Deals ice damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice</span> or removes <span class="yellow">Astral Fire</span><br/>
-	<span class="green">Duration:</span> 13s`;
-blm_actions.blizzard_ii.description = `Deals ice damage with a potency of 50 to all nearby enemies.<br/>
+	<span class="green">Duration:</span> 13s`
+};
+blm_actions.blizzard_ii.getDesc = function (state) {
+	return `Deals ice damage with a potency of ${this.getPotency(state).toFixed(0)} to all nearby enemies.<br/>
 	<span class="green">Additional Effect:</span> <span class="yellow">Bind</span><br/>
 	<span class="green">Duration:</span> 8s<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice</span> or removes <span class="yellow">Astral Fire</span><br/>
-	<span class="green">Duration:</span> 13s`;
-blm_actions.blizzard_iii.description = `Deals ice damage with a potency of 240.<br/>
+	<span class="green">Duration:</span> 13s`
+};
+blm_actions.blizzard_iii.getDesc = function (state) {
+	return `Deals ice damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice III</span> and removes <span class="yellow">Astral Fire</span><br/>
-	<span class="green">Duration:</span> 13s`;
-blm_actions.blizzard_iv.description = `Deals ice damage with a potency of 260.<br/>
+	<span class="green">Duration:</span> 13s`
+};
+blm_actions.blizzard_iv.getDesc = function (state) {
+	return `Deals ice damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> Grants 3 <span class="yellow">Umbral Hearts</span><br/>
 	<span class="green">Umbral Heart Bonus:</span> Nullifies <span class="yellow">Astral Fire</span>'s MP cost increase for <span class="orange">Fire spells</span> and reduces MP cost for <span class="orange">Flare</span> by two-thirds<br/>
-	Can only be executed while under the effect of both <span class="yellow">Enochian</span> and <span class="yellow">Umbral Ice</span>.`;
-blm_actions.freeze.description = `Covers a designated area in ice, dealing ice damage with a potency of 100.<br/>
+	Can only be executed while under the effect of both <span class="yellow">Enochian</span> and <span class="yellow">Umbral Ice</span>.`
+};
+blm_actions.freeze.getDesc = function (state) {
+	return `Covers a designated area in ice, dealing ice damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> <span class="yellow">Bind</span><br/>
 	<span class="green">Duration:</span> 15s<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Umbral Ice</span> or removes <span class="yellow">Astral Fire</span><br/>
-	<span class="green">Duration:</span> 13s`;
-blm_actions.thunder_i.description = `Deals lightning damage with a potency of 30.<br/>
+	<span class="green">Duration:</span> 13s`
+};
+blm_actions.thunder_i.getDesc = function (state) {
+	return `Deals lightning damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> Lightning damage over time<br/>
 	<span class="green">Potency:</span> 40<br/>
 	<span class="green">Duration:</span> 18s<br/>
 	<span class="green">Additional Effect:</span> 10% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
 	<span class="green">Duration:</span> 12s<br/>
-	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`;
-blm_actions.thunder_ii.description = `Deals lightning damage with a potency of 30 to target and all enemies nearby it.<br/>
+	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`
+};
+blm_actions.thunder_ii.getDesc = function (state) {
+	return `Deals lightning damage with a potency of ${this.getPotency(state).toFixed(0)} to target and all enemies nearby it.<br/>
 	<span class="green">Additional Effect:</span> Lightning damage over time<br/>
 	<span class="green">Potency:</span> 30<br/>
 	<span class="green">Duration:</span> 12s<br/>
 	<span class="green">Additional Effect:</span> 3% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
 	<span class="green">Duration:</span> 12s<br/>
-	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`;
-blm_actions.thunder_iii.description = `Deals lightning damage with a potency of 70.<br/>
+	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`
+};
+blm_actions.thunder_iii.getDesc = function (state) {
+	return `Deals lightning damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
 	<span class="green">Additional Effect:</span> Lightning damage over time<br/>
 	<span class="green">Potency:</span> 40<br/>
 	<span class="green">Duration:</span> 24s<br/>
 	<span class="green">Additional Effect:</span> 10% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
 	<span class="green">Duration:</span> 12s<br/>
-	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`;
-blm_actions.thunder_iv.description = `Deals lightning damage with a potency of 50 to target and all enemies nearby it.<br/>
+	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`
+};
+blm_actions.thunder_iv.getDesc = function (state) {
+	return `Deals lightning damage with a potency of ${this.getPotency(state).toFixed(0)} to target and all enemies nearby it.<br/>
 	<span class="green">Additional Effect:</span> Lightning damage over time<br/>
 	<span class="green">Potency:</span> 30<br/>
 	<span class="green">Duration:</span> 18s<br/>
 	<span class="green">Additional Effect:</span> 3% chance after each tick that the next <span class="orange">Thunder</span> spell of any grade will add its full damage over time amount to its initial damage, have no cast time, and cost no MP<br/>
 	<span class="green">Duration:</span> 12s<br/>
-	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`;
-blm_actions.scathe.description = `Deals unaspected damage with a potency of 100.<br/>
-	<span class="green">Additional Effect:</span> 20% chance potency will double`;
-blm_actions.foul.description = `Deals unaspected damage to a target and all enemies nearby it with a potency of 650 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
-	Can only be executed while under the effect of <span class="yellow">Polyglot</span>. <span class="yellow">Polyglot</span> effect ends upon use.`;
-blm_actions.sleep.description = `Puts target to sleep.<br/>
+	Only one <span class="orange">Thunder</span> spell-induced damage over time effect per caster can be inflicted upon a single target.`
+};
+blm_actions.scathe.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	<span class="green">Additional Effect:</span> 20% chance potency will double`
+};
+blm_actions.foul.getDesc = function (state) {
+	return `Deals unaspected damage to a target and all enemies nearby it with a potency of ${this.getPotency(state).toFixed(0)} for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
+	Can only be executed while under the effect of <span class="yellow">Polyglot</span>. <span class="yellow">Polyglot</span> effect ends upon use.`
+};
+blm_actions.sleep.getDesc = function (state) {
+	return `Puts target to sleep.<br/>
 	<span class="green">Duration:</span> 30s<br/>
-	Cancels auto-attack upon execution.`;
-blm_actions.transpose.description = `Swaps <span class="yellow">Astral Fire</span> with a single <span class="yellow">Umbral Ice</span>, or <span class="yellow">Umbral Ice</span> with a single <span class="yellow">Astral Fire</span>.`;
-blm_actions.ley_lines.description = `Connects naturally occurring ley lines to create a circle of power which, while standing within it, reduces spell cast time and recast time, and auto-attack delay by 15%.<br/><span class="green">Duration:</span> 30s`;
-blm_actions.sharpcast.description = `Ensures the next <span class="orange">Scathe</span>, <span class="orange">Fire</span>, or <span class="orange">Thunder</span> spell cast will, for the first hit, trigger <span class="orange">Scathe</span>'s additional effect, <span class="yellow">Firestarter</span>, or <span class="yellow">Thundercloud</span> respectively.<br/><span class="green">Duration:</span> 15s`;
-blm_actions.enochian.description = `Increases magic damage dealt by 5%. Also allows the casting of <span class="orange">Blizzard IV</span> and <span class="orange">Fire IV</span>.<br/>
+	Cancels auto-attack upon execution.`
+};
+blm_actions.transpose.getDesc = function (state) {
+	return `Swaps <span class="yellow">Astral Fire</span> with a single <span class="yellow">Umbral Ice</span>, or <span class="yellow">Umbral Ice</span> with a single <span class="yellow">Astral Fire</span>.`
+};
+blm_actions.ley_lines.getDesc = function (state) {
+	return `Connects naturally occurring ley lines to create a circle of power which, while standing within it, reduces spell cast time and recast time, and auto-attack delay by 15%.<br/><span class="green">Duration:</span> 30s`
+};
+blm_actions.sharpcast.getDesc = function (state) {
+	return `Ensures the next <span class="orange">Scathe</span>, <span class="orange">Fire</span>, or <span class="orange">Thunder</span> spell cast will, for the first hit, trigger <span class="orange">Scathe</span>'s additional effect, <span class="yellow">Firestarter</span>, or <span class="yellow">Thundercloud</span> respectively.<br/><span class="green">Duration:</span> 15s`
+};
+blm_actions.enochian.getDesc = function (state) {
+	return `Increases magic damage dealt by 5%. Also allows the casting of <span class="orange">Blizzard IV</span> and <span class="orange">Fire IV</span>.<br/>
 	<span class="green">Additional Effect</span>: Grants <span class="yellow">Polyglot</span> if <span class="yellow">Enochian</span> is maintained for 30s<br/>
-	Can only be executed while under the effect of <span class="yellow">Astral Fire</span> or <span class="yellow">Umbral Ice</span>. Effect is canceled if <span class="yellow">Astral Fire</span> or <span class="yellow">Umbral Ice</span> end.`;
-blm_actions.triplecast.description = `The next three spells will require no cast time.<br/>
-	<span class="green">Duration:</span> 15s`;
-blm_actions.convert.description = `Sacrifices 20% of maximum HP to restore 30% of MP. Cannot be executed when current HP is lower than 20%.`,
-blm_actions.manaward.description = `Creates a barrier that nullifies damage totaling up to 30% of maximum HP.<br/>
-	<span class="green">Duration:</span> 20s`;
-blm_actions.aetherial_manipulation.description = `Rush to a target party member's side.<br/>Unable to cast if bound.`;
-blm_actions.between_the_lines.description = `Move instantly to <span class="yellow">Ley Lines</span> drawn by you.<br/>
-	Cannot be executed while bound.`;
+	Can only be executed while under the effect of <span class="yellow">Astral Fire</span> or <span class="yellow">Umbral Ice</span>. Effect is canceled if <span class="yellow">Astral Fire</span> or <span class="yellow">Umbral Ice</span> end.`
+};
+blm_actions.triplecast.getDesc = function (state) {
+	return `The next three spells will require no cast time.<br/>
+	<span class="green">Duration:</span> 15s`
+};
+blm_actions.convert.getDesc = function (state) {
+	return `Sacrifices 20% of maximum HP to restore 30% of MP. Cannot be executed when current HP is lower than 20%.`
+};
+
+blm_actions.manaward.getDesc = function (state) {
+	return `Creates a barrier that nullifies damage totaling up to 30% of maximum HP.<br/>
+	<span class="green">Duration:</span> 20s`
+};
+blm_actions.aetherial_manipulation.getDesc = function (state) {
+	return `Rush to a target party member's side.<br/>Unable to cast if bound.`
+};
+blm_actions.between_the_lines.getDesc = function (state) {
+	return `Move instantly to <span class="yellow">Ley Lines</span> drawn by you.<br/>
+	Cannot be executed while bound.`
+};
