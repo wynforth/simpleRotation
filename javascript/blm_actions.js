@@ -112,15 +112,11 @@ class ThunderSpell extends BLMSpell {
 	}
 
 	getCast(state) {
-		if (hasStatus("thundercloud"))
-			return 0;
-		return super.getCast(state);
+		return hasStatus("thundercloud") ? 0 : super.getCast(state);
 	}
 
 	getManaCost(state) {
-		if (hasStatus("thundercloud"))
-			return 0;
-		return super.getManaCost(state);
+		return hasStatus("thundercloud") ? 0 : super.getManaCost(state);
 	}
 
 	execute(state) {
@@ -216,6 +212,34 @@ blm_actions.fire_iii.execute = function (state) {
 	if (hasStatus("firestarter"))
 		setStatus("firestarter", false);
 };
+
+blm_actions.fire_iii.isHighlighted = function(state){
+	return hasStatus('firestarter');
+};
+
+blm_actions.fire_iii.getCast = function(state){
+	if(hasStatus('firestarter'))
+		return 0;
+	
+	var base = this.cast * (state.spd / 2.5);
+	if (hasStatus('umbral_ice'))
+			if (getStacks('umbral_ice') == 3)
+				return base * 0.5;
+			
+	
+	return base;
+};
+
+blm_actions.fire_iii.getManaCost = function (state) {
+	if(hasStatus('firestarter'))
+			return 0;
+	if (hasStatus('astral_fire'))
+		return this.mana * (hasStatus('umbral_heart') ? 1 : 2);
+	if (hasStatus('umbral_ice'))
+		return this.mana * (getStacks('umbral_ice') > 1 ? 0.25 : 0.5);
+
+	return this.mana;
+}
 //Fire IV
 blm_actions.fire_iv.execute = function (state) {
 	if (hasStatus("astral_fire"))
@@ -298,7 +322,7 @@ blm_actions.enochian.isUseable = function (state) {
 };
 //Convert
 blm_actions.convert.execute = function (state) {
-	setMana(state.mana + (state.maxMana * .2));
+	setMana(state.mana + (state.maxMana * .3));
 };
 //Between The Lines
 blm_actions.between_the_lines.isUseable = function (state) {

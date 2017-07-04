@@ -29,6 +29,7 @@ const jobActions = {
 	BLM: blm_actions,
 	SAM: sam_actions,
 	BRD: brd_actions,
+	RDM: rdm_actions,
 }
 
 function getRole(job){
@@ -433,7 +434,6 @@ function getStatus(name) {
 	var status = Object.assign(Object.create(statuses[name]), statuses[name])
 	status.id = name;
 	return status;
-	//return Object.assign({},statuses[name]); //get a copy of the status not the status directly
 }
 
 function setStatus(name, active){
