@@ -1,11 +1,10 @@
 //initialization
-var currentJob = '';
 
 var rotation = [];
 var state = {};
 
 
-initialize();
+initialize('');
 
 function removeRotationAction(index){
 	rotation.splice(index,1);
@@ -127,12 +126,16 @@ function playRotation(){
 		row.startTime = state.currentTime;
 		
 		
-		//determine cast time, and next action time
+		//determine cast time and cost at start of cast, and next action time
 		var castTime = action.getCast(state);
+		var mana = calculateManaCost(action.getManaCost(state));
+		var tp = calculateTPCost(action.getTPCost(state));
 		
+		/* determined in the spell
 		if(action.type == "spell" && hasAnyStatus(["swiftcast","triplecast","dualcast"])){
 			castTime = 0;
 		}
+		*/
 		
 		//determine time to take next action
 		//if its not an ability (ie its on the gcd) the time is the longest of the cast time, the gcd, or the animation lock (in the cast of swiftcast)
@@ -141,6 +144,7 @@ function playRotation(){
 		var delay = action.animTime;
 		if(action.type != "ability"){
 			//remove instcast mods
+			/* done in the spell
 			if(action.type == "spell"){
 				if(hasStatus("swiftcast")){
 					setStatus("swiftcast",false);
@@ -149,7 +153,7 @@ function playRotation(){
 				} else if(hasStatus("dualcast")){
 					setStatus("dualcast",false);
 				}
-			}
+			}*/
 			
 			//state.cast.start = state.currentTime;
 			//state.cast.end = castTime;
@@ -170,10 +174,10 @@ function playRotation(){
 		advanceTime(delay);
 
 		//remove cost
-		var mana = calculateManaCost(action.getManaCost(state));
+		
 		setMana(state.mana - mana);
 		row.mana = mana;
-		var tp = calculateTPCost(action.getTPCost(state));
+		
 		setTP(state.tp - tp);
 		row.tp = tp;
 		

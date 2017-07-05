@@ -1,7 +1,7 @@
 //initialize state
-function initialize(){
+function initialize(job){
 	//currentJob = getUrlParameter('job');
-	state = resetState(currentJob);
+	state = resetState(job);
 	actions = getActions(state);
 	
 	setMana(state.maxMana);
@@ -10,9 +10,9 @@ function initialize(){
 	setSpellSpeed(state.spd);
 	
 	//job specific clean it up later
-	setKenki(0);
-	$(".progress.kenki-bg").toggleClass('hidden', currentJob!="SAM");
-	
+	setResource1(0);
+	setResource2(0);
+		
 	rotation = [];
 	createActionButtons();
 	update();
@@ -22,7 +22,7 @@ function initialize(){
 }
 
 
-const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status);
+const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status, rdm_status);
 //statuses.swiftcast = new Status('swiftcast', 20, '#E090C0');
 
 const jobActions = {
@@ -70,20 +70,13 @@ function resetState(job){
 		currentTime: 0,
 		targetTime: 0,
 		nextTick: 3.0,
-		spd: defaults[job].spd,
-		sks: defaults[job].sks,
+		spd: parseFloat($("#spellSpeed").val()), //defaults[job].spd,
+		sks: parseFloat($("#skillSpeed").val()), //defaults[job].sks,
 		lastAction: '',
 		lastActionTime: 0,
 		lastCombo: false,
-		kenki: 0,
-		black: 0,
-		white: 0,
-		oath: 0,
-		beast: 0,
-		blood: 0,
-		faerie: 0,
-		ninki: 0,
-		heat: 0,
+		resource_1: 0,
+		resource_2: 0,
 	};
 }
 
@@ -133,12 +126,15 @@ function replaceQueryParam(param, newval, search) {
 
 function changeJob(name){
 	cleanActionButtonHeaders();
-	currentJob = name;
-	//var str = window.location.search;
-	//str = replaceQueryParam('job', currentJob, str);
-	//window.location = window.location.pathname + str;
+	cleanResources();
 	
-	initialize();
+	parseFloat($("#spellSpeed").val(defaults[name].spd))
+	parseFloat($("#skillSpeed").val(defaults[name].sks))
+	initialize(name);
+	//visibility
+	setResources();
+	
+
 }
 
 /*----------------
@@ -147,10 +143,45 @@ DISPLAY FUNCTIONS
 
 -----------------*/
 
+function cleanResources(){
+	$(".progress.resource-1-bg").removeClass(state.job);
+	$(".progress-resource-1").removeClass(state.job);
+	$(".resource-1").removeClass(state.job);
+	
+	$(".progress.resource-2-bg").removeClass(state.job);
+	$(".progress-resource-2").removeClass(state.job);
+	$(".resource-2").removeClass(state.job);
+}
+
+function setResources(){
+	switch(state.job){
+		case 'SAM':
+			$(".progress.resource-1-bg").toggleClass('hidden', false);
+			$(".progress.resource-2-bg").toggleClass('hidden', true);
+			break;
+		case 'RDM':
+			$(".progress.resource-1-bg").toggleClass('hidden', false);
+			$(".progress.resource-2-bg").toggleClass('hidden', false);
+			break;
+		default:
+			$(".progress.resource-1-bg").toggleClass('hidden', true);
+			$(".progress.resource-2-bg").toggleClass('hidden', true);
+		
+	}
+	
+	$(".progress.resource-1-bg").addClass(state.job);
+	$(".progress-resource-1").addClass(state.job);
+	$(".resource-1").addClass(state.job);
+	
+	$(".progress.resource-2-bg").addClass(state.job);
+	$(".progress-resource-2").addClass(state.job);
+	$(".resource-2").addClass(state.job);
+}
+
 function cleanActionButtonHeaders(){
-	$(".header.job").removeClass(state.job);
+	$(".header.job").removeClass(state.role);
 	$(".header.job .image-job").attr("src","img/icons/none.png");
-	$(".actions.job").removeClass(`border-${state.job}`);
+	$(".actions.job").removeClass(`border-${state.role}`);
 	
 	$(".header.role").removeClass(state.role);
 	$(".header.role .image-role").attr("src","img/icons/none.png");
@@ -177,9 +208,9 @@ function createActionButtons(){
 			//console.log(action.name.replace(/\ /g,'_').toLowerCase());
 		}
 	}
-	$(".header.job").addClass(state.job);
+	$(".header.job").addClass(state.role);
 	$(".header.job .image-job").attr("src","img/icons/"+state.job+".png");
-	$(".actions.job").addClass(`border-${state.job}`);
+	$(".actions.job").addClass(`border-${state.role}`);
 	$(".actions.job").html(actionArr.map(Action).join(''));
 	
 	var actionArr = [];
@@ -206,10 +237,8 @@ function updateActionButtons(){
     const key = $(this).data("action");
     const action = getAction(key);
 
-	//update image incase the action was replaced
-	if(key != action.id)
-		$("img", this).prop("src", `img/${action.getImage()}.png`);
-
+	$("img", this).prop("src", `img/${action.getImage()}.png`);
+	
 	$(this).toggleClass("disabled", !actionUsable(key));
     $(this).toggleClass("highlight", action.isHighlighted(state));
 		
@@ -371,6 +400,7 @@ function getAction(name) {
 	action.id = name;
 	
 	var replacement = action.getReplacement(state);
+	//console.log(replacement);
 	if(replacement != false)
 		return getAction(replacement);
 		
@@ -418,10 +448,16 @@ function setTP(tp) {
 	$(".tp").text(`${state.tp} / ${state.maxTP}`);
 }
 
-function setKenki(kenki) {
-	state.kenki = Math.min(kenki, 100);
-	$(".progress-kenki").css('width', (state.kenki/100*100)+'%').attr('aria-valuenow', state.kenki);
-	$(".kenki").text(`${state.kenki}`);
+function setResource1(value) {
+	state.resource_1 = Math.min(value, 100);
+	$(".progress-resource-1").css('width', (state.resource_1/100*100)+'%').attr('aria-valuenow', state.kenki);
+	$(".resource-1").text(`${state.resource_1}`);
+}
+
+function setResource2(value) {
+	state.resource_2 = Math.min(value, 100);
+	$(".progress-resource-2").css('width', (state.resource_2/100*100)+'%').attr('aria-valuenow', state.kenki);
+	$(".resource-2").text(`${state.resource_2}`);
 }
 
 /*------------------
@@ -431,6 +467,7 @@ STATUS FUNCTIONS
 ------------------*/
 
 function getStatus(name) {
+	//console.log(name);
 	var status = Object.assign(Object.create(statuses[name]), statuses[name])
 	status.id = name;
 	return status;

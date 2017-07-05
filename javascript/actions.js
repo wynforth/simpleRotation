@@ -37,7 +37,9 @@ class BaseAction {
 		return false;
 	}
 
-	execute(state) {}
+	execute(state) {
+		
+	}
 
 	isLevel(state) {
 		return this.level <= state.level;
@@ -108,6 +110,8 @@ class Spell extends BaseAction {
 		this.radius = radius;
 		this.type = "spell";
 	}
+	
+	execute(state){	}
 
 	getCast(state) {
 		return this.cast * (state.spd / 2.5);
@@ -631,7 +635,7 @@ const defaults = {
 		spd: 2.5,
 	},
 	RDM: {
-		mana: 0,
+		mana: 14000,
 		sks: 2.5,
 		spd: 2.35,
 	},

@@ -23,7 +23,7 @@ class SAM_WeaponSkill extends WeaponSkill {
 
 	execute(state) {
 		super.execute(state);
-		setKenki(state.kenki + this.kenki);
+		setResource1(state.resource_1 + this.kenki);
 		if (hasStatus('hissatsu_kaiten'))
 			setStatus('hissatsu_kaiten', false);
 	}
@@ -60,7 +60,7 @@ class SAM_ComboWS extends SAM_WeaponSkill {
 	execute(state) {
 		if (this.isCombo(state)) {
 			updateStatus('meikyo_shisui', -1);
-			setKenki(state.kenki + this.comboKenki);
+			setResource1(state.resource_1 + this.comboKenki);
 			for (var i = 0; i < this.comboStatus.length; i++)
 				setStatus(this.comboStatus[i], true);
 		}
@@ -96,11 +96,11 @@ class SAM_DamageAbility extends SAM_Ability {
 	}
 
 	execute(state) {
-		setKenki(state.kenki - this.kenki);
+		setResource1(state.resource_1 - this.kenki);
 	}
 
 	isUseable(state) {
-		return state.kenki >= this.kenki;
+		return state.resource_1 >= this.kenki;
 	}
 }
 
@@ -160,7 +160,7 @@ ACTION OVERRIDES
 
 //Enpi
 sam_actions.enpi.execute = function (state) {
-	setKenki(state.kenki + 10);
+	setResource1(state.resource_1 + 10);
 	if (hasStatus('enhanced_enpi'))
 		setStatus('enhanced_enpi', false);
 };
@@ -179,7 +179,7 @@ sam_actions.hagakure.execute = function (state) {
 	amt += hasStatus('sen_setsu') ? 20 : 0;
 	amt += hasStatus('sen_getsu') ? 20 : 0;
 	amt += hasStatus('sen_ka') ? 20 : 0;
-	setKenki(state.kenki + amt);
+	setResource1(state.resource_1 + amt);
 
 	setStatus('sen_setsu', false);
 	setStatus('sen_getsu', false);
@@ -208,7 +208,7 @@ sam_actions.ageha.isUseable = function (state) {
 };
 //Hissatsu: Seigan
 sam_actions.hissatsu_seigan.isUseable = function (state) {
-	return state.kenki >= this.kenki && hasStatus('eyes_open');
+	return state.resource_1 >= this.kenki && hasStatus('eyes_open');
 };
 //Merciful Eyes
 sam_actions.merciful_eyes.isUseable = function (state) {
@@ -222,12 +222,12 @@ sam_actions.merciful_eyes.recastGroup = function () {
 };
 //Hissatsu: Kaiten
 sam_actions.hissatsu_kaiten.execute = function (state) {
-	setKenki(state.kenki - this.kenki);
+	setResource1(state.resource_1 - this.kenki);
 	setStatus('hissatsu_kaiten', true);
 };
 //Hissatsu: Yaten
 sam_actions.hissatsu_yaten.execute = function (state) {
-	setKenki(state.kenki - this.kenki);
+	setResource1(state.resource_1 - this.kenki);
 	setStatus('enhanced_enpi', true);
 };
 
@@ -263,7 +263,7 @@ sam_status.third_eye.tick = function (state) {
 };
 
 sam_status.meditate.tick = function (state) {
-	setKenki(state.kenki + 10);
+	setResource1(state.resource_1 + 10);
 };
 
 /***************

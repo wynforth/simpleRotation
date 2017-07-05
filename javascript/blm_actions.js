@@ -20,10 +20,29 @@ class BLMBuff extends Buff {
 	}
 }
 
-class BLMSpell extends Spell {
+class BLM_Spell extends Spell {
 	constructor(name, level, potency, cast, mana, range, radius) {
 		super(name, level, potency, cast, mana, range, radius);
 		this.affinity = ['BLM'];
+	}
+	
+	execute(state){
+		super.execute(state);
+		if(hasStatus('triplecast'))
+			updateStatus('triplecast',-1);
+		else if(hasStatus('swiftcast'))
+			setStatus('swiftcast',false);
+	}
+	
+	getCast(state){
+		if(hasAnyStatus(['swiftcast','triplecast']))
+			return 0;
+		
+		return super.getCast(state) * (hasStatus('ley_lines') ? .85 : 1);
+	}
+	
+	getRecast(state){
+		return super.getRecast(state) * (hasStatus('ley_lines') ? .85 : 1);
 	}
 
 	getPotency(state) {
@@ -31,11 +50,13 @@ class BLMSpell extends Spell {
 	}
 }
 
-class FireSpell extends BLMSpell {
+class FireSpell extends BLM_Spell {
 	constructor(name, level, potency, cast, mana, range, radius) {
 		super(name, level, potency, cast, mana, range, radius);
 	}
 	execute(state) {
+		super.execute(state);
+		
 		if (hasStatus("umbral_ice")) {
 			setStatus("umbral_ice", false);
 		} else if (hasStatus("astral_fire")) {
@@ -75,12 +96,13 @@ class FireSpell extends BLMSpell {
 	}
 }
 
-class IceSpell extends BLMSpell {
+class IceSpell extends BLM_Spell {
 	constructor(name, level, potency, cast, mana, range, radius) {
 		super(name, level, potency, cast, mana, range, radius);
 	}
 
 	execute(state) {
+		super.execute(state);
 		if (hasStatus("astral_fire"))
 			setStatus("astral_fire", false);
 		else
@@ -106,13 +128,9 @@ class IceSpell extends BLMSpell {
 	}
 }
 
-class ThunderSpell extends BLMSpell {
+class ThunderSpell extends BLM_Spell {
 	constructor(name, level, potency, cast, mana, range, radius) {
 		super(name, level, potency, cast, mana, range, radius);
-	}
-
-	getCast(state) {
-		return hasStatus("thundercloud") ? 0 : super.getCast(state);
 	}
 
 	getManaCost(state) {
@@ -126,13 +144,22 @@ class ThunderSpell extends BLMSpell {
 		setStatus("thunder_iii", false);
 		setStatus("thunder_iv", false);
 		setStatus(this.id, true);
-		setStatus("thundercloud", false);
+		//thundercloud precidence
+		if(hasStatus('thundercloud'))
+			setStatus("thundercloud", false);
+		else
+			super.execute(state);
+		
 		if (hasStatus("sharpcast")) {
 			setStatus("sharpcast", false);
 			setStatus("thundercloud", true);
 		}
 	}
-
+	
+	getPureCast(state){
+		return hasStatus("thundercloud") ? 0 : super.getPureCast(state);
+	}
+	
 	getPotency(state) {
 		var base = hasStatus('thundercloud') ? (this.potency + (statuses[this.id].getTotalPotency(state))) : this.potency;
 		return base * (hasStatus('enochian') ? 1.05 : 1);
@@ -166,9 +193,9 @@ const blm_actions = {
 	thunder_iii: new ThunderSpell("Thunder III", 45, 70, 2.5, 1920, 25, 0),
 	thunder_iv: new ThunderSpell("Thunder IV", 64, 50, 3.0, 2160, 25, 5),
 
-	scathe: new BLMSpell("Scathe", 15, 100, 0, 960, 25, 0),
-	foul: new BLMSpell("Foul", 70, 650, 2.5, 240, 25, 5),
-	sleep: new BLMSpell("Sleep", 10, 0, 2.5, 1200, 25, 5),
+	scathe: new BLM_Spell("Scathe", 15, 100, 0, 960, 25, 0),
+	foul: new BLM_Spell("Foul", 70, 650, 2.5, 240, 25, 5),
+	sleep: new BLM_Spell("Sleep", 10, 0, 2.5, 1200, 25, 5),
 
 	transpose: new BLMAction("Transpose", 4, 12, 0),
 	ley_lines: new BLMBuff("Ley Lines", 52, 30),
@@ -188,6 +215,12 @@ ACTION OVERRIDES
  ***************/
 //Fire I
 blm_actions.fire_i.execute = function (state) {
+	//stupidly can't call super :/
+	if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
+
 	if (hasStatus("umbral_ice")) {
 		setStatus("umbral_ice", false);
 	} else if (hasStatus("astral_fire")) {
@@ -209,8 +242,13 @@ blm_actions.fire_iii.execute = function (state) {
 	updateStatus("astral_fire", 3, true);
 	if (hasStatus("umbral_ice"))
 		setStatus("umbral_ice", false);
+	
 	if (hasStatus("firestarter"))
 		setStatus("firestarter", false);
+	else if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
 };
 
 blm_actions.fire_iii.isHighlighted = function(state){
@@ -218,16 +256,16 @@ blm_actions.fire_iii.isHighlighted = function(state){
 };
 
 blm_actions.fire_iii.getCast = function(state){
-	if(hasStatus('firestarter'))
+	if(hasAnyStatus(['firestarter', 'swiftcast','triplecast']))
 		return 0;
 	
-	var base = this.cast * (state.spd / 2.5);
+	var mod = 1;
 	if (hasStatus('umbral_ice'))
 			if (getStacks('umbral_ice') == 3)
-				return base * 0.5;
-			
+				mod -= 0.5;
+	mod -= (hasStatus('ley_lines') ? .15 : 0);
 	
-	return base;
+	return (this.cast * (state.spd / 2.5)) * mod;
 };
 
 blm_actions.fire_iii.getManaCost = function (state) {
@@ -244,6 +282,11 @@ blm_actions.fire_iii.getManaCost = function (state) {
 blm_actions.fire_iv.execute = function (state) {
 	if (hasStatus("astral_fire"))
 		updateStatus("umbral_heart", -1);
+	
+	if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
 };
 blm_actions.fire_iv.isUseable = function (state) {
 	return hasAllStatus(['enochian', 'astral_fire']);
@@ -254,6 +297,11 @@ blm_actions.flare.execute = function (state) {
 	if (hasStatus("umbral_ice"))
 		setStatus("umbral_ice", false);
 	setStatus('umbral_heart', false);
+	
+	if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
 };
 blm_actions.flare.getManaCost = function (state) {
 	if (hasStatus('umbral_heart'))
@@ -265,10 +313,20 @@ blm_actions.blizzard_iii.execute = function (state) {
 	updateStatus("umbral_ice", 3, true);
 	if (hasStatus("astral_fire"))
 		setStatus("astral_fire", false);
+	
+	if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
 };
 //Blizzard IV
 blm_actions.blizzard_iv.execute = function (state) {
 	setStatus("umbral_heart", true);
+	
+	if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
 };
 blm_actions.blizzard_iv.isUseable = function (state) {
 	return hasAllStatus(['enochian', 'umbral_ice']);
@@ -287,6 +345,10 @@ blm_actions.thunder_iv.hidden = true;
 //scathe
 blm_actions.scathe.execute = function (state) {
 	setStatus('sharpcast', false);
+	if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
 };
 blm_actions.scathe.getPotency = function (state) {
 	var mod = 1;
@@ -297,6 +359,11 @@ blm_actions.scathe.getPotency = function (state) {
 //Foul
 blm_actions.foul.execute = function (state) {
 	setStatus('polyglot', false);
+	
+	if (hasStatus('triplecast'))
+		updateStatus('triplecast', -1);
+	else if (hasStatus('swiftcast'))
+		setStatus('swiftcast', false);
 };
 blm_actions.foul.isUseable = function (state) {
 	return hasStatus('polyglot') && state.mana >= this.getManaCost(state);

@@ -162,11 +162,13 @@ body {
 /* 
 TANK
 */
-.DRK, .PLD, .WAR, .tank {
+/*.DRK, .PLD, .WAR, */
+.tank {
 	background-color: rgb(45, 58, 128);
 }
 
-.border-DRK, .border-PLD, .border-WAR, .border-tank {
+/*.border-DRK, .border-PLD, .border-WAR, */
+.border-tank {
 	border-color: rgb(45, 58, 128);
 	background-color: rgb(129,136,178);
 }
@@ -174,11 +176,12 @@ TANK
 /*
 HEALER
 */
-.AST, .SCH, .WHM, .healer {
+/* .AST, .SCH, .WHM, */
+.healer {
 	background-color: rgb(52, 102, 36);
 }
-
-.border-AST, .border-SCH, .border-WHM, .border-healer {
+/* .border-AST, .border-SCH, .border-WHM, */
+.border-healer {
 	border-color: rgb(52, 102, 36);
 	background-color: rgb(133,163,123);
 }
@@ -186,7 +189,7 @@ HEALER
 /* 
 DPS
 */
-.BLM, .SMN, .RDM, .MNK, .DRG, .NIN, .SAM, .BRD, .MCH,
+/*.BLM, .SMN, .RDM, .MNK, .DRG, .NIN, .SAM, .BRD, .MCH,*/
 .caster, .melee, .ranged {
 	background-color: rgb(115, 40, 40);
 }
@@ -196,9 +199,9 @@ DPS
 	height: 48px;
 }
 
-.border-BLM, .border-SMN, .border-RDM, 
+/*.border-BLM, .border-SMN, .border-RDM, 
 .border-MNK, .border-DRG, .border-SAM, 
-.border-BRD, .border-MCH,
+.border-BRD, .border-MCH,*/
 .border-caster, .border-melee, .border-ranged {
 	border-color: rgb(115, 40, 40);
 	background-color: rgb(171,126,126);
@@ -324,22 +327,6 @@ table .status-block {
 	height: 100%;
 	display: block;
 }
-
-
-
-.kenki-text {
-	color: #FFD9FA;
-	text-shadow: 0 0 2px #0073ff, 0 0 2px #2c111d;
-}
-.progress-kenki { 
-	#background-color: #E05793; 
-	background: rgb(255, 45, 45); 
-    background: -webkit-linear-gradient(top, rgb(255, 45, 45) , rgb(255, 220, 220)); 
-    background: -o-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
-    background: -moz-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); /
-    background: linear-gradient(to bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
-  }
-.kenki-bg { background-color: #525252; }
 
 .grey {
   color: #848484;
@@ -551,4 +538,50 @@ form {
 }
 
 
+.progress.resource-1-bg.SAM { 
+	background-color: #525252; 
+}
+.resource-1.SAM {
+	color: white; 
+	text-shadow: 0 0 2px rgb(255, 45, 45);
+}
+.progress-bar.progress-resource-1.SAM { 
+	#background-color: #E05793; 
+	background: rgb(255, 45, 45); 
+	background: -webkit-linear-gradient(top, rgb(255, 45, 45) , rgb(255, 220, 220)); 
+	background: -o-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+	background: -moz-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220));
+	background: linear-gradient(to bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+}
 
+.progress.resource-1-bg.RDM { 
+	background-color: #525252; 
+}
+.resource-1.RDM {
+	color: white; 
+	text-shadow: 0 0 2px rgb(255, 45, 45);
+}
+.progress-bar.progress-resource-1.RDM { 
+	#background-color: #E05793; 
+	background: rgb(255, 45, 45); 
+	background: -webkit-linear-gradient(top, rgb(255, 45, 45) , rgb(255, 220, 220)); 
+	background: -o-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+	background: -moz-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220));
+	background: linear-gradient(to bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+}
+
+.progress.resource-2-bg.RDM { 
+	background-color: #525252; 
+}
+.resource-2.RDM {
+	color: white; 
+	text-shadow: 0 0 2px rgb(255, 45, 45);
+}
+.progress-bar.progress-resource-2.RDM { 
+	#background-color: #E05793; 
+	background: rgb(255, 45, 45); 
+	background: -webkit-linear-gradient(top, rgb(255, 45, 45) , rgb(255, 220, 220)); 
+	background: -o-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+	background: -moz-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220));
+	background: linear-gradient(to bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+}
