@@ -22,14 +22,15 @@ function initialize(job){
 }
 
 
-const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status, rdm_status);
+const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status, rdm_status, smn_status);
 //statuses.swiftcast = new Status('swiftcast', 20, '#E090C0');
 
 const jobActions = {
 	BLM: blm_actions,
-	SAM: sam_actions,
 	BRD: brd_actions,
 	RDM: rdm_actions,
+	SAM: sam_actions,
+	SMN: smn_actions,
 }
 
 function getRole(job){
@@ -133,8 +134,6 @@ function changeJob(name){
 	initialize(name);
 	//visibility
 	setResources();
-	
-
 }
 
 /*----------------

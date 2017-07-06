@@ -6,8 +6,7 @@ CLASSES
 
 class SAM_WeaponSkill extends WeaponSkill {
 	constructor(name, level, potency, cast, tp, range, radius, kenki) {
-		super(name, level, potency, cast, tp, range, radius);
-		this.affinity = ['SAM'];
+		super(name, level, potency, cast, tp, range, radius, ['SAM']);
 		this.kenki = kenki;
 	}
 
@@ -74,24 +73,15 @@ class SAM_ComboWS extends SAM_WeaponSkill {
 	}
 }
 
-class SAM_Ability extends BaseAction {
+class SAM_Ability extends Ability {
 	constructor(name, level, recast) {
-		super(name);
-		this.level = level;
-		this.recast = recast;
-		this.affinity = ['SAM'];
+		super(name, level, recast, 0, 0, ['SAM'])
 	}
 }
 
-class SAM_DamageAbility extends SAM_Ability {
+class SAM_DamageAbility extends DamageAbility {
 	constructor(name, level, potency, recast, range, radius, kenki) {
-		super(name, level, recast);
-		this.level = level;
-		this.recast = recast;
-		this.affinity = ['SAM'];
-		this.potency = potency;
-		this.range = range;
-		this.radius = radius;
+		super(name, level, potency, recast, range, radius, ['SAM']);
 		this.kenki = kenki;
 	}
 
@@ -106,8 +96,7 @@ class SAM_DamageAbility extends SAM_Ability {
 
 class SAM_Buff extends Buff {
 	constructor(name, level, recast) {
-		super(name, level, recast);
-		this.affinity = ['SAM'];
+		super(name, level, recast, ['SAM']);
 	}
 }
 
@@ -149,7 +138,7 @@ const sam_actions = {
 
 	third_eye: new SAM_Buff("Third Eye", 6, 15),
 	merciful_eyes: new SAM_Ability("Merciful Eyes", 58, 1),
-	ageha: new SAM_DamageAbility("Ageha", 10, 250, 60, 3, 0, 0),
+	ageha: new SAM_DamageAbility("Ageha", 10, 250, 60, 3, 0, 10),
 };
 
 /***************
@@ -231,6 +220,10 @@ sam_actions.hissatsu_yaten.execute = function (state) {
 	setStatus('enhanced_enpi', true);
 };
 
+sam_actions.ageha.execute = function (state) {
+	setResource1(state.resource_1 + this.kenki);
+};
+
 /***************
 
 STATUSES
@@ -273,72 +266,72 @@ DESCRIPTIONS
  ***************/
 
 sam_actions.hakaze.getDesc = function (state) {
-	return `Delivers an attack with a potency of 150. <br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>. <br/>
 	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
 }
 sam_actions.jinpu.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100. <br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>. <br/>
 	<span class="green">Combo Action:</span> <span class="orange">Hakaze</span> <br/>
-	<span class="green">Combo Potency:</span> 280 <br/>
+	<span class="green">Combo Potency:</span> ${this.comboPotency} <br/>
 	<span class="green">Combo Bonus:</span> Increases damage dealt by 10% <br/>
 	<span class="green">Duration:</span> 30s <br/>
-	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
+	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.comboKenki}`;
 }
 sam_actions.gekko.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Jinpu</span><br/>
-	<span class="green">Combo Potency:</span> 400<br/>
-	<span class="green">Rear Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
-	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
+	<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
+	<span class="green">Rear Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.kenki}<br/>
+	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.comboKenki}<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Getsu</span>`;
 }
 sam_actions.shifu.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Hakaze</span><br/>
-	<span class="green">Combo Potency:</span> 280<br/>
+	<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
 	<span class="green">Combo Bonus:</span> Reduces weaponskill cast time and recast time, spell cast time and recast time, and auto-attack delay by 10%<br/>
 	<span class="green">Duration:</span> 30s<br/>
-	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
+	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.comboKenki}`;
 }
 sam_actions.kasha.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Shifu</span><br/>
-	<span class="green">Combo Potency:</span> 400<br/>
-	<span class="green">Side Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
-	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 5<br/>
+	<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
+	<span class="green">Side Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.kenki}<br/>
+	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.comboKenki}<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Ka</span>`;
 }
 sam_actions.yukikaze.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Hakaze</span><br/>
-	<span class="green">Combo Potency:</span> 340<br/>
+	<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
 	<span class="green">Combo Bonus:</span> Reduces target's slashing resistance by 10%<br/>
 	<span class="green">Duration:</span> 30s<br/>
-	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 10<br/>
+	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.comboKenki}<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Setsu</span>`;
 }
 sam_actions.fuga.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100 to all enemies in a cone before you.<br/>
-	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 5`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all enemies in a cone before you.<br/>
+	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.kenki}`;
 }
 sam_actions.mangetsu.getDesc = function (state) {
-	return `Delivers an attack to all nearby enemies with a potency of 100 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
+	return `Delivers an attack to all nearby enemies with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Fuga</span><br/>
-	<span class="green">Combo Potency:</span> 200 for the first enemy, 5% less for the second, 10% less for the third, 15% less for the fourth, 20% less for the fifth, and 25% less for all remaining enemies.<br/>
-	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 10<br/>
+	<span class="green">Combo Potency:</span> ${this.comboPotency} for the first enemy, 5% less for the second, 10% less for the third, 15% less for the fourth, 20% less for the fifth, and 25% less for all remaining enemies.<br/>
+	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.comboKenki}<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Getsu</span>`;
 }
 sam_actions.oka.getDesc = function (state) {
-	return `Delivers an attack to nearby enemies with a potency of 100 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
+	return `Delivers an attack to nearby enemies with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
 	<span class="green">Combo Action:</span> <span class="orange">Fuga</span><br/>
-	<span class="green">Combo Potency:</span> 200 for the first enemy, 5% less for the second, 10% less for the third, 15% less for the fourth, 20% less for the fifth, and 25% less for all remaining enemies.<br/>
-	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by 10<br/>
+	<span class="green">Combo Potency:</span> ${this.comboPotency} for the first enemy, 5% less for the second, 10% less for the third, 15% less for the fourth, 20% less for the fifth, and 25% less for all remaining enemies.<br/>
+	<span class="green">Combo Bonus:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.comboKenki}<br/>
 	<span class="green">Combo Bonus:</span> Grants <span class="yellow">Ka</span>`;
 }
 sam_actions.enpi.getDesc = function (state) {
-	return `Delivers a ranged attack with a potency of 100.<br/>
+	return `Delivers a ranged attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Enhanced Enpi Bonus Potency:</span> 300<br/>
-	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 10`;
+	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.kenki}`;
 }
 sam_actions.hagakure.getDesc = function (state) {
 	return `Converts <span class="yellow">Setsu</span>, <span class="yellow">Getsu</span>, and <span class="yellow">Ka</span> into <span class="orange">Kenki</span>. Each <span class="yellow">Sen</span> converted increases your <span class="orange">Kenki Gauge</span> by 20. Can only be executed if under the effect of at least one of the three statuses.`;
@@ -350,13 +343,13 @@ sam_actions.iaijutsu.getDesc = function (state) {
 	<span class="green">3 Sen:</span> <span class="orange">Midare Setsugekka</span>`;
 }
 sam_actions.midare_setsugekka.getDesc = function (state) {
-	return `Delivers an attack with a potency of 720.`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.`;
 }
 sam_actions.tenka_goken.getDesc = function (state) {
-	return `Delivers an attack to all enemies in a cone before you with a potency of 360 for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.`;
+	return `Delivers an attack to all enemies in a cone before you with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.`;
 }
 sam_actions.higanbana.getDesc = function (state) {
-	return `Delivers an attack with a potency of 240.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> Damage over time<br/>
 	<span class="green">Potency:</span> 35<br/>
 	<span class="green">Duration:</span> 60s`;
@@ -366,8 +359,8 @@ sam_actions.meikyo_shisui.getDesc = function (state) {
 	<span class="green">Duration:</span> 10s`;
 }
 sam_actions.ageha.getDesc = function (state) {
-	return `Delivers an attack with a potency of 250.<br/>
-	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by 10 (30 if killing blow is dealt)<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+	<span class="green">Additional Effect:</span> Increases <span class="orange">Kenki Gauge</span> by ${this.kenki} (30 if killing blow is dealt)<br/>
 	Can only be executed when target's HP is below 20%.`;
 }
 sam_actions.third_eye.getDesc = function (state) {
@@ -384,24 +377,24 @@ sam_actions.meditate.getDesc = function (state) {
 	Cancels auto-attack upon execution.`;
 }
 sam_actions.hissatsu_gyoten.getDesc = function (state) {
-	return `Rushes target and delivers an attack with a potency of 100.<br/>
-	<span class="green">Kenki Gauge Cost:</span> 10<br/>
+	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+	<span class="green">Kenki Gauge Cost:</span> ${this.kenki}<br/>
 	Cannot be executed while bound.`;
 }
 sam_actions.hissatsu_shinten.getDesc = function (state) {
-	return `Delivers an attack with a potency of 300.<br/>
-	<span class="green">Kenki Gauge Cost:</span> 25`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+	<span class="green">Kenki Gauge Cost:</span> ${this.kenki}`;
 }
 sam_actions.hissatsu_kyuten.getDesc = function (state) {
-	return `Delivers an attack with a potency of 150 to all nearby enemies.<br/>
-	<span class="green">Kenki Gauge Cost:</span> 25`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all nearby enemies.<br/>
+	<span class="green">Kenki Gauge Cost:</span> ${this.kenki}`;
 }
 sam_actions.hissatsu_guren.getDesc = function (state) {
-	return `Delivers an attack to all enemies in a straight line before you with a potency of 800 for the first enemy, 25% less for the second, and 50% less for all remaining enemies.<br/>
-	<span class="green">Kenki Gauge Cost:</span> 50`;
+	return `Delivers an attack to all enemies in a straight line before you with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> for the first enemy, 25% less for the second, and 50% less for all remaining enemies.<br/>
+	<span class="green">Kenki Gauge Cost:</span> ${this.kenki}`;
 }
 sam_actions.hissatsu_seigan.getDesc = function (state) {
-	return `Delivers an attack with a potency of 200.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Kenki Gauge Cost:</span> 15<br/>
 	Can only be executed while under the effect of <span class="yellow">Open Eyes</span>.<br/>
 	Shares a recast timer with <span class="orange">Merciful Eyes</span>.`;
@@ -416,13 +409,13 @@ sam_actions.merciful_eyes.getDesc = function (state) {
 sam_actions.hissatsu_kaiten.getDesc = function (state) {
 	return `Increases potency of next weaponskill by 50%.<br/>
 	<span class="green">Duration:</span> 10s<br/>
-	<span class="green">Kenki Gauge Cost:</span> 20`;
+	<span class="green">Kenki Gauge Cost:</span> ${this.kenki}`;
 }
 sam_actions.hissatsu_yaten.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> 10-yalm backstep<br/>
 	<span class="green">Additional Effect:</span> Grants <span class="yellow">Enhanced Enpi</span><br/>
 	<span class="green">Duration:</span> 15s<br/>
-	<span class="green">Kenki Gauge Cost:</span> 10<br/>
+	<span class="green">Kenki Gauge Cost:</span> ${this.kenki}<br/>
 	Cannot be executed while bound.`;
 }

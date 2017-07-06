@@ -5,10 +5,11 @@ GENERAL CLASSES
  ***************/
  
 class BaseAction {
-	constructor(name, level) {
+	constructor(name, level, affinity) {
 		this.name = name;
 		this.level = level;
-
+		this.affinity = affinity;
+		
 		this.type = "ability";
 		this.description = ``;
 		this.cast = 0;
@@ -22,7 +23,7 @@ class BaseAction {
 		this.hidden = false;
 		this.radius = 0;
 		this.range = 0;
-		this.affinity = [];
+		
 	}
 
 	recastGroup() {
@@ -90,8 +91,8 @@ class BaseAction {
 }
 
 class Buff extends BaseAction {
-	constructor(name, level, recast) {
-		super(name, level);
+	constructor(name, level, recast, affinity) {
+		super(name, level, affinity);
 		this.recast = recast;
 	}
 
@@ -100,9 +101,26 @@ class Buff extends BaseAction {
 	}
 }
 
+class Ability extends BaseAction {
+	constructor(name, level, recast, range, radius, affinity){
+		super(name, level, affinity);
+		this.recast = recast;
+		this.range = range;
+		this.radius = radius;
+	}
+	
+}
+
+class DamageAbility extends Ability {
+	constructor(name, level, potency, recast, range, radius, affinity){
+		super(name, level, recast, range, radius, affinity);
+		this.potency = potency;
+	}
+}
+
 class Spell extends BaseAction {
-	constructor(name, level, potency, cast, mana, range, radius) {
-		super(name, level);
+	constructor(name, level, potency, cast, mana, range, radius, affinity) {
+		super(name, level, affinity);
 		this.potency = potency;
 		this.cast = cast;
 		this.mana = mana;
@@ -123,12 +141,12 @@ class Spell extends BaseAction {
 }
 
 class WeaponSkill extends BaseAction {
-	constructor(name, level, potency, cast, tp, range, radius) {
-		super(name, level);
+	constructor(name, level, potency, cast, tp, range, radius, affinity) {
+		super(name, level, affinity);
 		this.potency = potency;
 		this.cast = cast;
 		this.tp = tp;
-		this.range = 3;
+		this.range = 3; // 'melee' range
 		this.radius = radius;
 		this.type = "weaponskill";
 	}
@@ -141,6 +159,8 @@ class WeaponSkill extends BaseAction {
 		return this.recast * (state.sks / 2.5);
 	}
 }
+
+// STATUS Classes
 
 class Status {
 	constructor(name, duration, color) {
@@ -192,11 +212,9 @@ ROLE CLASSES
 
 class Role_Action extends BaseAction {
 	constructor(name, level, recast, range, roles) {
-		super(name);
-		this.level = level;
+		super(name, level, roles);
 		this.recast = recast;
 		this.range = range;
-		this.affinity = roles;
 	}
 
 	getImage() {
@@ -206,8 +224,7 @@ class Role_Action extends BaseAction {
 
 class Role_Spell extends Spell{
 	constructor(name, level, potency, cast, mana, range, radius, roles){
-		super(name, level, potency, cast, mana, range, radius)
-		this.affinity = roles;
+		super(name, level, potency, cast, mana, range, radius, roles)
 	}
 	
 	getImage() {
@@ -215,13 +232,16 @@ class Role_Spell extends Spell{
 	}
 }
 
-class Role_Buff extends Role_Action {
+class Role_Buff extends Buff {
 	constructor(name, level, recast, roles) {
-		super(name, level, recast, 0, roles)
+		super(name, level, recast, roles)
 	}
 
 	execute(state) {
 		setStatus(this.id, true);
+	}
+	getImage() {
+		return `role/${this.id}`;
 	}
 }
 

@@ -352,6 +352,11 @@ table .status-block {
 	color: #C4B49B;
 }
 
+.calc {
+	color: #80b9ff;
+	#font-style: italic;
+}
+
 .tooltip.show {
 	opacity: 1 !important;
 }
@@ -555,33 +560,33 @@ form {
 }
 
 .progress.resource-1-bg.RDM { 
-	background-color: #525252; 
+	background-color: rgb(53, 53, 53); 
 }
 .resource-1.RDM {
 	color: white; 
-	text-shadow: 0 0 2px rgb(255, 45, 45);
+	text-shadow: 0 0 2px rgb(167, 167, 167);
 }
 .progress-bar.progress-resource-1.RDM { 
 	#background-color: #E05793; 
-	background: rgb(255, 45, 45); 
-	background: -webkit-linear-gradient(top, rgb(255, 45, 45) , rgb(255, 220, 220)); 
-	background: -o-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
-	background: -moz-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220));
-	background: linear-gradient(to bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+	background: rgb(53, 53, 53); 
+	background: -webkit-linear-gradient(right, rgb(106, 106, 106) , rgb(53, 53, 53)); 
+	background: -o-linear-gradient(left, rgb(106, 106, 106), rgb(53, 53, 53)); 
+	background: -moz-linear-gradient(left, rgb(106, 106, 106), rgb(53, 53, 53));
+	background: linear-gradient(to left, rgb(86, 86, 86), rgb(53, 53, 53)); 
 }
 
 .progress.resource-2-bg.RDM { 
-	background-color: #525252; 
+	background-color: rgb(53, 53, 53); 
 }
 .resource-2.RDM {
-	color: white; 
-	text-shadow: 0 0 2px rgb(255, 45, 45);
+	color: rgb(100, 100, 100); 
+	text-shadow: 0 0 2px rgb(75, 75, 75);
 }
 .progress-bar.progress-resource-2.RDM { 
 	#background-color: #E05793; 
-	background: rgb(255, 45, 45); 
-	background: -webkit-linear-gradient(top, rgb(255, 45, 45) , rgb(255, 220, 220)); 
-	background: -o-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
-	background: -moz-linear-gradient(bottom, rgb(255, 45, 45), rgb(255, 220, 220));
-	background: linear-gradient(to bottom, rgb(255, 45, 45), rgb(255, 220, 220)); 
+	background: rgb(235, 235, 235); 
+	background: -webkit-linear-gradient(right, rgb(235, 235, 235) , rgb(186, 186, 186)); 
+	background: -o-linear-gradient(left, rgb(235, 235, 235), rgb(186, 186, 186)); 
+	background: -moz-linear-gradient(left, rgb(235, 235, 235), rgb(186, 186, 186));
+	background: linear-gradient(to left, rgb(235, 235, 235), rgb(186, 186, 186)); 
 }

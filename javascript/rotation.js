@@ -105,6 +105,9 @@ function playRotation(){
 	resultTable.push([]); //first row is list of statuses;
 	
 	state = resetState(state.job);
+	//figure out a better way to do this. job classes with initializers?
+	setStatus('aetherflow', (state.job == 'SMN' || state.job == 'SCH')); //always start with aetherflow
+	
 	clearRotationButtons();
 	
 	for(var i=0; i< rotation.length; i++){
