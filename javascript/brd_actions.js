@@ -9,22 +9,6 @@ class BRD_WeaponSkill extends WeaponSkill {
 		super(name, level, potency, cast, tp, range, radius);
 		this.affinity = ['BRD'];
 	}
-
-	getCast(state) {
-		return super.getCast(state);
-	}
-
-	getRecast(state) {
-		return super.getRecast(state);
-	}
-
-	execute(state) {
-		super.execute(state);
-	}
-
-	getPotency(state) {
-		return super.getPotency(state);
-	}
 }
 
 class BRD_Spell extends Spell {
@@ -40,6 +24,7 @@ class BRD_StatusWS extends BRD_WeaponSkill {
 	}
 
 	execute(state) {
+		super.execute(state);
 		setStatus(this.id, true);
 	}
 }
@@ -102,7 +87,7 @@ const brd_actions = {
 	refulgent_arrow: new BRD_WeaponSkill("Refulgent Arrow", 70, 300, 0, 0, 25, 0),
 
 	quick_nock: new BRD_WeaponSkill("Quick Nock", 18, 110, 0, 120, 12, 12),
-	rain_of_death: new BRD_StatusWS("Rain of Death", 45, 100, 0, 0, 25, 8),
+	rain_of_death: new BRD_Action("Rain of Death", 45, 100, 15, 25),
 
 	sidewinder: new BRD_Action("Sidewinder", 60, 100, 60, 25),
 	miserys_end: new BRD_Action("Misery's End", 10, 190, 12, 25),
@@ -140,7 +125,10 @@ brd_actions.windbite.getReplacement = function (state) {
 	return state.level >= 64 ? 'stormbite' : this.id;
 }
 
-brd_actions.rain_of_death.recast = 15;
+brd_actions.quick_nock.damageSteps = [1];
+
+brd_actions.rain_of_death.radius = 5;
+brd_actions.rain_of_death.damageSteps = [1];
 brd_actions.rain_of_death.recastGroup = function () {
 	return 'bloodletter';
 };
@@ -267,12 +255,12 @@ DESCRIPTIONS
  ***************/
 
 brd_actions.heavy_shot.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> 20% chance next <span class="orange">Straight Shot</span> will deal critical damage<br/>
 	<span class="green">Duration:</span> 10s`;
 };
 brd_actions.straight_shot.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> Increases critical hit rate by 10%<br/>
 	<span class="green">Duration:</span> 20s`;
 };
@@ -281,34 +269,34 @@ brd_actions.raging_strikes.getDesc = function (state) {
 	<span class="green">Duration:</span> 20s`;
 };
 brd_actions.venomous_bite.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> <span class="yellow">Venom</span><br/>
 	<span class="green">Potency:</span> 40<br/>
 	<span class="green">Duration:</span> 18s`;
 };
 brd_actions.miserys_end.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	Can only be executed when target's HP is below 20%.`;
 };
 brd_actions.bloodletter.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	Shares a recast timer with <span class="orange">Rain of Death</span>.`;
 };
 brd_actions.repelling_shot.getDesc = function (state) {
 	return `Jump 10 yalms back from current position. Cannot be executed while bound.`;
 };
 brd_actions.quick_nock.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)} to all enemies in a cone before you.`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all enemies in a cone before you.`;
 };
 brd_actions.mages_ballad.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> Increases critical hit rate of all party members within a radius of 20 yalms by 2%<br/>
 	<span class="green">Duration:</span> 30s<br/>
 	Effect is lost if party members move out of hearing distance.<br/>
 	<span class="green">Additional Effect:</span> Activates <span class="yellow">Repertoire</span>, resetting <span class="orange">Bloodletter</span> and <span class="orange">Rain of Death</span> recast time if critical damage over time is dealt by <span class="orange">Caustic Bite</span> or <span class="orange">Stormbite</span>`;
 };
 brd_actions.windbite.getDesc = function (state) {
-	return `Deals wind damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Deals wind damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> Wind damage over time<br/>
 	<span class="green">Potency:</span> 50<br/>
 	<span class="green">Duration:</span> 18s`;
@@ -321,7 +309,7 @@ brd_actions.barrage.getDesc = function (state) {
 	<span class="green">Duration:</span> 10s`;
 };
 brd_actions.armys_paeon.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> Increases critical hit rate of all party members within a radius of 20 yalms by 2%<br/>
 	<span class="green">Duration:</span> 30s<br/>
 	Effect is lost if party members move out of hearing distance.<br/>
@@ -330,7 +318,7 @@ brd_actions.armys_paeon.getDesc = function (state) {
 	Can be stacked up to 4 times.`;
 };
 brd_actions.rain_of_death.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)} to target and all enemies nearby it.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to target and all enemies nearby it.<br/>
 	Shares a recast timer with <span class="orange">Bloodletter</span>.`;
 };
 brd_actions.battle_voice.getDesc = function (state) {
@@ -338,7 +326,7 @@ brd_actions.battle_voice.getDesc = function (state) {
 	<span class="green">Duration:</span> 20s`;
 };
 brd_actions.the_wanderers_minuet.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> Increases critical hit rate of all party members within a radius of 20 yalms by 2%<br/>
 	<span class="green">Duration:</span> 30s<br/>
 	Effect is lost if party members move out of hearing distance.<br/>
@@ -350,11 +338,11 @@ brd_actions.pitch_perfect.getDesc = function (state) {
 	Can only be executed when <span class="orange">The Wanderer's Minuet</span> is active.`;
 };
 brd_actions.empyreal_arrow.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}. This weaponskill does not share a recast timer with any other actions.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>. This weaponskill does not share a recast timer with any other actions.<br/>
 	Guarantees the trigger of the additional effects for <span class="orange">Mage's Ballad</span>, <span class="orange">Army's Paeon</span>, and <span class="orange">The Wanderer's Minuet</span> when these actions are executed while under the effect of Empyreal Arrow.`;
 };
 brd_actions.iron_jaws.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> If the target is suffering from a <span class="orange">Caustic Bite</span> or <span class="orange">Stormbite</span> effect inflicted by you, the effect timer is reset`;
 };
 brd_actions.the_wardens_paean.getDesc = function (state) {
@@ -362,7 +350,7 @@ brd_actions.the_wardens_paean.getDesc = function (state) {
 	<span class="green">Duration:</span> 30s`;
 };
 brd_actions.sidewinder.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> If the target is suffering from a <span class="orange">Caustic Bite</span> or <span class="orange">Stormbite</span> effect inflicted by you, <span class="orange">Sidewinder</span> potency is increased to 175 for one effect, or 260 for both`;
 };
 brd_actions.troubadour.getDesc = function (state) {
@@ -374,13 +362,13 @@ brd_actions.troubadour.getDesc = function (state) {
 	Can only be executed if a song is being sung.`;
 };
 brd_actions.caustic_bite.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> <span class="yellow">Poison</span><br/>
 	<span class="green">Potency:</span> 45<br/>
 	<span class="green">Duration:</span> 30s`;
 };
 brd_actions.stormbite.getDesc = function (state) {
-	return `Deals wind damage with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Deals wind damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	<span class="green">Additional Effect:</span> Wind damage over time<br/>
 	<span class="green">Potency:</span> 55<br/>
 	<span class="green">Duration:</span> 30s`;
@@ -390,6 +378,6 @@ brd_actions.natures_minne.getDesc = function (state) {
 	<span class="green">Duration:</span> 15s`;
 };
 brd_actions.refulgent_arrow.getDesc = function (state) {
-	return `Delivers an attack with a potency of ${this.getPotency(state).toFixed(0)}.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 	Can only be executed while under the effect of <span class="yellow">Straighter Shot</span>.`;
 };

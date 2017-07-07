@@ -1,3 +1,5 @@
+const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status, rdm_status, smn_status);
+
 //initialize state
 function initialize(job){
 	//currentJob = getUrlParameter('job');
@@ -8,6 +10,7 @@ function initialize(job){
 	setTP(state.maxTP);
 	setSkillSpeed(state.sks);
 	setSpellSpeed(state.spd);
+	setTargets(1);
 	
 	//job specific clean it up later
 	setResource1(0);
@@ -21,24 +24,61 @@ function initialize(job){
 	$(".rotation-table tbody").html('');
 }
 
-
-const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status, rdm_status, smn_status);
-//statuses.swiftcast = new Status('swiftcast', 20, '#E090C0');
-
-const jobActions = {
-	BLM: blm_actions,
-	BRD: brd_actions,
-	RDM: rdm_actions,
-	SAM: sam_actions,
-	SMN: smn_actions,
-}
-
-function getRole(job){
+function getRole(job) {
+	switch (job) {
+	case 'DRK':
+	case 'PLD':
+	case 'WAR':
+		return 'tank';
+		break;
+	case 'AST':
+	case 'SCH':
+	case 'WHM':
+		return 'healer';
+		break;
+	case 'DRG':
+	case 'MNK':
+	case 'NIN':
+	case 'SAM':
+		return 'melee';
+		break;
+	case 'BRD':
+	case 'MCH':
+		return 'ranged';
+		break;
+	case 'BLM':
+	case 'RDM':
+	case 'SMN':
+		return 'caster';
+		break;
+	default:
+		return '';
+	}
 	return roles[job];
 }
 
 function getJobActions(job){
-	return jobActions[job];
+	switch (job){
+		case 'BLM': 
+			return blm_actions;
+			break;
+		case 'BRD':
+			return brd_actions;
+			break;
+		case 'RDM':
+			return rdm_actions;
+			break;
+		case 'SAM':
+			return sam_actions;
+			break;
+		case 'SMN':
+			return smn_actions;
+			break;
+		default:
+			break;
+	}
+	
+	return '';
 }
 
 function getRoleActions(role){
@@ -73,6 +113,7 @@ function resetState(job){
 		nextTick: 3.0,
 		spd: parseFloat($("#spellSpeed").val()), //defaults[job].spd,
 		sks: parseFloat($("#skillSpeed").val()), //defaults[job].sks,
+		targets: parseInt($("#targets").val()),
 		lastAction: '',
 		lastActionTime: 0,
 		lastCombo: false,
@@ -83,9 +124,10 @@ function resetState(job){
 
 function setOptions()
 {
-	console.log("Setting options");
+	console.log("Getting options");
 	state.sks = parseFloat($("#skillSpeed").val());
 	state.spd = parseFloat($("#spellSpeed").val());
+	state.targets = parseInt($("#targets").val());
 	update();
 }
 
@@ -99,6 +141,12 @@ function setSpellSpeed(value){
 	//console.log(value);
 	state.spd = value;
 	$("#spellSpeed").val(value);
+}
+
+function setTargets(value){
+	//console.log(value);
+	state.targets = value;
+	$("#targets").val(value);
 }
 
 var getUrlParameter = function getUrlParameter(sParam) {
@@ -486,6 +534,7 @@ function setStatus(name, active){
 	} else {
 		
 		//console.log("losing status " + name);
+		status.finalize(state);
 		delete state.statuses[name];
 		//drop enochian if fire or ice are lost
 		if(hasStatus('enochian') && !hasAnyStatus(["astral_fire","umbral_ice"])){

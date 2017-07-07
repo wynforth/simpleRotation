@@ -22,20 +22,16 @@ class RDM_Spell extends Spell {
 		setResource2(state.resource_2 + this.white);
 	}
 
-	unique(state) {}
-
 	execute(state) {
 		super.execute(state);
-
-		this.unique(state);
-
-		if (hasStatus('swiftcast'))
-			setStatus('swiftcast', false);
-		else if (hasStatus('dualcast'))
-			setStatus('dualcast', false);
-		else if (this.getCast(state) > 0)
-			setStatus('dualcast', true);
-
+		if (this.cast > 0) {
+			if (hasStatus('swiftcast'))
+				setStatus('swiftcast', false);
+			else if (hasStatus('dualcast'))
+				setStatus('dualcast', false);
+			else if (this.getCast(state) > 0)
+				setStatus('dualcast', true);
+		}
 		this.updateResources(state);
 	}
 
@@ -152,6 +148,12 @@ const rdm_actions = {
 ACTION OVERRIDES
 
  ***************/
+ //AoE
+ 
+rdm_actions.scatter.damageSteps = [1];
+rdm_actions.moulinet.damageSteps = [1];
+rdm_actions.enchanted_moulinet.damageSteps = [1];
+rdm_actions.contre_sixte.damageSteps = [.9, .8, .7, .6, .5];
 
 rdm_actions.riposte.getReplacement = function (state) {
 	if (state.resource_1 >= 30 && state.resource_2 >= 30)
@@ -321,61 +323,61 @@ DESCRIPTIONS
 
 
 rdm_actions.riposte.getDesc = function (state) {
-	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state)}</span>. Action upgraded to <span class="orange">Enchanted Riposte</span> if both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> are at 30 or more.`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>. Action upgraded to <span class="orange">Enchanted Riposte</span> if both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> are at 30 or more.`;
 }
 rdm_actions.enchanted_riposte.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.black} <span class="orange">Black Mana</span><br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.white} <span class="orange">White Mana</span>`;
 }
 rdm_actions.zwerchhau.getDesc = function (state) {
-	return `Deals an attack with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Combo Action:</span> <span class="orange">Riposte</span> or <span class="orange">Enchanted Riposte</span><br/>
 		<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
 		Action upgraded to <span class="orange">Enchanted Zwerchhau</span> if both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> are at 25 or more.`;
 }
 rdm_actions.enchanted_zwerchhau.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Combo Action:</span> <span class="orange">Riposte</span> or <span class="orange">Enchanted Riposte</span><br/>
 		<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.black} <span class="orange">Black Mana</span><br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.white} <span class="orange">White Mana</span>`;
 }
 rdm_actions.redoublement.getDesc = function (state) {
-	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Combo Action:</span> <span class="orange">Zwerchhau</span> or <span class="orange">Enchanted Zwerchhau</span><br/>
 		<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
 		Action upgraded to <span class="orange">Enchanted Redoublement</span> if both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> are at 25 or more.`;
 }
 rdm_actions.enchanted_redoublement.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Combo Action:</span> <span class="orange">Enchanted Zwerchhau</span><br/>
 		<span class="green">Combo Potency:</span> ${this.comboPotency}<br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.black} <span class="orange">Black Mana</span><br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.white} <span class="orange">White Mana</span>`;
 }
 rdm_actions.jolt.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> by ${this.white}`;
 }
 rdm_actions.impact.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> by ${this.white}<br/>
 		Can only be executed while under the effect of <span class="yellow">Impactful</span>.`;
 }
 rdm_actions.verthunder.getDesc = function (state) {
-	return `Deals lightning damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals lightning damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases <span class="orange">Black Mana</span> by ${this.black}<br/>
 		<span class="green">Additional Effect:</span> 50% chance of becoming <span class="yellow">Verfire Ready</span><br/>
 		<span class="green">Duration:</span> 30s`;
 }
 rdm_actions.verfire.getDesc = function (state) {
-	return `Deals fire damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals fire damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases <span class="orange">Black Mana</span> by ${this.black}<br/>
 		Can only be executed while <span class="yellow">Verfire Ready</span> is active.`;
 }
 rdm_actions.verflare.getDesc = function (state) {
-	return `Deals fire damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals fire damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases <span class="orange">Black Mana</span> by ${this.black}<br/>
 		<span class="green">Additional Effect:</span> 20% chance of becoming <span class="yellow">Verfire Ready</span><br/>
 		<span class="green">Duration:</span> 30s<br/>
@@ -383,18 +385,18 @@ rdm_actions.verflare.getDesc = function (state) {
 		Can only be executed after landing <span class="orange">Enchanted Redoublement</span>.`;
 }
 rdm_actions.veraero.getDesc = function (state) {
-	return `Deals wind damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals wind damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases <span class="orange">White Mana</span> by ${this.white}<br/>
 		<span class="green">Additional Effect:</span> 50% chance of becoming <span class="yellow">Verstone Ready</span><br/>
 		<span class="green">Duration:</span> 30s`;
 }
 rdm_actions.verstone.getDesc = function (state) {
-	return `Deals earth damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals earth damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases <span class="orange">White Mana</span> by ${this.white}<br/>
 		Can only be executed while <span class="yellow">Verstone Ready</span> is active.`;
 }
 rdm_actions.verholy.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases <span class="orange">White Mana</span> by ${this.white}<br/>
 		<span class="green">Additional Effect:</span> 20% chance of becoming <span class="yellow">Verstone Ready</span><br/>
 		<span class="green">Duration:</span> 30s<br/>
@@ -402,7 +404,7 @@ rdm_actions.verholy.getDesc = function (state) {
 		Can only be executed after landing <span class="orange">Enchanted Redoublement</span>.`;
 }
 rdm_actions.scatter.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span> to target and all enemies nearby it.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to target and all enemies nearby it.<br/>
 		<span class="green">Additional Effect:</span> Increases both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> by ${this.white}<br/>
 		<span class="green">Additional Effect:</span> 25% chance you are granted <span class="yellow">Enhanced Scatter</span><br/>
 		<span class="green">Duration:</span> 10s<br/>
@@ -412,24 +414,24 @@ rdm_actions.moulinet.getDesc = function (state) {
 	return `Delivers an attack with a potency of 60 to all enemies in a cone before you. Action upgraded to <span class="orange">Enchanted Moulinet</span> if both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> are at 30 or more.`;
 }
 rdm_actions.enchanted_moulinet.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span> to all enemies in a cone before you.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all enemies in a cone before you.<br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.black} <span class="orange">Black Mana</span><br/>
 		<span class="green">Balance Gauge Cost:</span> ${this.white} <span class="orange">White Mana</span>`;
 }
 rdm_actions.corps_a_corps.getDesc = function (state) {
-	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		Cannot be executed while bound.`;
 }
 rdm_actions.displacement.getDesc = function (state) {
-	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> 15-yalm backstep<br/>
 		Cannot be executed while bound.`;
 }
 rdm_actions.fleche.getDesc = function (state) {
-	return `Deals an attack with a potency of <span class="calc">${this.getPotency(state)}</span>.`;
+	return `Deals an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.`;
 }
 rdm_actions.contre_sixte.getDesc = function (state) {
-	return `Delivers an attack to all nearby enemies with a potency of <span class="calc">${this.getPotency(state)}</span> for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.`;
+	return `Delivers an attack to all nearby enemies with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.`;
 }
 rdm_actions.acceleration.getDesc = function (state) {
 	return `Ensures the next <span class="orange">Verthunder</span> or <span class="orange">Veraero</span> spell cast will, for the first hit, trigger <span class="yellow">Verfire Ready</span> or <span class="yellow">Verstone Ready</span> respectively.<br/>
@@ -457,7 +459,7 @@ rdm_actions.verraise.getDesc = function (state) {
 	return `Resurrects target to a weakened state.`;
 }
 rdm_actions.jolt_ii.getDesc = function (state) {
-	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state)}</span>.<br/>
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 		<span class="green">Additional Effect:</span> Increases both <span class="orange">Black Mana</span> and <span class="orange">White Mana</span> by ${this.white}<br/>
 		<span class="green">Additional Effect:</span> Grants <span class="yellow">Impactful</span> status<br/>
 		<span class="green">Duration:</span> 30s`;

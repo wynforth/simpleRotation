@@ -38,12 +38,13 @@ class SAM_Iaijutsu extends SAM_WeaponSkill {
 		this.hidden = true;
 	}
 	execute(state) {
+		super.execute(state);
 		if (this.id === 'higanbana')
 			setStatus(this.id, true);
 		setStatus('sen_setsu', false);
 		setStatus('sen_getsu', false);
 		setStatus('sen_ka', false);
-		super.execute(state);
+		
 	}
 }
 
@@ -57,19 +58,37 @@ class SAM_ComboWS extends SAM_WeaponSkill {
 	}
 
 	execute(state) {
+		super.execute(state);
 		if (this.isCombo(state)) {
 			updateStatus('meikyo_shisui', -1);
 			setResource1(state.resource_1 + this.comboKenki);
 			for (var i = 0; i < this.comboStatus.length; i++)
 				setStatus(this.comboStatus[i], true);
 		}
-		super.execute(state);
+		
 	}
 
 	isCombo(state) {
 		if (this.comboActions.length > 0 && hasStatus('meikyo_shisui'))
 			return true;
 		return super.isCombo(state);
+	}
+}
+
+class SAM_AoE_ComboWS extends SAM_ComboWS {
+	constructor(name, level, potency, cast, tp, range, radius, kenki, comboPotency, comboActions, comboKenki, comboStatus) {
+		super(name, level, potency, cast, tp, range, radius, kenki, comboPotency, comboActions, comboKenki, comboStatus);
+		this.comboDamageSteps = [0];
+	}
+
+	getTargetPotency(state, target) {
+		if (this.isCombo(state)) {
+			if (target == 1) // primary target
+				return this.getPotency(state);
+			var index = Math.max(0, Math.min((target - 2), this.comboDamageSteps.length - 1));
+			return this.getPotency(state) * this.comboDamageSteps[index];
+		}
+		return super.getTargetPotency(state, target);
 	}
 }
 
@@ -86,6 +105,7 @@ class SAM_DamageAbility extends DamageAbility {
 	}
 
 	execute(state) {
+		super.execute(state);
 		setResource1(state.resource_1 - this.kenki);
 	}
 
@@ -114,8 +134,8 @@ const sam_actions = {
 	kasha: new SAM_ComboWS("Kasha", 40, 100, 0, 50, 3, 0, 5, 400, ['shifu'], 5, ['sen_ka']),
 	yukikaze: new SAM_ComboWS("Yukikaze", 50, 100, 0, 50, 3, 0, 0, 340, ["hakaze"], 10, ['sen_setsu', 'yukikaze']),
 	fuga: new SAM_WeaponSkill("Fuga", 26, 100, 0, 140, 0, 5, 5),
-	mangetsu: new SAM_ComboWS("Mangetsu", 35, 100, 0, 140, 0, 5, 0, 200, ['fuga'], 10, ['sen_getsu']),
-	oka: new SAM_ComboWS("Oka", 45, 100, 0, 140, 0, 5, 0, 200, ['fuga'], 10, ['sen_ka']),
+	mangetsu: new SAM_AoE_ComboWS("Mangetsu", 35, 100, 0, 140, 0, 5, 0, 200, ['fuga'], 10, ['sen_getsu']),
+	oka: new SAM_AoE_ComboWS("Oka", 45, 100, 0, 140, 0, 5, 0, 200, ['fuga'], 10, ['sen_ka']),
 	enpi: new SAM_WeaponSkill("Enpi", 15, 100, 0, 160, 15, 0, 10),
 
 	iaijutsu: new SAM_WeaponSkill("Iaijutsu", 30, 0, 1.8, 0, 0, 0, 0),
@@ -146,7 +166,18 @@ const sam_actions = {
 ACTION OVERRIDES
 
  ****************/
+//AoE
+sam_actions.fuga.damageSteps = [1];
+sam_actions.hissatsu_kyuten.damageSteps = [1];
+sam_actions.hissatsu_guren.damageSteps = [.75, .5];
+sam_actions.tenka_goken.damageSteps = [.9, .8, .7, .6, .5];
+sam_actions.mangetsu.damageSteps = [.9, .8, .7, .6, .5];
+sam_actions.mangetsu.comboDamageSteps = [.95, .9, .85, .8, .75];
+sam_actions.oka.damageSteps = [.9, .8, .7, .6, .5];
+sam_actions.oka.comboDamageSteps = [.95, .9, .85, .8, .75];
 
+ 
+ 
 //Enpi
 sam_actions.enpi.execute = function (state) {
 	setResource1(state.resource_1 + 10);

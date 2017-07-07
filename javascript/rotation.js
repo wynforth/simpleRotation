@@ -69,6 +69,8 @@ function updateDots(time){
 	
 	for(var i=0; i < toRemove.length; i++){
 		if(toRemove[i] == "enochian"){
+			
+			//do this localy?
 			if(hasAnyStatus(['astral_fire','umbral_ice'])){
 				var status = getStatus('enochian');
 				state.statuses['enochian'].duration += status.duration;
@@ -87,9 +89,18 @@ function updateDots(time){
 
 function calculatePotency(action){
 	var potency = action.getPotency(state);
-	var mod = 1;
+	if (state.targets == 1)
+		return potency;
+	//console.log(action);
+	for(var i = 2; i <= state.targets; i++){
 		
-	return potency*mod;
+		var p = action.getTargetPotency(state, i)
+		if(p==0) break;
+	console.log(`${action.name} hitting target ${i} for ${p} potency`);
+		potency += p;
+	}
+		
+	return potency;
 }
 
 function calculateManaCost(mana){

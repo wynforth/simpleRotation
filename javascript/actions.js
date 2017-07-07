@@ -23,6 +23,7 @@ class BaseAction {
 		this.hidden = false;
 		this.radius = 0;
 		this.range = 0;
+		this.damageSteps = [0];
 		
 	}
 
@@ -37,9 +38,10 @@ class BaseAction {
 		}
 		return false;
 	}
-
+	
+	unique(state) {}
 	execute(state) {
-		
+		this.unique(state);
 	}
 
 	isLevel(state) {
@@ -62,6 +64,13 @@ class BaseAction {
 		if (this.comboActions.length == 0)
 			return this.potency;
 		return this.isCombo(state) ? this.comboPotency : this.potency;
+	}
+	
+	getTargetPotency(state, target) {
+		if(target == 1) // primary target
+			return this.getPotency(state);
+		var index = Math.max(0, Math.min((target - 2), this.damageSteps.length - 1));
+		return this.getPotency(state) * this.damageSteps[index];
 	}
 
 	getManaCost(state) {
@@ -97,6 +106,7 @@ class Buff extends BaseAction {
 	}
 
 	execute(state) {
+		super.execute(state);
 		setStatus(this.id, true);
 	}
 }
@@ -172,6 +182,8 @@ class Status {
 	};
 
 	tick(state) {};
+
+	finalize(state) {};
 }
 
 class StatusStack extends Status {
@@ -201,6 +213,16 @@ class Dot extends Status {
 	getTotalPotency(state) {
 		return (this.duration / 3) * this.potency;
 	}
+}
+
+class AoE_Dot extends Dot {
+	constructor(name, duration, potency, color) {
+		super(name, duration, potency, color);
+	}
+	tick(state) {
+		//console.log("TICK: " + this.id + " for " + this.potency);
+		state.potency += this.potency * state.targets;
+	};
 }
 
 /***************
@@ -567,23 +589,7 @@ general_status.refresh.tick = function (state) {
 	setMana(state.mana + (state.maxMana * .02));
 };
 
-const roles = {
-	DRK: 'tank',
-	PLD: 'tank',
-	WAR: 'tank',
-	AST: 'healer',
-	SCH: 'healer',
-	WHM: 'healer',
-	DRG: 'melee',
-	MNK: 'melee',
-	NIN: 'melee',
-	SAM: 'melee',
-	BRD: 'ranged',
-	MCH: 'ranged',
-	BLM: 'caster',
-	RDM: 'caster',
-	SMN: 'caster'
-}
+
 
 const role2jobs = {
 	healer: "AST SCH WHM ",

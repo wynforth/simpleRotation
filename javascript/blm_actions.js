@@ -23,10 +23,12 @@ class BLM_Spell extends Spell {
 	
 	execute(state){
 		super.execute(state);
-		if(hasStatus('triplecast'))
-			updateStatus('triplecast',-1);
-		else if(hasStatus('swiftcast'))
-			setStatus('swiftcast',false);
+		if (this.cast > 0) {
+			if (hasStatus('triplecast'))
+				updateStatus('triplecast', -1);
+			else if (hasStatus('swiftcast'))
+				setStatus('swiftcast', false);
+		}
 	}
 	
 	getCast(state){
@@ -42,6 +44,13 @@ class BLM_Spell extends Spell {
 
 	getPotency(state) {
 		return super.getPotency(state) * (hasStatus('enochian') ? 1.05 : 1);
+	}
+}
+
+class BLM_AoESpell extends BLM_Spell {
+	constructor(name, level, potency, cast, mana, range, radius, damageSteps) {
+		super(name, level, potency, cast, mana, range, radius);
+		this.damageSteps = damageSteps;
 	}
 }
 
@@ -189,7 +198,7 @@ const blm_actions = {
 	thunder_iv: new ThunderSpell("Thunder IV", 64, 50, 3.0, 2160, 25, 5),
 
 	scathe: new BLM_Spell("Scathe", 15, 100, 0, 960, 25, 0),
-	foul: new BLM_Spell("Foul", 70, 650, 2.5, 240, 25, 5),
+	foul: new BLM_AoESpell("Foul", 70, 650, 2.5, 240, 25, 5,[.9, .8, .7, .6, .5]),
 	sleep: new BLM_Spell("Sleep", 10, 0, 2.5, 1200, 25, 5),
 
 	transpose: new BLM_Ability("Transpose", 4, 12, 0),
@@ -208,6 +217,16 @@ const blm_actions = {
 ACTION OVERRIDES
 
  ***************/
+ //AOE Overrides
+ blm_actions.fire_ii.damageSteps = [1];
+ blm_actions.flare.damageSteps = [.85, .7, .55, .4, .3];
+ blm_actions.blizzard_ii.damageSteps = [1];
+ blm_actions.freeze.damageSteps = [1];
+ blm_actions.thunder_ii.damageSteps = [1];
+ blm_actions.thunder_iv.damageSteps = [1];
+ 
+ 
+ 
 //Fire I
 blm_actions.fire_i.execute = function (state) {
 	//stupidly can't call super :/
@@ -230,6 +249,7 @@ blm_actions.fire_i.execute = function (state) {
 		setStatus("firestarter", true);
 	};
 };
+
 //Fire III
 blm_actions.fire_iii.execute = function (state) {
 	if (hasStatus("astral_fire") && !hasStatus("firestarter"))
@@ -413,9 +433,9 @@ const blm_status = {
 	mana_ward: new Status("Manaward", 20, "#C0A0C0"),
 	//dots
 	thunder_i: new Dot("Thunder I", 18, 40, "#C0B02F"),
-	thunder_ii: new Dot("Thunder II", 12, 30, "#C0B02F"),
+	thunder_ii: new AoE_Dot("Thunder II", 12, 30, "#C0B02F"),
 	thunder_iii: new Dot("Thunder III", 24, 40, "#C0B02F"),
-	thunder_iv: new Dot("Thunder IV", 18, 30, "#C0B02F"),
+	thunder_iv: new AoE_Dot("Thunder IV", 18, 30, "#C0B02F"),
 };
 
 /***************
