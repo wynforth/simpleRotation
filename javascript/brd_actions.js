@@ -9,12 +9,36 @@ class BRD_WeaponSkill extends WeaponSkill {
 		super(name, level, potency, cast, tp, range, radius);
 		this.affinity = ['BRD'];
 	}
+	
+	execute(state){
+		super.execute(state);
+		
+		if(hasStatus('barrage') && this.potency > 0)
+			setStatus('barrage', false);
+		
+	}
+	
+	getPotency(state){
+		var base = super.getPotency(state);
+		return (base * (hasStatus('raging_strikes') ? 1.1 : 1)) * (hasStatus('barrage') ? 3 : 1);
+	}
 }
 
 class BRD_Spell extends Spell {
 	constructor(name, level, potency, cast, range, radius) {
 		super(name, level, potency, cast, range, radius);
 		this.affinity = ['BRD'];
+	}
+	
+	execute(state){
+		super.execute(state);
+		if(hasStatus('barrage') && this.potency > 0)
+			setStatus('barrage', false);
+	}
+	
+	getPotency(state){
+		var base = super.getPotency(state);
+		return (base * (hasStatus('raging_strikes') ? 1.1 : 1)) * (hasStatus('barrage') ? 3 : 1);
 	}
 }
 
@@ -27,6 +51,7 @@ class BRD_StatusWS extends BRD_WeaponSkill {
 		super.execute(state);
 		setStatus(this.id, true);
 	}
+	
 }
 
 class BRD_Buff extends Buff {
@@ -49,6 +74,13 @@ class BRD_Song extends Buff {
 		super.execute(state);
 		addRecast(this.recastGroup(), this.recast);
 		addRecast('global', state.targetTime - state.currentTime);
+		if(hasStatus('barrage') && this.potency > 0)
+			setStatus('barrage', false);
+	}
+	
+	getPotency(state){
+		var base = super.getPotency(state);
+		return (base * (hasStatus('raging_strikes') ? 1.1 : 1)) * (hasStatus('barrage') ? 3 : 1);
 	}
 
 	recastGroup() {
@@ -68,6 +100,17 @@ class BRD_Action extends BaseAction {
 		this.range = range;
 		this.potency = potency;
 		this.affinity = ['BRD'];
+	}
+	
+	execute(state){
+		super.execute(state);
+		if(hasStatus('barrage') && this.potency > 0)
+			setStatus('barrage', false);
+	}
+	
+	getPotency(state){
+		var base = super.getPotency(state);
+		return (base * (hasStatus('raging_strikes') ? 1.1 : 1)) * (hasStatus('barrage') ? 3 : 1);
 	}
 }
 
@@ -139,7 +182,7 @@ brd_actions.miserys_end.isUseable = function (state) {
 
 brd_actions.battle_voice.radius = 20;
 
-brd_actions.foe_requiem.execute = function (state) {
+brd_actions.foe_requiem.unique = function (state) {
 	setStatus(this.id, !hasStatus(this.id));
 };
 
@@ -150,7 +193,7 @@ brd_actions.pitch_perfect.getPotency = function (state) {
 	return (getStacks('the_wanderers_minuet') - 1) * 100;
 }
 
-brd_actions.iron_jaws.execute = function (state) {
+brd_actions.iron_jaws.unique = function (state) {
 	var dots = ['venomous_bite', 'windbite', 'caustic_bite', 'stormbite'];
 	for (var i = 0; i < dots.length; i++) {
 		if (hasStatus(dots[i]))
@@ -159,7 +202,7 @@ brd_actions.iron_jaws.execute = function (state) {
 }
 
 brd_actions.empyreal_arrow.recast = 15;
-brd_actions.empyreal_arrow.execute = function (state) {
+brd_actions.empyreal_arrow.unique = function (state) {
 	addRecast(this.recastGroup(), this.recast);
 	//addRecast('global', state.targetTime - state.currentTime);
 }
@@ -181,7 +224,7 @@ brd_actions.sidewinder.getPotency = function (state) {
 		additional = 160;
 	else if (dots == 1)
 		additional = 75
-			return this.potency + additional;
+			return ((this.potency + additional)  * (hasStatus('raging_strikes') ? 1.1 : 1)) * (hasStatus('barrage') ? 3 : 1);
 }
 
 brd_actions.refulgent_arrow.isUseable = function (state) {
@@ -195,7 +238,7 @@ brd_actions.troubadour.isUseable = function (state) {
 	return hasAnyStatus(['mages_ballad', 'armys_paeon', 'the_wanderers_minuet']);
 }
 
-brd_actions.troubadour.execute = function (state) {
+brd_actions.troubadour.unique = function (state) {
 	if (hasStatus('mages_ballad'))
 		setStatus('troubadours_ballad', true);
 	else if (hasStatus('armys_paeon'))
