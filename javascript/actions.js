@@ -179,11 +179,21 @@ class Status {
 		this.color = color;
 		this.stacks = 1;
 		this.maxStacks = 1;
+		this.id = this.name.replace(" ", "_").toLowerCase();
 	};
 
 	tick(state) {};
 
 	finalize(state) {};
+	
+	getImg() {
+		console.log(this);
+		var icon = this.id;
+		if (this.stacks > 1)
+			icon = this.id + "_" + "i".repeat(this.stacks);
+		console.log(icon);
+		return `<img src="img/status/${icon}.png" />`;
+	}
 }
 
 class StatusStack extends Status {

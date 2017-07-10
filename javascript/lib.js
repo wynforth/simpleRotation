@@ -406,7 +406,7 @@ function updateRotationButtons(){
 function updateStatuses(){
 	const Status = ({ name, url, duration }) => `
 		<div class="status" data-action="${name}">
-          <img src="img/status/${url}.png" />
+          ${url}
           <small class="cooldown">${duration}</small>
         </div>`;
 	
@@ -414,11 +414,8 @@ function updateStatuses(){
 	for(var key in state.statuses){
 		if(statuses.hasOwnProperty(key)){
 			var value = state.statuses[key].duration;
-			var icon = key;
-			if(state.statuses[key].stacks > 1)
-				icon = key+"_"+"i".repeat(state.statuses[key].stacks);			
+			var icon = state.statuses[key].getImg();
 			statusArr.push({'name': key, 'url': icon, 'duration': `${value.toFixed(1)}s`});
-			//console.log(action.name.replace(/\ /g,'_').toLowerCase());
 		}
 	}
 	$(".statuses").html(statusArr.map(Status).join(''));
