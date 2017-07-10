@@ -139,8 +139,6 @@ class Spell extends BaseAction {
 		this.type = "spell";
 	}
 	
-	execute(state){	}
-
 	getCast(state) {
 		return this.cast * (state.spd / 2.5);
 	}
@@ -187,11 +185,11 @@ class Status {
 	finalize(state) {};
 	
 	getImg() {
-		console.log(this);
+		//console.log(this);
 		var icon = this.id;
 		if (this.stacks > 1)
 			icon = this.id + "_" + "i".repeat(this.stacks);
-		console.log(icon);
+		//console.log(icon);
 		return `<img src="img/status/${icon}.png" />`;
 	}
 }
@@ -562,6 +560,9 @@ STATUSES
 const general_status = {
 	//general
 	heavy: new Status("Heavy", 20, "#A02F2F"),
+	stun: new Status("Stun", 6, "#A02F2F"),
+	blind: new Status("Blind", 12, "#A02F2F"),
+	pacification: new Status("Pacification", 6, "#A02F2F"),
 	medicated: new Status("Medicated", 30, "#2F5F90"),
 	//caster
 	addle: new Status("Addle", 10, "#6F3FA0"),

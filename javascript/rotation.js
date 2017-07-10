@@ -64,6 +64,8 @@ function updateDots(time){
 		state.statuses[key].duration -= time;
 		if(state.statuses[key].duration <= 0)
 			toRemove.push(key);
+		else if(state.statuses[key].duration > 60) // fake 'infinite'
+			state.statuses[key].duration = 120;
 	}
 	//console.log(toRemove);
 	
@@ -241,7 +243,7 @@ what to do when an action is clicked
 -- resources
 -- dps results
 */
-function addAction(name){
+function addAction(name, doUpdate = true){
 	if(!actionUsable(name)) {
 		console.log("Cannot use " + name + " right now. Add Error message handling?");
 		return;
@@ -254,7 +256,11 @@ function addAction(name){
 	}
 	rotation.push(action);
 
-	update();
+	if(doUpdate)
+		update();
+	else
+		console.log(name + ': skipping update');
+	
 }
 
 function drawResultTable(result){

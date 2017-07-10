@@ -19,8 +19,10 @@ class SMN_Spell extends Spell {
 
 		if (hasStatus('swiftcast') && (this.cast > 0))
 			setStatus('swiftcast', false);
+		
 		if(hasStatus('summon_bahamut') && this.id != 'wyrmwave'){
-			addAction('wyrmwave');
+			console.log('bahamut casting wyrmwave');
+			addAction('wyrmwave', false);
 			//var action = getAction('wyrmwave');
 			//action.execute(state);
 		}
@@ -32,6 +34,23 @@ class SMN_Spell extends Spell {
 	
 	getPotency(state){
 		return super.getPotency(state) * (hasStatus('dreadwyrm_trance') ? 1.1 : 1);
+	}
+}
+
+class SMN_PetSpell extends Spell {
+	constructor(name, level, potency, range, radius) {
+		super(name, level, potency, 0, 0, range, radius, ['SMN'])
+		this.recast = 1.5;
+		this.animTime = 0;
+		this.type = 'ability';
+	}
+	
+	execute(state) {
+		super.execute(state);
+	}
+	
+	recastGroup() {
+		return 'pet';
 	}
 }
 
@@ -129,7 +148,7 @@ const smn_actions = {
 	summon_ii: new SMN_Spell('Summon II', 4, 0, 6, 1200, 0, 0),
 	summon_iii: new SMN_Spell('Summon III', 4, 0, 6, 1200, 0, 0),
 	
-	wyrmwave: new SMN_Spell('Wyrm Wave', 70, 160, 0, 0, 25, 0),
+	wyrmwave: new SMN_PetSpell('Wyrmwave', 70, 160, 25, 0),
 };
 
 /***************
@@ -231,17 +250,11 @@ ACTION OVERRIDES
  }
 
  smn_actions.summon_bahamut.isUseable = function(state){
-	 return getStacks('dreadwyrm_aether') >= 2;
+	 return true; //getStacks('dreadwyrm_aether') >= 2;
  }
  
   smn_actions.enkindle_bahamut.isUseable = function(state){
 	 return hasStatus('summon_bahamut');
- }
- 
- smn_actions.wyrmwave.recast = 1.5;
- smn_actions.wyrmwave.recastGroup = function() { return 'bahamut'; }
- smn_actions.wyrmwave.execute = function(state){
-	 //state.potency += this.potency;
  }
  
 /***************
@@ -251,19 +264,19 @@ STATUSES
  ***************/
 
 const smn_status = { 
-	bio: new Dot('Bio', 18, 40, "#fff"),
-	miasma: new Dot('Miasma', 24, 35, "#fff"),
-	aetherflow: new StatusStack('Aetherflow', 60, "#fff", 3, 3), 
-	aethertrail_attunement: new StatusStack('Aethertrail Attunement', 60, "#fff", 1, 3), 
-	bio_ii: new Dot('Bio II', 30, 35, "#fff"),
-	rouse: new Status('Rouse', 20, "#fff"),
-	shadowflare: new AoE_Dot('Shadowflare', 15, 50, "#fff"),
-	bio_iii: new Dot('Bio III', 30, 40, "#fff"),
-	miasma_ii: new Dot('Miasma II', 30, 40, "#fff"),
+	bio: new Dot('Bio', 18, 40, "#88BE50"),
+	bio_ii: new Dot('Bio II', 30, 35, "#88BE50"),
+	bio_iii: new Dot('Bio III', 30, 40, "#88BE50"),
+	miasma: new Dot('Miasma', 24, 35, "#721DD7"),
+	miasma_ii: new Dot('Miasma II', 30, 40, "#721DD7"),
+	aetherflow: new StatusStack('Aetherflow', 120, "#864014", 3, 3), 
+	aethertrail_attunement: new StatusStack('Aethertrail Attunement', 120, "#fff", 1, 3), 
+	rouse: new Status('Rouse', 20, "#188FF0"),
+	shadowflare: new AoE_Dot('Shadowflare', 15, 50, "#9A2498"),
 	summon_bahamut: new Status('Summon Bahamut', 20, "#fff"),
 	further_ruin: new Status('Further Ruin', 12, "#fff"),
-	ruination: new Status('Ruination', 20, "#fff"),
-	dreadwyrm_trance : new Status('Dreadwyrm Trance', 16, "#fff"),
+	ruination: new Status('Ruination', 20, "#4BA1EC"),
+	dreadwyrm_trance : new Status('Dreadwyrm Trance', 16, "#C1294D"),
 	dreadwyrm_aether : new StatusStack('Dreadwyrm Aether', 60, "#fff", 1, 10),
 };
 

@@ -590,3 +590,20 @@ form {
 	background: -moz-linear-gradient(left, rgb(235, 235, 235), rgb(186, 186, 186));
 	background: linear-gradient(to left, rgb(235, 235, 235), rgb(186, 186, 186)); 
 }
+
+
+.progress.resource-1-bg.PLD { 
+	background-color: #272827; 
+}
+.resource-1.PLD {
+	color: white; 
+	text-shadow: 0 0 2px #272827;
+}
+.progress-bar.progress-resource-1.PLD { 
+	#background-color: #272827; 
+	background: #4169AD; 
+	background: -webkit-linear-gradient(top, #72C4F8 , #4169AD, #72C4F8); 
+	background: -o-linear-gradient(bottom,  #72C4F8 , #4169AD, #72C4F8); 
+	background: -moz-linear-gradient(bottom,  #72C4F8 , #4169AD, #72C4F8);
+	background: linear-gradient(to bottom,  #72C4F8 , #4169AD, #72C4F8); 
+}

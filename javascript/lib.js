@@ -1,4 +1,11 @@
-const statuses = Object.assign({}, general_status, blm_status, sam_status, brd_status, rdm_status, smn_status);
+const statuses = Object.assign({},
+		general_status,
+		blm_status, 
+		sam_status, 
+		brd_status, 
+		rdm_status, 
+		smn_status,
+		pld_status);
 
 //initialize state
 function initialize(job){
@@ -73,6 +80,9 @@ function getJobActions(job){
 			break;
 		case 'SMN':
 			return smn_actions;
+			break;
+		case 'PLD':
+			return pld_actions;
 			break;
 		default:
 			break;
@@ -203,6 +213,7 @@ function cleanResources(){
 function setResources(){
 	switch(state.job){
 		case 'SAM':
+		case 'PLD':
 			$(".progress.resource-1-bg").toggleClass('hidden', false);
 			$(".progress.resource-2-bg").toggleClass('hidden', true);
 			break;
@@ -415,7 +426,11 @@ function updateStatuses(){
 		if(statuses.hasOwnProperty(key)){
 			var value = state.statuses[key].duration;
 			var icon = state.statuses[key].getImg();
-			statusArr.push({'name': key, 'url': icon, 'duration': `${value.toFixed(1)}s`});
+			var dur = `${value.toFixed(1)}s`;
+			if(value > 60)
+				dur = ``;
+			
+			statusArr.push({'name': key, 'url': icon, 'duration': dur});
 		}
 	}
 	$(".statuses").html(statusArr.map(Status).join(''));
