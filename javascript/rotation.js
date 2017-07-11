@@ -123,7 +123,7 @@ function playRotation(){
 	
 	clearRotationButtons();
 	
-	for(var i=0; i< rotation.length; i++){
+	for(var i=0; i < rotation.length; i++){
 		var row = {};
 		row.statuses = {};
 		var action = rotation[i];
@@ -255,6 +255,7 @@ function addAction(name, doUpdate = true){
 		return;
 	}
 	rotation.push(action);
+	action.onAdd(state);
 
 	if(doUpdate)
 		update();
@@ -275,8 +276,9 @@ function drawResultTable(result){
 	
 	$(".rotation-table thead .status-col").remove();
 	for(var i=0; i < statuses.length; i++){
+		var status = getStatus(statuses[i]);
 		var tbl_hdr = "";
-		tbl_hdr += "<td class=\"status-col\"><img src=\"img/status/" + statuses[i] + ".png\" /></td>";
+		tbl_hdr += `<td class=\"status-col\">${status.getImg(true)}</td>`;
 		$(".rotation-table thead tr").append(tbl_hdr);
 	}
 	

@@ -19,13 +19,16 @@ class SMN_Spell extends Spell {
 
 		if (hasStatus('swiftcast') && (this.cast > 0))
 			setStatus('swiftcast', false);
-		
+	}
+	
+	onAdd(state){
+		/*
 		if(hasStatus('summon_bahamut') && this.id != 'wyrmwave'){
 			console.log('bahamut casting wyrmwave');
 			addAction('wyrmwave', false);
-			//var action = getAction('wyrmwave');
-			//action.execute(state);
+		
 		}
+		*/
 	}
 
 	getCast(state) {
@@ -40,7 +43,7 @@ class SMN_Spell extends Spell {
 class SMN_PetSpell extends Spell {
 	constructor(name, level, potency, range, radius) {
 		super(name, level, potency, 0, 0, range, radius, ['SMN'])
-		this.recast = 1.5;
+		//this.recast = 1.5;
 		this.animTime = 0;
 		this.type = 'ability';
 	}

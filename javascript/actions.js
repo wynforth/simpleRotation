@@ -43,6 +43,9 @@ class BaseAction {
 	execute(state) {
 		this.unique(state);
 	}
+	
+	onAdd(state){
+	}
 
 	isLevel(state) {
 		return this.level <= state.level;
@@ -184,13 +187,21 @@ class Status {
 
 	finalize(state) {};
 	
-	getImg() {
+	getImg(base = false) {
 		//console.log(this);
 		var icon = this.id;
-		if (this.stacks > 1)
+		var name = this.name
+		if (this.stacks > 1 && !base){
 			icon = this.id + "_" + "i".repeat(this.stacks);
+			if(this.stacks == 5)
+				name = this.name + " V";
+			else if(this.stacks == 4)
+				name = this.name + " IV";
+			else
+				name = this.name + " " + "I".repeat(this.stacks);
+		}
 		//console.log(icon);
-		return `<img src="img/status/${icon}.png" />`;
+		return `<img src="img/status/${icon}.png" title="${name}"/>`;
 	}
 }
 
