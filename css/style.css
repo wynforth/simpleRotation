@@ -105,7 +105,7 @@ body {
 	margin-bottom: 1em;
 }
 
-.actions, .resources, .statuses, .jobs {
+.actions, .resources, .statuses, .jobs, .scroll {
   #margin-top: 0.5em;
   border: 1px solid transparent;
   padding: 2px;
@@ -142,7 +142,10 @@ body {
 
 .rotation .actions,
 .result .actions,
-.resources, .statuses, .jobs {
+.resources, 
+.statuses, 
+.jobs,
+.scroll {
 	border-color: #494b4c;
 	background-color: #737373;
 }
@@ -158,6 +161,34 @@ body {
 	height: 24px;	
 }
 
+.scroll {
+	height: 48px;
+	
+	position: relative;
+}
+
+.scroll img {
+	width: 18px;
+	height: 18px;
+}
+
+.scroll div {
+	position: absolute;
+	top: 8px;
+	height: 8px;
+}
+
+.scroll .spell {
+	background-color: blue;
+}
+
+.scroll .weaponskill{
+	background-color: orange;
+}
+
+.scroll .ability {
+	transform: translate( 0px, -8px);
+}	
 
 /* 
 TANK

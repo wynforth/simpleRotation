@@ -275,6 +275,7 @@ function drawResultTable(result){
 	
 	
 	$(".rotation-table thead .status-col").remove();
+	$(".rotation .scroll").html('');
 	for(var i=0; i < statuses.length; i++){
 		var status = getStatus(statuses[i]);
 		var tbl_hdr = "";
@@ -295,6 +296,10 @@ function drawResultTable(result){
 		tbl_row += "<td class=\"mp-text\">" + row.mana + "</td>";
 		tbl_row += "<td class=\"tp-text\">" + row.tp + "</td>";
 
+		//scrollable section
+		var scalar = 25;
+		var div = `<div class="${action.type}" style="left: ${row.startTime * scalar}; width: ${(row.endTime - row.startTime) * scalar}"><img src="img/${action.getImage()}.png" title="${row.name}"/></div>`;
+		$(".rotation .scroll").append(div);
 		
 		for(var j=0; j < statuses.length; j++){
 			//console.log(row.statuses.hasOwnProperty(statuses[j]));

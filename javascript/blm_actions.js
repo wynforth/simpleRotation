@@ -43,7 +43,13 @@ class BLM_Spell extends Spell {
 	}
 
 	getPotency(state) {
-		return super.getPotency(state) * (hasStatus('enochian') ? 1.05 : 1);
+		var base = super.getPotency(state);
+		if(state.level >= 40)
+			base *= 1.3;
+		else if(state.level >= 10)
+			base *= 1.1;
+		base *= (hasStatus('enochian') ? 1.05 : 1)
+		return base;
 	}
 }
 
