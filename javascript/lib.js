@@ -556,6 +556,13 @@ function setStatus(name, active){
 	}
 }
 
+function setStatusMod(name, mod){
+	if(!hasStatus(name))
+		return false;
+	
+	state.statuses[name].mod = mod;
+}
+
 function updateStatus(name, stack, set=false) {
 	//console.log(name);
 	var isNew = !hasStatus(name);

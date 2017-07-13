@@ -219,8 +219,9 @@ STATUS OVERRIDES
  ***************/
 
 pld_status.sword_oath.tick = function (state) {
-	state.potency += this.potency;
+	//state.potency += this.potency;
 	setResource1(state.resource_1 + 5);
+	return this.potency;
 }
 
 /***************

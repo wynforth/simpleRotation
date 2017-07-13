@@ -24,7 +24,7 @@ row:
  -- if buff time remaining > end time = solid fill
  -- if buff time remaining < end time = striped/dark fill
  */
-function advanceTime(time){
+function advanceTime(time, resultTable){
 	if(time == 0) return;
 	//do up to just the next tick clock
 	//console.log(state.currentTime + " advancing by " + time + "s delay");
@@ -40,7 +40,7 @@ function advanceTime(time){
 		state.nextTick += 3;
 		
 		updateDots(tick);
-		tickDots();
+		tickDots(resultTable);
 		
 		time -= tick;
 		
@@ -50,10 +50,34 @@ function advanceTime(time){
 	
 }
 
-function tickDots() {
-	for(var key in state.statuses){
+function tickDots(resultTable) {
+	for (var key in state.statuses) {
 		//console.log(state.statuses[key].name + " - " + state.statuses[key].duration);
-		state.statuses[key].tick(state);
+
+		var potency = state.statuses[key].tick(state);
+		state.potency += potency;
+		if (potency > 0) {
+			var status = getStatus(key);
+			var row = {
+				name: `*${status.name}*`,
+				type: 'dot',
+				id: key,
+				mana: 0,
+				tp: 0,
+				startTime: state.currentTime,
+				endTime: state.currentTime,
+				statuses: {}
+			};
+			row.potency = potency;
+			for (var key in state.statuses) {
+				if (resultTable[0].indexOf(key) < 0)
+					resultTable[0].push(key);
+				//row.statuses[key] = {id: key, stacks: getStacks(key), duration: state.statuses[key].duration};
+				row.statuses[key] = state.statuses[key];
+			}
+
+			resultTable.push(row);
+		}
 	}
 }
 
@@ -132,13 +156,14 @@ function playRotation(){
 		//console.log(action.name);
 		if(action.type != 'ability'){
 			//not oGCD we advance to targetTime;
-			advanceTime(state.targetTime-state.currentTime);
+			advanceTime(state.targetTime-state.currentTime, resultTable);
 		}
 		//display rotation action
 		addRotationAction(i,action.id);
 		
 		row.name = action.name;
 		row.id = action.id;
+		row.type = action.type;
 		row.startTime = state.currentTime;
 		
 		
@@ -147,37 +172,16 @@ function playRotation(){
 		var mana = calculateManaCost(action.getManaCost(state));
 		var tp = calculateTPCost(action.getTPCost(state));
 		
-		/* determined in the spell
-		if(action.type == "spell" && hasAnyStatus(["swiftcast","triplecast","dualcast"])){
-			castTime = 0;
-		}
-		*/
-		
 		//determine time to take next action
 		//if its not an ability (ie its on the gcd) the time is the longest of the cast time, the gcd, or the animation lock (in the cast of swiftcast)
 		//if this delay is shorter than the already built in delay, we use that
 		//for abilities, its either the current delay or the animation time
 		var delay = action.animTime;
 		if(action.type != "ability"){
-			//remove instcast mods
-			/* done in the spell
-			if(action.type == "spell"){
-				if(hasStatus("swiftcast")){
-					setStatus("swiftcast",false);
-				} else if(hasStatus("triplecast")){
-					updateStatus("triplecast", -1);
-				} else if(hasStatus("dualcast")){
-					setStatus("dualcast",false);
-				}
-			}*/
-			
 			//state.cast.start = state.currentTime;
 			//state.cast.end = castTime;
 			//time till next action, longest of cast time, recast time, or animation lock
 			delay = Math.max(castTime, delay);
-			//console.log(action.id + " delay " + delay);
-			//console.log(action.id + " recast " + action.getRecast(state));
-			//console.log(action.id + " target " +  (state.targetTime-state.currentTime));
 			state.targetTime = state.currentTime + Math.max(action.getRecast(state), delay, state.targetTime-state.currentTime);
 		} else {
 			state.targetTime = state.currentTime + Math.max(delay, state.targetTime-state.currentTime);
@@ -187,7 +191,7 @@ function playRotation(){
 		
 		//update current time to when this action is ussuable: 
 		addRecast(action.recastGroup(),action.getRecast(state));
-		advanceTime(delay);
+		advanceTime(delay, resultTable);
 
 		//remove cost
 		
@@ -224,9 +228,10 @@ function playRotation(){
 		row.endTime = state.currentTime;
 		resultTable.push(row);
 	}
-	advanceTime(state.targetTime-state.currentTime);
+	var index = resultTable.length;
+	advanceTime(state.targetTime-state.currentTime, resultTable);
 	if(resultTable.length > 1)
-		resultTable[resultTable.length-1].endTime = state.currentTime; //update the final end time
+		resultTable[index-1].endTime = state.currentTime; //update the final action end time
 	//console.log(state);
 	return resultTable;
 }
@@ -298,7 +303,7 @@ function drawResultTable(result){
 
 		//scrollable section
 		var scalar = 25;
-		var div = `<div class="${action.type}" style="left: ${row.startTime * scalar}; width: ${(row.endTime - row.startTime) * scalar}"><img src="img/${action.getImage()}.png" title="${row.name}"/></div>`;
+		var div = `<div class="${row.type}" style="left: ${row.startTime * scalar}; width: ${(row.endTime - row.startTime) * scalar}"><img src="img/${action.getImage()}.png" title="${row.name}"/></div>`;
 		$(".rotation .scroll").append(div);
 		
 		for(var j=0; j < statuses.length; j++){

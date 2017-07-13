@@ -281,13 +281,14 @@ const sam_status = {
 STATUS OVERRIDES
 
  ****************/
-sam_status.third_eye.tick = function (state) {
+sam_status.third_eye.finalize = function (state) {
 	setStatus('eyes_open', true);
 	setStatus('third_eye', false);
 };
 
 sam_status.meditate.tick = function (state) {
 	setResource1(state.resource_1 + 10);
+	return 0;
 };
 
 /***************

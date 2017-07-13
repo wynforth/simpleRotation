@@ -63,10 +63,14 @@ class BaseAction {
 		return false;
 	}
 
+	getTraitMod(state){
+		return 1;
+	}
+	
 	getPotency(state) {
 		if (this.comboActions.length == 0)
-			return this.potency;
-		return this.isCombo(state) ? this.comboPotency : this.potency;
+			return this.potency * this.getTraitMod(state);
+		return (this.isCombo(state) ? this.comboPotency : this.potency) * this.getTraitMod(state);
 	}
 	
 	getTargetPotency(state, target) {
@@ -223,10 +227,14 @@ class Dot extends Status {
 	constructor(name, duration, potency, color) {
 		super(name, duration, color);
 		this.potency = potency;
+		this.mod = 1;
 	}
+	
 	tick(state) {
 		//console.log("TICK: " + this.id + " for " + this.potency);
-		state.potency += this.potency;
+		var potency = this.potency * this.mod;
+		//state.potency += potency;
+		return potency;
 	};
 
 	getTotalPotency(state) {

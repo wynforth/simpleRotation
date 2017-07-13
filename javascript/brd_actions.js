@@ -289,6 +289,7 @@ brd_status.foe_requiem.tick = function (state) {
 		setStatus('foe_requiem', true);
 		setMana(state.mana - 600);
 	}
+	return 0;
 }
 
 /***************

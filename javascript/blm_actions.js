@@ -41,15 +41,17 @@ class BLM_Spell extends Spell {
 	getRecast(state){
 		return super.getRecast(state) * (hasStatus('ley_lines') ? .85 : 1);
 	}
+	
+	getTraitMod(state) {
+		if(state.level >= 40)
+			return 1.3;
+		else if(state.level >= 10)
+			return 1.1;
+		return 1;
+	}
 
 	getPotency(state) {
-		var base = super.getPotency(state);
-		if(state.level >= 40)
-			base *= 1.3;
-		else if(state.level >= 10)
-			base *= 1.1;
-		base *= (hasStatus('enochian') ? 1.05 : 1)
-		return base;
+		return super.getPotency(state) * (hasStatus('enochian') ? 1.05 : 1);
 	}
 }
 
@@ -154,6 +156,11 @@ class ThunderSpell extends BLM_Spell {
 		setStatus("thunder_iii", false);
 		setStatus("thunder_iv", false);
 		setStatus(this.id, true);
+		var dotmod = 1
+		dotmod = this.getTraitMod(state);
+		dotmod += (hasStatus('enochian') ? .05 : 0);
+		setStatusMod(this.id, dotmod);
+		
 		//thundercloud precidence
 		if(hasStatus('thundercloud'))
 			setStatus("thundercloud", false);
@@ -172,7 +179,7 @@ class ThunderSpell extends BLM_Spell {
 	
 	getPotency(state) {
 		var base = hasStatus('thundercloud') ? (this.potency + (statuses[this.id].getTotalPotency(state))) : this.potency;
-		return base * (hasStatus('enochian') ? 1.05 : 1);
+		return base * this.getTraitMod(state) * (hasStatus('enochian') ? 1.05 : 1);
 	}
 
 	isHighlighted(state) {
@@ -375,7 +382,7 @@ blm_actions.scathe.getPotency = function (state) {
 	var mod = 1;
 	mod += hasStatus('enochian') ? 0.05 : 0;
 	mod += hasStatus('sharpcast') ? 1 : 0;
-	return this.potency * mod;
+	return this.potency * mod * this.getTraitMod(state);
 };
 //Foul
 blm_actions.foul.execute = function (state) {
@@ -452,6 +459,7 @@ STATUS OVERRIDES
 
 blm_status.umbral_ice.tick = function (state) {
 	setMana(state.mana + (state.maxMana * (.15 + (.15 * this.stacks))));
+	return 0;
 };
 /***************
 

@@ -190,6 +190,10 @@ body {
 	transform: translate( 0px, -8px);
 }	
 
+.scroll .dot {
+	transform: translate( 0px, 8px);
+}	
+
 /* 
 TANK
 */
