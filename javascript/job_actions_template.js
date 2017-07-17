@@ -25,7 +25,7 @@ STATUSES
 
  ***************/
 
-const JOP_status = { };
+const JOB_status = { };
 
 /***************
 

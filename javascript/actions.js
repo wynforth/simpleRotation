@@ -161,7 +161,7 @@ class WeaponSkill extends BaseAction {
 		this.potency = potency;
 		this.cast = cast;
 		this.tp = tp;
-		this.range = 3; // 'melee' range
+		this.range = range; // 'melee' range
 		this.radius = radius;
 		this.type = "weaponskill";
 	}

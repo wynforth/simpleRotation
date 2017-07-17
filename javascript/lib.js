@@ -5,7 +5,8 @@ const statuses = Object.assign({},
 		brd_status, 
 		rdm_status, 
 		smn_status,
-		pld_status);
+		pld_status,
+		mnk_status);
 
 //initialize state
 function initialize(job){
@@ -83,6 +84,9 @@ function getJobActions(job){
 			break;
 		case 'PLD':
 			return pld_actions;
+			break;
+		case 'MNK':
+			return mnk_actions;
 			break;
 		default:
 			break;
@@ -261,6 +265,7 @@ function createActionButtons(){
 	var actionArr = [];
 	for(var key in getJobActions(state.job)){
 		var action = getAction(key);
+		//console.log(action);
 		if(actions.hasOwnProperty(key) && !actions[key].hidden){
 			actionArr.push({'name': key, 'url': action.getImage()});
 			//console.log(action.name.replace(/\ /g,'_').toLowerCase());

@@ -43,6 +43,7 @@ class BLM_Spell extends Spell {
 	}
 	
 	getTraitMod(state) {
+		return 1;
 		if(state.level >= 40)
 			return 1.3;
 		else if(state.level >= 10)
