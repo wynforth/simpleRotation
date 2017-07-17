@@ -133,6 +133,7 @@ function resetState(job){
 		lastCombo: false,
 		resource_1: 0,
 		resource_2: 0,
+		positionals: true,
 	};
 }
 

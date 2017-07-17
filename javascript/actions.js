@@ -213,7 +213,7 @@ class StatusStack extends Status {
 	constructor(name, duration, color, initial, max) {
 		super(name, duration, color);
 		this.stacks = initial;
-		this.maxStacks = 3;
+		this.maxStacks = max;
 	};
 
 	addStacks(amt) {
