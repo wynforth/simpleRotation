@@ -143,7 +143,7 @@ const smn_actions = {
 	rouse: new SMN_Buff('Rouse', 42, 60),
 	enkindle: new SMN_Ability('Enkindle', 50, 180, 25),
 
-	tri_bind: new SMN_Spell('Tri-Bind', 40, 0, 3, 1200, 25, 5),
+	tri_bind: new SMN_Spell('Tri-Bind', 40, 30, 3, 1200, 25, 5),
 	physick: new SMN_Spell('Physick', 4, 0, 2, 600, 25, 0),
 	resurrection: new SMN_Spell('Resurrection', 18, 0, 8, 3600, 25, 0),
 	
@@ -161,6 +161,7 @@ ACTION OVERRIDES
  ***************/
  //AoE
  smn_actions.painflare.damageSteps = [1];
+ smn_actions.tri_bind.damageSteps = [1];
  
  
  smn_actions.bio.getReplacement = function(state){

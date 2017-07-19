@@ -352,3 +352,191 @@ mnk_status.fists_of_fire.finalize = function(state){
 DESCRIPTIONS
 
  ***************/
+ 
+mnk_actions.bootshine.getDesc = function (state) {
+	return `Delivers an attack with a potency of 140.<br/>
+<span class="green">Opo-opo Form Bonus:</span> Critical damage if dealt from a target's rear<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">raptor</span><br/>
+<span class="green">Duration:</span> 10s`;
+}
+mnk_actions.true_strike.getDesc = function (state) {
+	return `Delivers an attack with a potency of 140.<br/>
+180 when executed from a target's rear.<br/>
+Can only be executed when in <span class="orange">raptor</span> form.<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">coeurl</span><br/>
+<span class="green">Duration:</span> 10s`;
+}
+mnk_actions.demolish.getDesc = function (state) {
+	return `Delivers an attack with a potency of 30.<br/>
+70 when executed from a target's rear.<br/>
+Can only be executed when in <span class="orange">coeurl</span> form.<br/>
+<span class="green">Additional Effect:</span> Damage over time<br/>
+<span class="green">Potency:</span> 50<br/>
+<span class="green">Duration:</span> 18s<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">opo-opo</span><br/>
+<span class="green">Duration:</span> 10s<br/>
+<span class="green">Additional Effect:</span> Grants <span class="yellow">Greased Lightning</span><br/>
+<span class="green">Duration:</span> 16s<br/>
+<span class="green">Greased Lightning Bonus:</span> Increases damage dealt by 10% and reduces weaponskill cast time and recast time, spell cast time and recast time, and auto-attack delay by 5%`;
+}
+mnk_actions.dragon_kick.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100.<br/>
+140 when executed from a target's flank.<br/>
+<span class="green">Opo-opo Form Bonus:</span> Reduces target's blunt resistance by 10%<br/>
+<span class="green">Duration:</span> 15s<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">raptor</span><br/>
+<span class="green">Duration:</span> 10s`;
+}
+mnk_actions.twin_snakes.getDesc = function (state) {
+	return `Delivers an attack with a potency of 100.<br/>
+130 when executed from a target's flank.<br/>
+Can only be executed when in <span class="orange">raptor</span> form.<br/>
+<span class="green">Additional Effect:</span> Increases damage by 10%<br/>
+<span class="green">Duration:</span> 15s<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">coeurl</span><br/>
+<span class="green">Duration:</span> 10s`;
+}
+mnk_actions.snap_punch.getDesc = function (state) {
+	return `Delivers an attack with a potency of 130.<br/>
+170 when executed from a target's flank.<br/>
+Can only be executed when in <span class="orange">coeurl</span> form.<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">opo-opo</span><br/>
+<span class="green">Duration:</span> 10s<br/>
+<span class="green">Additional Effect:</span> Grants <span class="yellow">Greased Lightning</span><br/>
+<span class="green">Duration:</span> 16s<br/>
+<span class="green">Greased Lightning Bonus:</span> Increases damage dealt by 10% and reduces weaponskill cast time and recast time, spell cast time and recast time, and auto-attack delay by 5%`;
+}
+mnk_actions.arm_of_the_destroyer.getDesc = function (state) {
+	return `Delivers an attack with a potency of 50 to all nearby targets.<br/>
+<span class="green">Opo-opo Form Bonus:</span> <span class="yellow">Silence</span><br/>
+<span class="green">Duration:</span> 1s<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">raptor</span><br/>
+<span class="green">Duration:</span> 10s`;
+}
+mnk_actions.one_ilm_punch.getDesc = function (state) {
+	return `Delivers an attack with a potency of 120.<br/>
+Can only be executed when in <span class="orange">raptor</span> form.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
+<span class="green">Duration:</span> 1s<br/>
+<span class="yellow">Stun</span> is impervious to stun nullifying effects.<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">coeurl</span><br/>
+<span class="green">Duration:</span> 10s`;
+}
+mnk_actions.rockbreaker.getDesc = function (state) {
+	return `Delivers an attack with a potency of 130 to all enemies in a cone before you.<br/>
+Can only be executed when in <span class="orange">coeurl</span> form.<br/>
+<span class="green">Additional Effect:</span> Changes form to <span class="orange">opo-opo</span><br/>
+<span class="green">Duration:</span> 10s<br/>
+<span class="green">Additional Effect:</span> Grants <span class="yellow">Greased Lightning</span><br/>
+<span class="green">Duration:</span> 16s<br/>
+<span class="green">Greased Lightning Bonus:</span> Increases damage dealt by 10% and reduces weaponskill cast time and recast time, spell cast time and recast time, and auto-attack delay by 5%`;
+}
+mnk_actions.form_shift.getDesc = function (state) {
+	return `Shifts your current form to the next in the sequence. If no form is being used when executed, you will move into the <span class="orange">opo-opo</span> form.`;
+}
+mnk_actions.meditation.getDesc = function (state) {
+	return `Opens a chakra. Up to five chakra can be opened at once.<br/>
+Shares a recast timer with all other weaponskills.`;
+}
+mnk_actions.the_forbidden_chakra.getDesc = function (state) {
+	return `Delivers an attack with a potency of 250.<br/>
+Can only be executed while under the effect of the <span class="yellow">Fifth Chakra</span>. The five chakras close upon execution.`;
+}
+mnk_actions.purification.getDesc = function (state) {
+	return `Restores 300 TP.<br/>
+Can only be executed while under the effect of the <span class="yellow">Fifth Chakra</span>. The five chakras close upon execution.`;
+}
+mnk_actions.elixer_field.getDesc = function (state) {
+	return `Delivers an attack with a potency of 220 to all nearby enemies.`;
+}
+mnk_actions.steel_peak.getDesc = function (state) {
+	return `Delivers an attack with a potency of 150.`;
+}
+mnk_actions.shoulder_tackle.getDesc = function (state) {
+	return `Rushes target and delivers an attack with a potency of 100.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
+<span class="green">Duration:</span> 2s<br/>
+Cannot be executed while bound.`;
+}
+mnk_actions.howling_fist.getDesc = function (state) {
+	return `Delivers an attack with a potency of 210 to all enemies in a straight line before you.`;
+}
+mnk_actions.tornado_kick.getDesc = function (state) {
+	return `Delivers an attack with a potency of 330.<br/>
+Can only be executed while under the effect of <span class="yellow">Greased Lightning</span> III. Effect fades upon execution.`;
+}
+mnk_actions.perfect_balance.getDesc = function (state) {
+	return `Allows execution of weaponskills which require a certain form, without being in that form.
+<span class="green">Duration:</span> 10s`;
+}
+mnk_actions.internal_release.getDesc = function (state) {
+	return `Increases critical hit rate by 30%.<br/>
+<span class="green">Duration:</span> 15s`;
+}
+mnk_actions.mantra.getDesc = function (state) {
+	return `Increases HP recovery via healing magic by 20% for self and nearby party members.<br/>
+<span class="green">Duration:</span> 15s`;
+}
+mnk_actions.fists_of_earth.getDesc = function (state) {
+	return `Reduces damage taken by 10%.<br/>
+Cannot be used with <span class="orange">Fists of Fire</span> or <span class="orange">Fists of Wind</span>, and shares recast timer with both.<br/>
+Effect ends upon reuse.`;
+}
+mnk_actions.fists_of_wind.getDesc = function (state) {
+	return `Increases movement speed.<br/>
+Cannot be used with <span class="orange">Fists of Earth</span> or <span class="orange">Fists of Fire</span>, and shares recast timer with both.<br/>
+Effect ends upon reuse.`;
+}
+mnk_actions.fists_of_fire.getDesc = function (state) {
+	return `Increases damage dealt by 5%.<br/>
+Cannot be used with <span class="orange">Fists of Earth</span> or <span class="orange">Fists of Wind</span>, and shares recast timer with both.<br/>
+Effect ends upon reuse.`;
+}
+mnk_actions.riddle_of_earth.getDesc = function (state) {
+	return `Grants <span class="yellow">Fists of Earth</span>. Also grants <span class="yellow">Earth's Reply</span> if damage is taken while active.<br/>
+<span class="green">Duration:</span> 30s<br/>
+<span class="green">Additional Effect:</span> Extends <span class="yellow">Greased Lightning</span> duration to maximum<br/>
+<span class="green">Earth's Reply Bonus:</span> Reduces damage taken by 10%<br/>
+<span class="green">Duration:</span> 30s<br/>
+Both <span class="yellow">Riddle of Earth</span> and <span class="yellow">Earth's Reply</span> are canceled if <span class="yellow">Fists of Earth</span> ends.`;
+}
+mnk_actions.riddle_of_wind.getDesc = function (state) {
+	return `Rushes target and delivers an attack with a potency of 65.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
+<span class="green">Duration:</span> 2s<br/>
+Can only be executed while under the effect of <span class="yellow">Fists of Wind</span> and <span class="yellow">Riddle of Wind</span><br/>
+Cannot be executed while bound.`;
+}
+mnk_actions.riddle_of_fire.getDesc = function (state) {
+	return `Increases damage dealt by 30% while increasing weaponskill recast time by 15%. Also grants <span class="yellow">Fists of Fire</span>.<br/>
+<span class="green">Duration:</span> 20s<br/>
+<span class="yellow">Riddle of Fire</span> is canceled if <span class="yellow">Fists of Fire</span> ends.`;
+}
+mnk_actions.brotherhood.getDesc = function (state) {
+	return `Increases physical damage dealt by nearby party members by 5%. Also grants a 30% chance of opening a chakra when party members under the effect of <span class="yellow">Brotherhood</span> execute a weaponskill.<br/>
+<span class="green">Duration:</span> 15s`;
+}
+mnk_actions.earth_tackle.getDesc = function (state) {
+	return `Rushes target and delivers an attack with a potency of 100.<br/>
+<span class="green">Additional Effect:</span> 10-yalm knockback<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
+<span class="green">Duration:</span> 2s<br/>
+Can only be executed while under the effect of <span class="yellow">Fists of Earth</span>.<br/>
+Cannot be executed while bound.`;
+}
+mnk_actions.wind_tackle.getDesc = function (state) {
+	return `Rushes target and delivers an attack with a potency of 65.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
+<span class="green">Duration:</span> 2s<br/>
+<span class="green">Additional Effect:</span> Grants <span class="yellow">Riddle of Wind</span><br/>
+<span class="green">Duration:</span> 5s<br/>
+Can only be executed while under the effect of <span class="orange">Fists of Wind</span>.<br/>
+Cannot be executed while bound.`;
+}
+mnk_actions.fire_tackle.getDesc = function (state) {
+	return `Rushes target and delivers an attack with a potency of 130.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
+<span class="green">Duration:</span> 2s<br/>
+Can only be executed while under the effect of <span class="orange">Fists of Fire</span>.<br/>
+Cannot be executed while bound.`;
+}

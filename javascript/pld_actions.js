@@ -56,7 +56,7 @@ class PLD_Stance extends PLD_Spell {
 			setStatus('shield_oath', false);
 		setStatus(this.id, !hasStatus(this.id));
 
-		setResource1(state.resource_1 / 2);
+		//setResource1(state.resource_1 / 2);
 	}
 
 	getManaCost(state) {
@@ -129,7 +129,7 @@ const pld_actions = {
 	circle_of_scorn: new PLD_DamageAbility("Circle of Scorn", 50, 100, 25, 0, 5),
 
 	requiescat: new PLD_DamageAbility("Requiescat", 68, 350, 60, 25, 0),
-	holy_spirit: new PLD_Spell("Holy Spirit", 64, 430, 1.5, 1800, 25, 0),
+	holy_spirit: new PLD_Spell("Holy Spirit", 64, 400, 1.5, 1800, 25, 0),
 	clemency: new PLD_Spell("Clemency", 58, 0, 1.5, 1400, 25, 0),
 
 	sheltron: new PLD_OathAbility("Sheltron", 52, 5, 50),
