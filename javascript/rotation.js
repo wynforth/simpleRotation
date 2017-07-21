@@ -55,8 +55,9 @@ function tickDots(resultTable) {
 		//console.log(state.statuses[key].name + " - " + state.statuses[key].duration);
 
 		var potency = state.statuses[key].tick(state);
-		state.potency += potency;
+		
 		if (potency > 0) {
+			state.potency += potency;
 			var status = getStatus(key);
 			var row = {
 				name: `*${status.name}*`,

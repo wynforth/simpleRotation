@@ -28,7 +28,6 @@ CLASSES
 		var base = super.getCast(state);
 		var mod = 1;
 		mod -= getStacks('greased_lightning') * .05;
-		
 		mod += (hasStatus('riddle_of_fire')? .15 : 0);
 		
 		return base * mod;
@@ -38,7 +37,6 @@ CLASSES
 		var base = super.getRecast(state);
 		var mod = 1;
 		mod -= getStacks('greased_lightning') * .05;
-		
 		mod += (hasStatus('riddle_of_fire')? .15 : 0);
 		
 		return base * mod;
@@ -102,6 +100,19 @@ class MNK_DamageAbility extends DamageAbility {
 		super(name, level, potency, recast, range, radius, ['MNK']);
 	}
 
+	getPotencyMod(state){
+		var mod = 1;
+		mod += getStacks('greased_lightning') * .1;
+		mod += (hasStatus('twin_snakes') ? .1 : 0);
+		//mod += (hasStatus('dragon_kick') ? .1 : 0);
+		mod += (hasStatus('fists_of_fire') ? .05 : 0);
+		mod += (hasStatus('riddle_of_fire') ? .3 : 0);
+		return mod;
+	}
+	
+	getPotency(state){
+		return super.getPotency(state) * this.getPotencyMod(state);
+	}
 }
 
 class MNK_Buff extends Buff {
@@ -169,7 +180,7 @@ const mnk_actions = {
 
 	riddle_of_earth: new MNK_Buff("Riddle of Earth", 64, 60),
 	riddle_of_wind: new MNK_DamageAbility("Riddle of Wind", 66, 65, 0, 20, 0),	
-	riddle_of_fire: new MNK_Buff("Riddle of Earth", 68, 60),
+	riddle_of_fire: new MNK_Buff("Riddle of Fire", 68, 60),
 	brotherhood: new MNK_Buff("Brotherhood", 70, 90),
 
 	earth_tackle: new MNK_DamageAbility("Earth Tackle", 66, 100, 30, 10, 0),	
@@ -308,30 +319,30 @@ STATUSES
  ***************/
 
 const mnk_status = {
-	opoopo_form: new Status("Opo-opo Form", 10, "#fff"),
-	raptor_form: new Status("Raptor Form", 10, "#fff"),
-	coeurl_form: new Status("Coeurl Form", 10, "#fff"),
-	internal_release: new Status("Internal Release", 15, "#fff"),
-	greased_lightning: new StatusStack("Greased Lightning", 16, "#fff", 1, 3),
+	opoopo_form: new Status("Opo-opo Form", 10, "#E3CCAC"),
+	raptor_form: new Status("Raptor Form", 10, "#D6B7F0"),
+	coeurl_form: new Status("Coeurl Form", 10, "#D3CC67"),
+	internal_release: new Status("Internal Release", 15, "#A5D083"),
+	greased_lightning: new StatusStack("Greased Lightning", 16, "#4477C5", 1, 3),
 	
-	dragon_kick: new Status("Dragon Kick", 15, "#fff"),
-	twin_snakes: new Status("Twin Snakes", 15, "#fff"),
-	demolish: new Dot("Demolish", 18, 50, "#fff"),
+	dragon_kick: new Status("Dragon Kick", 15, "#EEDAA7"),
+	twin_snakes: new Status("Twin Snakes", 15, "#E299D8"),
+	demolish: new Dot("Demolish", 18, 50, "#E17878"),
 	
-	fists_of_earth: new Status("Fists of Earth", 99, "#fff"),
-	fists_of_wind: new Status("Fists of Wind", 99, "#fff"),
-	fists_of_fire: new Status("Fists of Fire", 99, "#fff"),
+	fists_of_earth: new Status("Fists of Earth", 99, "#DD9F63"),
+	fists_of_wind: new Status("Fists of Wind", 99, "#B4ADCE"),
+	fists_of_fire: new Status("Fists of Fire", 99, "#C45A45"),
 
-	mantra: new Status("Mantra", 15, "#fff"),
-	perfect_balance: new Status("Perfect Balance", 10, "#fff"),
+	mantra: new Status("Mantra", 15, "#485693"),
+	perfect_balance: new Status("Perfect Balance", 10, "#DF964C"),
 		
-	brotherhood: new Status("Brotherhood", 15, "#fff"),
+	brotherhood: new Status("Brotherhood", 15, "#F0CE6C"),
 	chakra: new StatusStack("Chakra",99, "#fff", 1, 5),
 
-	riddle_of_earth: new Status("Riddle of Earth", 30, "#fff"),
-	earths_reply: new Status("Earth's Reply", 30, "#fff"),
-	riddle_of_wind: new Status("Riddle of Wind", 5, "#fff"),
-	riddle_of_fire: new Status("Riddle of Fire", 20, "#fff"),
+	riddle_of_earth: new Status("Riddle of Earth", 30, "#A47C2F"),
+	earths_reply: new Status("Earth's Reply", 30, "#D7C77C"),
+	riddle_of_wind: new Status("Riddle of Wind", 5, "#3A97E6"),
+	riddle_of_fire: new Status("Riddle of Fire", 20, "#E47D55"),
 };
 
 /***************
@@ -354,20 +365,20 @@ DESCRIPTIONS
  ***************/
  
 mnk_actions.bootshine.getDesc = function (state) {
-	return `Delivers an attack with a potency of 140.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 <span class="green">Opo-opo Form Bonus:</span> Critical damage if dealt from a target's rear<br/>
 <span class="green">Additional Effect:</span> Changes form to <span class="orange">raptor</span><br/>
 <span class="green">Duration:</span> 10s`;
 }
 mnk_actions.true_strike.getDesc = function (state) {
-	return `Delivers an attack with a potency of 140.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 180 when executed from a target's rear.<br/>
 Can only be executed when in <span class="orange">raptor</span> form.<br/>
 <span class="green">Additional Effect:</span> Changes form to <span class="orange">coeurl</span><br/>
 <span class="green">Duration:</span> 10s`;
 }
 mnk_actions.demolish.getDesc = function (state) {
-	return `Delivers an attack with a potency of 30.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 70 when executed from a target's rear.<br/>
 Can only be executed when in <span class="orange">coeurl</span> form.<br/>
 <span class="green">Additional Effect:</span> Damage over time<br/>
@@ -380,7 +391,7 @@ Can only be executed when in <span class="orange">coeurl</span> form.<br/>
 <span class="green">Greased Lightning Bonus:</span> Increases damage dealt by 10% and reduces weaponskill cast time and recast time, spell cast time and recast time, and auto-attack delay by 5%`;
 }
 mnk_actions.dragon_kick.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 140 when executed from a target's flank.<br/>
 <span class="green">Opo-opo Form Bonus:</span> Reduces target's blunt resistance by 10%<br/>
 <span class="green">Duration:</span> 15s<br/>
@@ -388,7 +399,7 @@ mnk_actions.dragon_kick.getDesc = function (state) {
 <span class="green">Duration:</span> 10s`;
 }
 mnk_actions.twin_snakes.getDesc = function (state) {
-	return `Delivers an attack with a potency of 100.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 130 when executed from a target's flank.<br/>
 Can only be executed when in <span class="orange">raptor</span> form.<br/>
 <span class="green">Additional Effect:</span> Increases damage by 10%<br/>
@@ -397,7 +408,7 @@ Can only be executed when in <span class="orange">raptor</span> form.<br/>
 <span class="green">Duration:</span> 10s`;
 }
 mnk_actions.snap_punch.getDesc = function (state) {
-	return `Delivers an attack with a potency of 130.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 170 when executed from a target's flank.<br/>
 Can only be executed when in <span class="orange">coeurl</span> form.<br/>
 <span class="green">Additional Effect:</span> Changes form to <span class="orange">opo-opo</span><br/>
@@ -407,14 +418,14 @@ Can only be executed when in <span class="orange">coeurl</span> form.<br/>
 <span class="green">Greased Lightning Bonus:</span> Increases damage dealt by 10% and reduces weaponskill cast time and recast time, spell cast time and recast time, and auto-attack delay by 5%`;
 }
 mnk_actions.arm_of_the_destroyer.getDesc = function (state) {
-	return `Delivers an attack with a potency of 50 to all nearby targets.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all nearby targets.<br/>
 <span class="green">Opo-opo Form Bonus:</span> <span class="yellow">Silence</span><br/>
 <span class="green">Duration:</span> 1s<br/>
 <span class="green">Additional Effect:</span> Changes form to <span class="orange">raptor</span><br/>
 <span class="green">Duration:</span> 10s`;
 }
 mnk_actions.one_ilm_punch.getDesc = function (state) {
-	return `Delivers an attack with a potency of 120.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 Can only be executed when in <span class="orange">raptor</span> form.<br/>
 <span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
 <span class="green">Duration:</span> 1s<br/>
@@ -423,7 +434,7 @@ Can only be executed when in <span class="orange">raptor</span> form.<br/>
 <span class="green">Duration:</span> 10s`;
 }
 mnk_actions.rockbreaker.getDesc = function (state) {
-	return `Delivers an attack with a potency of 130 to all enemies in a cone before you.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all enemies in a cone before you.<br/>
 Can only be executed when in <span class="orange">coeurl</span> form.<br/>
 <span class="green">Additional Effect:</span> Changes form to <span class="orange">opo-opo</span><br/>
 <span class="green">Duration:</span> 10s<br/>
@@ -439,7 +450,7 @@ mnk_actions.meditation.getDesc = function (state) {
 Shares a recast timer with all other weaponskills.`;
 }
 mnk_actions.the_forbidden_chakra.getDesc = function (state) {
-	return `Delivers an attack with a potency of 250.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 Can only be executed while under the effect of the <span class="yellow">Fifth Chakra</span>. The five chakras close upon execution.`;
 }
 mnk_actions.purification.getDesc = function (state) {
@@ -447,22 +458,22 @@ mnk_actions.purification.getDesc = function (state) {
 Can only be executed while under the effect of the <span class="yellow">Fifth Chakra</span>. The five chakras close upon execution.`;
 }
 mnk_actions.elixer_field.getDesc = function (state) {
-	return `Delivers an attack with a potency of 220 to all nearby enemies.`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all nearby enemies.`;
 }
 mnk_actions.steel_peak.getDesc = function (state) {
-	return `Delivers an attack with a potency of 150.`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.`;
 }
 mnk_actions.shoulder_tackle.getDesc = function (state) {
-	return `Rushes target and delivers an attack with a potency of 100.<br/>
+	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 <span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
 <span class="green">Duration:</span> 2s<br/>
 Cannot be executed while bound.`;
 }
 mnk_actions.howling_fist.getDesc = function (state) {
-	return `Delivers an attack with a potency of 210 to all enemies in a straight line before you.`;
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to all enemies in a straight line before you.`;
 }
 mnk_actions.tornado_kick.getDesc = function (state) {
-	return `Delivers an attack with a potency of 330.<br/>
+	return `Delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 Can only be executed while under the effect of <span class="yellow">Greased Lightning</span> III. Effect fades upon execution.`;
 }
 mnk_actions.perfect_balance.getDesc = function (state) {
@@ -501,7 +512,7 @@ mnk_actions.riddle_of_earth.getDesc = function (state) {
 Both <span class="yellow">Riddle of Earth</span> and <span class="yellow">Earth's Reply</span> are canceled if <span class="yellow">Fists of Earth</span> ends.`;
 }
 mnk_actions.riddle_of_wind.getDesc = function (state) {
-	return `Rushes target and delivers an attack with a potency of 65.<br/>
+	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 <span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
 <span class="green">Duration:</span> 2s<br/>
 Can only be executed while under the effect of <span class="yellow">Fists of Wind</span> and <span class="yellow">Riddle of Wind</span><br/>
@@ -517,7 +528,7 @@ mnk_actions.brotherhood.getDesc = function (state) {
 <span class="green">Duration:</span> 15s`;
 }
 mnk_actions.earth_tackle.getDesc = function (state) {
-	return `Rushes target and delivers an attack with a potency of 100.<br/>
+	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 <span class="green">Additional Effect:</span> 10-yalm knockback<br/>
 <span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
 <span class="green">Duration:</span> 2s<br/>
@@ -525,7 +536,7 @@ Can only be executed while under the effect of <span class="yellow">Fists of Ear
 Cannot be executed while bound.`;
 }
 mnk_actions.wind_tackle.getDesc = function (state) {
-	return `Rushes target and delivers an attack with a potency of 65.<br/>
+	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 <span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
 <span class="green">Duration:</span> 2s<br/>
 <span class="green">Additional Effect:</span> Grants <span class="yellow">Riddle of Wind</span><br/>
@@ -534,7 +545,7 @@ Can only be executed while under the effect of <span class="orange">Fists of Win
 Cannot be executed while bound.`;
 }
 mnk_actions.fire_tackle.getDesc = function (state) {
-	return `Rushes target and delivers an attack with a potency of 130.<br/>
+	return `Rushes target and delivers an attack with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
 <span class="green">Additional Effect:</span> <span class="yellow">Stun</span><br/>
 <span class="green">Duration:</span> 2s<br/>
 Can only be executed while under the effect of <span class="orange">Fists of Fire</span>.<br/>

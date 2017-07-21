@@ -248,7 +248,8 @@ class AoE_Dot extends Dot {
 	}
 	tick(state) {
 		//console.log("TICK: " + this.id + " for " + this.potency);
-		state.potency += this.potency * state.targets;
+		return super.tick(state) * state.targets;
+		//state.potency += this.potency * state.targets;
 	};
 }
 

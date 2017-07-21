@@ -43,12 +43,15 @@ class BLM_Spell extends Spell {
 	}
 	
 	getTraitMod(state) {
-		return 1;
+		
+		/*
 		if(state.level >= 40)
 			return 1.3;
 		else if(state.level >= 10)
 			return 1.1;
-		return 1;
+		*/
+		return super.getTraitMod(state);
+		
 	}
 
 	getPotency(state) {
@@ -194,7 +197,7 @@ ACTIONS
  ***************/
 
 const blm_actions = {
-	fire_i: new FireSpell("Fire I", 2, 180, 2.5, 1400, 25, 0),
+	fire_i: new FireSpell("Fire I", 2, 180, 2.5, 1200, 25, 0),
 	fire_ii: new FireSpell("Fire II", 18, 80, 3.0, 1800, 25, 5),
 	fire_iii: new FireSpell("Fire III", 34, 240, 3.5, 2400, 25, 0),
 	fire_iv: new FireSpell("Fire IV", 60, 260, 2.8, 1200, 25, 0),
@@ -203,7 +206,7 @@ const blm_actions = {
 	blizzard_i: new IceSpell("Blizzard I", 1, 180, 2.5, 480, 25, 0),
 	blizzard_ii: new IceSpell("Blizzard II", 12, 50, 3.0, 960, 0, 5),
 	blizzard_iii: new IceSpell("Blizzard III", 40, 240, 3.5, 1440, 25, 5),
-	blizzard_iv: new IceSpell("Blizzard IV", 58, 260, 2.8, 1200, 25, 0),
+	blizzard_iv: new IceSpell("Blizzard IV", 58, 260, 2.8, 960, 25, 0),
 	freeze: new IceSpell("Freeze", 35, 100, 3.0, 2400, 25, 5),
 
 	thunder_i: new ThunderSpell("Thunder I", 6, 30, 2.5, 960, 25, 0),
@@ -216,7 +219,7 @@ const blm_actions = {
 	sleep: new BLM_Spell("Sleep", 10, 0, 2.5, 1200, 25, 5),
 
 	transpose: new BLM_Ability("Transpose", 4, 12, 0),
-	ley_lines: new BLM_Buff("Ley Lines", 52, 30),
+	ley_lines: new BLM_Buff("Ley Lines", 52, 90),
 	sharpcast: new BLM_Buff("Sharpcast", 54, 60),
 	enochian: new BLM_Buff("Enochian", 56, 30),
 	triplecast: new BLM_Buff("Triplecast", 68, 60),

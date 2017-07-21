@@ -139,7 +139,7 @@ const smn_actions = {
 	enkindle_bahamut: new SMN_Ability('Enkindle Bahamut', 70, 13, 25),
 	aetherpact: new SMN_Buff('Aetherpact', 64, 90),
 	
-	shadowflare: new SMN_DamageAbility('Shadowflare', 50, 0, 60, 25, 5), 
+	shadowflare: new SMN_DamageAbility('Shadowflare', 50, 50, 60, 25, 5), 
 	rouse: new SMN_Buff('Rouse', 42, 60),
 	enkindle: new SMN_Ability('Enkindle', 50, 180, 25),
 
@@ -298,3 +298,145 @@ smn_status.dreadwyrm_trance.finalize = function(state){
 DESCRIPTIONS
 
  ***************/
+ 
+ 
+smn_actions.ruin.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.`;
+}
+smn_actions.ruin_ii.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.`;
+}
+smn_actions.ruin_iii.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+MP cost reduced while in <span class="yellow">Dreadwyrm Trance</span>.`;
+}
+smn_actions.ruin_iv.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+Can only be executed while under the effect of <span class="yellow">Further Ruin</span>.`;
+}
+smn_actions.bio.getDesc = function (state) {
+	return `Deals unaspected damage over time.<br/>
+<span class="green">Potency:</span> 40<br/>
+<span class="green">Duration:</span> 18s`;
+}
+smn_actions.bio_ii.getDesc = function (state) {
+	return `Deals unaspected damage over time.<br/>
+<span class="green">Potency:</span> 35<br/>
+<span class="green">Duration:</span> 30s`;
+}
+smn_actions.bio_iii.getDesc = function (state) {
+	return `Deals unaspected damage over time.<br/>
+<span class="green">Potency:</span> 40<br/>
+<span class="green">Duration:</span> 30s`;
+}
+smn_actions.miasma.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+<span class="green">Additional Effect:</span> Unaspected damage over time<br/>
+<span class="green">Potency:</span> 35<br/>
+<span class="green">Duration:</span> 24s`;
+}
+smn_actions.miasma_ii.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+<span class="green">Additional Effect:</span> Unaspected damage over time<br/>
+<span class="green">Potency:</span> 40<br/>
+<span class="green">Duration:</span> 30s`;
+}
+smn_actions.tri_disaster.getDesc = function (state) {
+	return `Inflicts target with <span class="orange">Bio III</span> and <span class="orange">Miasma III</span>.<br/>
+<span class="green">Additional Effect:</span> Inflicts target with <span class="yellow">Ruination</span>, increasing the potency of <span class="orange">Ruin</span> spells used against target by 20<br/>
+<span class="green">Duration:</span> 15s`;
+}
+smn_actions.aetherflow.getDesc = function (state) {
+	return `Restores 10% of maximum MP.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Aetherflow III</span><br/>
+<span class="green">Duration:</span> Infinite<br/>
+Aetherflow not granted to gauge slots affected by <span class="yellow">Aethertrail Attunement</span>. Cannot use while under the effect of <span class="yellow">Dreadwyrm Trance</span>.`;
+}
+smn_actions.energy_drain.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+<span class="green">Additional Effect:</span> Absorbs a portion of damage dealt as HP and restores MP<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Aethertrail Attunement</span><br/>
+<span class="green">Aetherflow Gauge Cost:</span> 1`;
+}
+smn_actions.bane.getDesc = function (state) {
+	return `Spreads a target's <span class="orange">Bio</span> and <span class="orange">Miasma</span> effects to nearby enemies.<br/>
+Potency is reduced by 20% for the second enemy, 40% for the third, 60% for the fourth, and 80% for all remaining enemies.<br/>
+<span class="green">Duration:</span> Time remaining on original effect<br/>
+<span class="green">Additional Effect:</span> 15% chance that <span class="orange">Bio</span> and <span class="orange">Miasma</span> duration resets if shorter than original effect duration<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Aethertrail Attunement</span><br/>
+<span class="green">Aetherflow Gauge Cost:</span> 1`;
+}
+smn_actions.fester.getDesc = function (state) {
+	return `Cause wounds inflicted by <span class="orange">Bio</span> and <span class="orange">Miasma</span> spells to fester, dealing damage with a potency of 150 for one effect, 300 for both. <span class="calc">potency ${this.getPotency(state).toFixed(0)}</span><br/>
+Can only be executed when the original spells were cast by you.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Aethertrail Attunement</span><br/>
+<span class="green">Aetherflow Gauge Cost:</span> 1`;
+}
+smn_actions.painflare.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to target and all enemies nearby it.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Aethertrail Attunement</span><br/>
+<span class="green">Aetherflow Gauge Cost:</span> 1`;
+}
+smn_actions.dreadwyrm_trance.getDesc = function (state) {
+	return `Increases magic damage dealt by 10% while lowering the MP cost of <span class="orange">Ruin III</span>.<br/>
+<span class="green">Duration:</span> 16s<br/>
+<span class="green">Additional Effect:</span> Resets <span class="orange">Tri-disaster</span> recast timer<br/>
+Increases Trance Gauge when effect ends.<br/>
+Can only be executed when <span class="yellow">Aethertrail Attunement</span> stack is 3 and <span class="yellow">Demi-Bahamut</span> is not summoned.<br/>
+<span class="yellow">Aethertrail Attunement</span> is achieved upon executing an <span class="orange">Aetherflow</span> action.<br/>
+Cannot execute <span class="orange">Aetherflow</span> while under the effect of <span class="yellow">Dreadwyrm Trance</span>.`;
+}
+smn_actions.deathflare.getDesc = function (state) {
+	return `Deals unaspected damage to a target and all enemies nearby it with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> for the first enemy, 10% less for the second, 20% less for the third, 30% less for the fourth, 40% less for the fifth, and 50% less for all remaining enemies.<br/>
+Can only be executed while in <span class="yellow">Dreadwyrm Trance</span>. <span class="yellow">Dreadwyrm Trance</span> fades upon execution.`;
+}
+smn_actions.summon_bahamut.getDesc = function (state) {
+	return `Summons <span class="yellow">Demi-Bahamut</span> to fight by your side. Each time you use an action on a target, <span class="yellow">Demi-Bahamut</span> will execute <span class="orange">Wyrmwave</span> on the same target.<br/>
+<span class="green">Duration:</span> 20s<br/>
+<span class="green">Dreadwyrm Aether Cost:</span> 2<br/>
+Cannot summon <span class="yellow">Demi-Bahamut</span> unless a pet is already summoned. Current pet will leave the battlefield while <span class="yellow">Demi-Bahamut</span> is present, and return once gone. Cannot use while under the effect of <span class="yellow">Dreadwyrm Trance</span>.`;
+}
+smn_actions.enkindle_bahamut.getDesc = function (state) {
+	return `Orders <span class="yellow">Demi-Bahamut</span> to execute <span class="orange">Akh Morn</span>.`;
+}
+smn_actions.aetherpact.getDesc = function (state) {
+	return `Orders pet to execute <span class="orange">Devotion</span>. Party member must be within 30 yalms of the pet.`;
+}
+smn_actions.shadowflare.getDesc = function (state) {
+	return `Envelops a designated area in a veil of magicked shadows, dealing damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to any enemies who enter.<br/>
+<span class="green">Duration:</span> 15s<br/>
+<span class="green">Additional Effect:</span> Slow +5%<br/>
+Cannot be used with any other area-creating actions.`;
+}
+smn_actions.rouse.getDesc = function (state) {
+	return `Increases healing magic potency and damage dealt by pet by 40%. While roused, pet will be immune to <span class="yellow">Stun</span>, <span class="yellow">Sleep</span>, <span class="yellow">Bind</span>, and <span class="yellow">Heavy</span>.<br/>
+<span class="green">Duration:</span> 20s`;
+}
+smn_actions.enkindle.getDesc = function (state) {
+	return `Commands pet to use its signature attack.`;
+}
+smn_actions.tri_bind.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span> to target and all enemies nearby it.<br/>
+<span class="green">Additional Effect:</span> <span class="yellow">Bind</span><br/>
+<span class="green">Duration:</span> 20s`;
+}
+smn_actions.physick.getDesc = function (state) {
+	return `Restores target's HP.<br/>
+<span class="green">Cure Potency:</span> 400`;
+}
+smn_actions.resurrection.getDesc = function (state) {
+	return `Resurrects target to a weakened state.`;
+}
+smn_actions.summon.getDesc = function (state) {
+	return `Summons a caster-type pet to fight at your side.`;
+}
+smn_actions.summon_ii.getDesc = function (state) {
+	return `Summons a tank-type pet to fight at your side.`;
+}
+smn_actions.summon_iii.getDesc = function (state) {
+	return `Summons an attacker-type pet to fight at your side.`;
+}
+smn_actions.wyrmwave.getDesc = function (state) {
+	return `Deals unaspected damage with a potency of <span class="calc">${this.getPotency(state).toFixed(0)}</span>.<br/>
+Will only execute while <span class="yellow">Demi-Bahamut</span> is summoned.`;
+}
