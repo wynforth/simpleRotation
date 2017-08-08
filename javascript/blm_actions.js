@@ -55,7 +55,7 @@ class BLM_Spell extends Spell {
 	}
 
 	getPotency(state) {
-		return super.getPotency(state) * (hasStatus('enochian') ? 1.05 : 1);
+		return super.getPotency(state) * (hasStatus('enochian') ? 1.1 : 1);
 	}
 }
 
@@ -183,7 +183,7 @@ class ThunderSpell extends BLM_Spell {
 	
 	getPotency(state) {
 		var base = hasStatus('thundercloud') ? (this.potency + (statuses[this.id].getTotalPotency(state))) : this.potency;
-		return base * this.getTraitMod(state) * (hasStatus('enochian') ? 1.05 : 1);
+		return base * this.getTraitMod(state) * (hasStatus('enochian') ? 1.1 : 1);
 	}
 
 	isHighlighted(state) {

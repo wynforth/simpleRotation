@@ -137,7 +137,7 @@ const brd_actions = {
 	bloodletter: new BRD_Action("Bloodletter", 12, 130, 15, 25),
 
 	raging_strikes: new BRD_Buff("Raging Strikes", 4, 80),
-	barrage: new BRD_Buff("Barrage", 38, 90),
+	barrage: new BRD_Buff("Barrage", 38, 80),
 	foe_requiem: new BRD_Spell("Foe Requiem", 35, 100, 1.5, 0, 25),
 
 	pitch_perfect: new BRD_Action("Pitch Perfect", 52, 0, 3, 25),
@@ -255,7 +255,7 @@ STATUSES
 
 const brd_status = {
 	//BRD
-	straight_shot: new Status("Straight Shot", 20, "#B01F00"),
+	straight_shot: new Status("Straight Shot", 30, "#B01F00"),
 	straighter_shot: new Status("Straighter Shot", 10, "#C7394B"),
 	raging_strikes: new Status("Raging Strikes", 20, "#D03F00"),
 	venomous_bite: new Dot("Venom", 18, "#905FE0", 40),
